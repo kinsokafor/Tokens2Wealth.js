@@ -1,10 +1,10 @@
 {
     "modules":
     {
-        "<pluginName>":
+        "Tokens2Wealth":
         {
             "entry": [
-                "<entry>/index"
+                "T2WMain/index"
             ],
             "active": true,
             "installed": false,
