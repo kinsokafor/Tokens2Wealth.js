@@ -4,11 +4,71 @@
         "Tokens2Wealth":
         {
             "entry": [
-                "T2WMain/index"
+                "T2WMain/index",
+                "T2WAdmin/index",
+                "T2WMembers/index"
             ],
             "active": true,
             "installed": false,
             "order": 1
+        }
+    },
+    "Auth": {
+        "roles": {
+            "member": {
+                "name": "Users",
+                "capacity": [
+                    6,
+                    7,
+                    8
+                ],
+                "profile": "t2w/m/#/profile/",
+                "index": "t2w/m/#/"
+            },"software_engineer": {
+                "name": "Software Engineer",
+                "capacity": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12
+                ],
+                "profile": "t2w/a/#/profile/",
+                "index": "t2w/a/#/"
+            },
+            "super_admin": {
+                "name": "Chief Admin",
+                "capacity": [
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    11,
+                    12
+                ],
+                "profile": "t2w/a/#/profile/",
+                "index": "t2w/a/#/"
+            },
+            "admin": {
+                "name": "Operation Admin",
+                "capacity": [
+                    4,
+                    5,
+                    11
+                ],
+                "profile": "t2w/a/#/profile/",
+                "index": "t2w/a/#/"
+            }
         }
     }
 }
