@@ -1,11 +1,12 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { Posts, Request } from '@/helpers';
+import { dbTable, Request } from '@/helpers';
 import _ from 'lodash';
+import { useLocalStorage } from '@vueuse/core'
 
 export const useAccountsStore = defineStore('useAccountsStore', {
     state: () => {
         return {
-            data: [],
+            data: [],//useLocalStorage("t2wAccounts", []),
             processing: false,
             fetching: false,
             limit: 20,
@@ -20,15 +21,17 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             }
             this.fetching = true;
             this.processing = true;
-            const post = new Posts;
-            post.get({
+            const dbtable = new dbTable;
+            dbtable.get("t2w_accounts", {
                 limit: this.limit,
                 offset: this.offset,
+                joinuserat: 'user_id',
+                rightcolumns: ['surname', 'other_names', 'profile_picture', 'middle_name', 'gender'],
                 ...params
             }, 'account').then(r => {
                 if ("id" in params) {
-                    // const meta = JSON.parse(r.data.meta)
-                    // delete r.data.meta
+                    const meta = JSON.parse(r.data.meta)
+                    delete r.data.meta
                     let i = { ...r.data }
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
@@ -40,8 +43,8 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     }
                 } else {
                     r.data.forEach(i => {
-                        // i = { ...i, ...(JSON.parse(i.meta)) }
-                        // delete i.meta
+                        i = { ...i, ...(JSON.parse(i.meta)) }
+                        delete i.meta
                         const index = this.data.findIndex(j => j.id == i.id)
                         if (index == -1) {
                             this.data = [...this.data, i]
@@ -74,12 +77,15 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         get: (state) => {
             const data = state.data
             return (params = {}) => {
-                if (!state.fetching) {
+                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
+                    state.lastParams = params;
                     state.loadFromServer(params)
                 }
                 const r = data.filter(i => {
                     for (var k in params) {
-                        return new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                        if(typeof params[k] == "string") {
+                            return new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                        }
                         if (k in i && params[k] != i[k]) return false
                         return true
                     }

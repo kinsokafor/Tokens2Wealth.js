@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/components/NotFound.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Accounts from '../views/Accounts/Accounts.vue'
+import AccountsList from '../views/Accounts/AccountsList.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -15,6 +17,18 @@ const router = createRouter({
             name: 'Dashboard',
             component: Dashboard,
             meta: { title: "Dashboard" }
+        },
+        {
+            path: '/accounts',
+            name: 'Accounts',
+            component: Accounts,
+            meta: { title: "Accounts" }
+        },
+        {
+            path: '/accounts/:accountType',
+            name: 'AccountsList',
+            component: AccountsList,
+            meta: { title: "Accounts list" }
         }
     ]
 });

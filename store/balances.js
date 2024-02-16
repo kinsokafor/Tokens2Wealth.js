@@ -2,7 +2,7 @@ import { defineStore, storeToRefs } from 'pinia';
 import { dbTable, Request } from '@/helpers';
 import _ from 'lodash';
 
-export const useSampleStore = defineStore('useSampleStore', {
+export const useBalancesStore = defineStore('useBalancesStore', {
     state: () => {
         return {
             data: [],
