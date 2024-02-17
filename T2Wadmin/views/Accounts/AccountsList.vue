@@ -28,7 +28,7 @@
                 return 312
                 break;
             
-            case 'loan':
+            case 'loans':
                 return 321
                 break;
 

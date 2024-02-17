@@ -8,25 +8,15 @@
             <h2>{{data.surname}} {{ data.other_names }}</h2>
             <p><span>Account type:</span> <span>{{data.ac_type}}</span></p>
             <p><span>Account number:</span> <span>{{data.ac_number}}</span></p>
-            <p><span>Current Balance:</span> <span>NGN 300,000</span></p>
+            <p><span>Balance:</span> <span>{{balanceDisplay}}</span></p>
             </div>
         </div>
-        <!-- <div class="ac-card-foot">
-            <div class="ac-credit">
-            <h4>Credits <span>10</span></h4>
-            <p>NGN 500,000</p>
-            </div>
-            <div class="ac-debit">
-            <h4>Debits <span>8</span></h4>
-            <p>NGN 500,000</p>
-            </div>
-        </div> -->
         </div>
 </template>
 
 <script setup>
-    import { computed, ref } from 'vue';
-    import { isEmpty, imageExists } from '@/helpers'
+    import { computed, ref, onMounted } from 'vue';
+    import { Request, imageExists } from '@/helpers'
     import 'animate.css'
     import male from '@/components/images/male_avatar.svg'
     import female from '@/components/images/female_avatar.svg'
@@ -36,6 +26,19 @@
         data: Object
     })
 
+    const balance = ref(0);
+
+    const balanceDisplay = computed(() => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'NGN',
+        }).format(balance.value))
+
+    onMounted(() => {
+        const r = new Request;
+        r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.data.ac_number}`).then(r => {
+            balance.value = r.data
+        })
+    })
 
     const tempImg = ref("#")
 

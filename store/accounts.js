@@ -6,7 +6,7 @@ import { useLocalStorage } from '@vueuse/core'
 export const useAccountsStore = defineStore('useAccountsStore', {
     state: () => {
         return {
-            data: [],//useLocalStorage("t2wAccounts", []),
+            data: useLocalStorage("t2wAccounts", []),
             processing: false,
             fetching: false,
             limit: 20,
