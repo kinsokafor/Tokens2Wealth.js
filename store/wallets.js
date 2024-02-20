@@ -9,7 +9,8 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             processing: false,
             fetching: false,
             limit: 100,
-            offset: 0
+            offset: 0,
+            dbtable: new dbTable
         }
     },
     actions: {
@@ -20,8 +21,7 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             }
             this.fetching = true;
             this.processing = true;
-            const dbtable = new dbTable;
-            dbtable.get("t2w_transactions", {
+            this.dbtable.get("t2w_transactions", {
                 limit: this.limit,
                 offset: this.offset,
                 ...params
@@ -62,6 +62,11 @@ export const useWalletsStore = defineStore('useWalletsStore', {
                     }, 60000)
                 }
             })
+        },
+
+        abort() {
+            this.dbtable.abort()
+            this.fetching = false;
         }
     },
     getters: {

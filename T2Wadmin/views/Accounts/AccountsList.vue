@@ -13,7 +13,7 @@
 
 <script setup>
     import {useRoute} from 'vue-router'
-    import {computed} from 'vue'
+    import {computed, onUnmounted} from 'vue'
     import {useAccountsStore} from '@/Modules/Tokens2Wealth/store/accounts'
     import AccountCard from '@/Modules/Tokens2Wealth/components/AccountCard.vue'
     import InfiniteScroll from '@/components/InfiniteScroll.vue';
@@ -21,6 +21,10 @@
     const route = useRoute()
 
     const store = useAccountsStore()
+
+    onUnmounted(() => {
+        store.abort()
+    })
 
     const accountCode = computed(() => {
         switch (route.params.accountType) {

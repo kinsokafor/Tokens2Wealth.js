@@ -1,17 +1,19 @@
 <template>
-    <div class="ac-card">
-        <div class="ac-card-top">
-            <div class="img-containerx">
-            <img :src="userImg" alt="profile">
-            </div>
-            <div class="ac-card-heading">
-            <h2>{{data.surname}} {{ data.other_names }}</h2>
-            <p><span>Account type:</span> <span>{{data.ac_type}}</span></p>
-            <p><span>Account number:</span> <span>{{data.ac_number}}</span></p>
-            <p><span>Balance:</span> <span>{{balanceDisplay}}</span></p>
+    <router-link :to="`/accounts/statement/${data.ac_number}`">
+        <div class="ac-card">
+            <div class="ac-card-top">
+                <div class="img-containerx">
+                <img :src="userImg" alt="profile">
+                </div>
+                <div class="ac-card-heading">
+                <h2>{{data.surname}} {{ data.other_names }}</h2>
+                <p><span>Account type:</span> <span>{{data.ac_type}}</span></p>
+                <p><span>Account number:</span> <span>{{data.ac_number}}</span></p>
+                <p><span>Balance:</span> <span>{{balanceDisplay}}</span></p>
+                </div>
             </div>
         </div>
-        </div>
+    </router-link>
 </template>
 
 <script setup>

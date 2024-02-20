@@ -9,7 +9,8 @@ export const useSampleStore = defineStore('useSampleStore', {
             processing: false,
             fetching: false,
             limit: 100,
-            offset: 0
+            offset: 0,
+            dbtable: new dbTable
         }
     },
     actions: {
@@ -20,8 +21,7 @@ export const useSampleStore = defineStore('useSampleStore', {
             }
             this.fetching = true;
             this.processing = true;
-            const dbtable = new dbTable;
-            dbtable.get('bh_data', {
+            this.dbtable.get('bh_data', {
                 limit: this.limit,
                 offset: this.offset,
                 order: 'asc',
@@ -64,6 +64,11 @@ export const useSampleStore = defineStore('useSampleStore', {
                     }, 60000)
                 }
             })
+        },
+
+        abort() {
+            this.dbtable.abort()
+            this.fetching = false;
         }
     },
     getters: {

@@ -10,7 +10,8 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             processing: false,
             fetching: false,
             limit: 20,
-            offset: 0
+            offset: 0,
+            dbtable: new dbTable
         }
     },
     actions: {
@@ -21,8 +22,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             }
             this.fetching = true;
             this.processing = true;
-            const dbtable = new dbTable;
-            dbtable.get("t2w_accounts", {
+            this.dbtable.get("t2w_accounts", {
                 limit: this.limit,
                 offset: this.offset,
                 joinuserat: 'user_id',
@@ -65,6 +65,11 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     }, 60000)
                 }
             })
+        },
+
+        abort() {
+            this.dbtable.abort()
+            this.fetching = false;
         }
     },
     getters: {
