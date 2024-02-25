@@ -1,17 +1,21 @@
 <template>
     <div>
         <AccountStatement :account-number="route.params.accountNumber" />
-        <SidePanel>
+        <SidePanel class="glass-bg side-panel">
             <div class="row">
                 <div class="col-md-12">
                     <AccountBalance :account-number="route.params.accountNumber"></AccountBalance>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="chart-wrap">
                         <Bar :data="scoresChartData" :options="options" />
                     </div>
+                </div>
+                <div class="col-md-12">
+                    <div>Total Credits:<br>{{ totalCD }}</div>
+                    <div>Total Debits:<br>{{ totalDB }}</div>
                 </div>
             </div>
         </SidePanel>
@@ -31,6 +35,10 @@
     const amountsBD = ref([]);
 
     const countBD = ref([]);
+
+    const totalCD = ref(0);
+
+    const totalDB = ref(0)
 
     const scoresChartData = computed(() => {
         return {
@@ -71,6 +79,15 @@
     onMounted(() => {
         r.post(process.env.EVO_API_URL + `/t2w/api/break-down/${route.params.accountNumber}`).then(r => {
             amountsBD.value = [Math.round(r.data.credits), Math.round(r.data.debits)]
+            totalCD.value = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'NGN',
+            }).format(r.data.credits)
+
+            totalDB.value = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'NGN',
+            }).format(r.data.debits)
         })
         r.post(process.env.EVO_API_URL + `/t2w/api/break-down/count/${route.params.accountNumber}`).then(r => {
             countBD.value = [r.data.credits, r.data.debits]
@@ -80,5 +97,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .side-panel {
+        position: relative;
+    }
 </style>
