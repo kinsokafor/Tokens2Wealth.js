@@ -10,7 +10,8 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             fetching: false,
             limit: 100,
             offset: 0,
-            dbtable: new dbTable
+            dbtable: new dbTable,
+            lastTimeOut: null
         }
     },
     actions: {
@@ -24,6 +25,8 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             this.dbtable.get("t2w_transactions", {
                 limit: this.limit,
                 offset: this.offset,
+                order: 'asc',
+                order_by: 'id',
                 ...params
             }).then(r => {
                 if ("id" in params) {
@@ -57,7 +60,10 @@ export const useWalletsStore = defineStore('useWalletsStore', {
                     this.loadFromServer(params)
                 } else {
                     this.offset = 0
-                    setTimeout(() => {
+                    if(this.lastTimeOut != null) {
+                        clearTimeout(this.lastTimeOut)
+                    }
+                    this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
                     }, 60000)
                 }

@@ -26,9 +26,9 @@
         currency: 'NGN',
         }).format(balance.value))
 
-    onMounted(() => {
+    onMounted(async () => {
         const r = new Request;
-        r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.accountNumber}`).then(r => {
+        await r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.accountNumber}`).then(r => {
             balance.value = r.data
         })
     })

@@ -1,13 +1,16 @@
 <template>
     <div>
-        <InfiniteScroll :data="store.get({ac_number: `${accountCode}%`})" v-slot="{data}">
+        <DataFilter 
+            :data="store.get({ac_number: `${accountCode}%`})" 
+            v-slot="{outputData}"
+            :search-columns="['surname', 'other_names', 'ac_number']">
             <div class="row">
-                <div class="col-md-4" v-for="item in data" :key="item.id" v-memo="item">
-                    <AccountCard :data="item"></AccountCard>
+                <div class="col-md-4" v-for="data in outputData" :key="data.id" v-memo="data">
+                    <AccountCard :data="data"></AccountCard>
                 </div>
                 
             </div>
-        </InfiniteScroll>
+        </DataFilter>
     </div>
 </template>
 
@@ -16,7 +19,7 @@
     import {computed, onUnmounted} from 'vue'
     import {useAccountsStore} from '@/Modules/Tokens2Wealth/store/accounts'
     import AccountCard from '@/Modules/Tokens2Wealth/components/AccountCard.vue'
-    import InfiniteScroll from '@/components/InfiniteScroll.vue';
+    import DataFilter from '@/components/filters/DataFilter.vue';
 
     const route = useRoute()
 

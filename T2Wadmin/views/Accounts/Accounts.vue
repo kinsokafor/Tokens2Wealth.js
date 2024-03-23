@@ -3,7 +3,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/wallets" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=301%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=301%" 
                 title="Wallets" 
                 icon-class="fa-solid fa-wallet" 
                 color="var(--green)"
@@ -14,7 +14,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/thrift-savings" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=312%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=312%" 
                 title="Thrift savings" 
                 icon-class="fa-solid fa-piggy-bank" 
                 color="var(--blue)"
@@ -25,7 +25,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/loans" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=321%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=321%" 
                 title="Loan" 
                 icon-class="fa-solid fa-user-tie" 
                 color="var(--red)"
@@ -36,7 +36,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/term-deposits" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=311%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=311%" 
                 title="Term deposit" 
                 icon-class="fa-solid fa-business-time" 
                 color="var(--purple)"
@@ -47,7 +47,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/shares" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=313%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=313%" 
                 title="Shares" 
                 icon-class="fa-solid fa-business-time" 
                 color="var(--color2)"
@@ -58,7 +58,7 @@
         <div class="col-md-4 mb-4">
             <router-link to="accounts/special-savings" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account?ac_number=314%" 
+                end-point="api/dbtable/t2w_accounts?ac_number=314%" 
                 title="Special savings" 
                 icon-class="fa-solid fa-money-check-dollar" 
                 color="var(--orange)"

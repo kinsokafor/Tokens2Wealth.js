@@ -22,8 +22,8 @@
                     7,
                     8
                 ],
-                "profile": "t2w/m/#/profile/",
-                "index": "t2w/m/#/"
+                "profile": "/t2w/m/#/profile/",
+                "index": "/t2w/m/#/"
             },"software_engineer": {
                 "name": "Software Engineer",
                 "capacity": [
@@ -40,8 +40,8 @@
                     11,
                     12
                 ],
-                "profile": "t2w/a/#/profile/",
-                "index": "t2w/a/#/"
+                "profile": "/t2w/a/#/profile/",
+                "index": "/t2w/a/#/"
             },
             "super_admin": {
                 "name": "Chief Admin",
@@ -56,8 +56,8 @@
                     11,
                     12
                 ],
-                "profile": "t2w/a/#/profile/",
-                "index": "t2w/a/#/"
+                "profile": "/t2w/a/#/profile/",
+                "index": "/t2w/a/#/"
             },
             "admin": {
                 "name": "Operation Admin",
@@ -66,8 +66,8 @@
                     5,
                     11
                 ],
-                "profile": "t2w/a/#/profile/",
-                "index": "t2w/a/#/"
+                "profile": "/t2w/a/#/profile/",
+                "index": "/t2w/a/#/"
             }
         }
     }

@@ -11,7 +11,8 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             fetching: false,
             limit: 20,
             offset: 0,
-            dbtable: new dbTable
+            dbtable: new dbTable,
+            lastTimeOut: null
         }
     },
     actions: {
@@ -60,7 +61,10 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     this.loadFromServer(params)
                 } else {
                     this.offset = 0
-                    setTimeout(() => {
+                    if(this.lastTimeOut != null) {
+                        clearTimeout(this.lastTimeOut)
+                    }
+                    this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
                     }, 60000)
                 }

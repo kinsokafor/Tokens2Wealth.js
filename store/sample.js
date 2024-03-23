@@ -10,7 +10,8 @@ export const useSampleStore = defineStore('useSampleStore', {
             fetching: false,
             limit: 100,
             offset: 0,
-            dbtable: new dbTable
+            dbtable: new dbTable,
+            lastTimeOut: null
         }
     },
     actions: {
@@ -53,16 +54,20 @@ export const useSampleStore = defineStore('useSampleStore', {
                             }
                         }
                     })
+                    if (r.data.length >= this.limit) {
+                        this.offset = this.limit + this.offset
+                        this.loadFromServer(params)
+                    } else {
+                        this.offset = 0
+                        if(this.lastTimeOut != null) {
+                            clearTimeout(this.lastTimeOut)
+                        }
+                        this.lastTimeOut = setTimeout(() => {
+                            this.fetching = false
+                        }, 180000)
+                    }
                 }
-                if (r.data.length >= this.limit) {
-                    this.offset = this.limit + this.offset
-                    this.loadFromServer(params)
-                } else {
-                    this.offset = 0
-                    setTimeout(() => {
-                        this.fetching = false
-                    }, 60000)
-                }
+                
             })
         },
 

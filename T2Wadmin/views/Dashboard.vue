@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <router-link to="accounts" class="counter-link">
                 <CounterCard 
-                end-point="api/post/type/account" 
+                end-point="api/dbtable/t2w_accounts" 
                 title="accounts" 
                 icon-class="fa-solid fa-money-check-dollar" 
                 color="var(--blue)"

@@ -17,29 +17,35 @@
 </template>
 
 <script setup>
-    import { computed, ref, onMounted } from 'vue';
+    import { computed, ref, onMounted, onUnmounted } from 'vue';
     import { Request, imageExists } from '@/helpers'
     import 'animate.css'
     import male from '@/components/images/male_avatar.svg'
     import female from '@/components/images/female_avatar.svg'
+    import { useLocalStorage } from '@vueuse/core'
 
 
     const props = defineProps({
         data: Object
     })
 
-    const balance = ref(0);
+    const balance = ref(useLocalStorage(`balance-${props.data.ac_number}`, 0));
 
-    const balanceDisplay = computed(() => new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'NGN',
-        }).format(balance.value))
+    const r = new Request;
 
-    onMounted(() => {
-        const r = new Request;
-        r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.data.ac_number}`).then(r => {
+    const balanceDisplay = computed(() => balance.value.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'NGN',
+        }))
+
+    onMounted(async () => {   
+        await r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.data.ac_number}`).then(r => {
             balance.value = r.data
         })
+    })
+
+    onUnmounted(() => {
+        r.abort()
     })
 
     const tempImg = ref("#")
@@ -60,8 +66,8 @@
             setTemp()
             return tempImg.value
         }
-        imageExists(props.data.profile_picture, () => {
-            tempImg.value = props.data.profile_picture
+        imageExists("/"+props.data.profile_picture, () => {
+            tempImg.value = "/"+props.data.profile_picture
         }, () => {
             setTemp()
         })
@@ -74,6 +80,9 @@
     padding: 0;
     margin: 0;
     line-height: 1;
+     a {
+        color: var(--shadow2);
+     }
     }
     .ac-card {
     padding: 24px 15px;
