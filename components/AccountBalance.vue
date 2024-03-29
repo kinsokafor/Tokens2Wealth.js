@@ -12,12 +12,14 @@
 </template>
 
 <script setup>
-    import {onMounted, ref, computed} from 'vue'
+    import {onMounted, ref, computed, onUnmounted} from 'vue'
     import { Request } from '@/helpers'
 
     const props = defineProps({
         accountNumber: String
     })
+
+    const r = new Request;
 
     const balance = ref(0)
 
@@ -27,10 +29,13 @@
         }).format(balance.value))
 
     onMounted(async () => {
-        const r = new Request;
         await r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.accountNumber}`).then(r => {
             balance.value = r.data
         })
+    })
+
+    onUnmounted(() => {
+        r.abort()
     })
 </script>
 

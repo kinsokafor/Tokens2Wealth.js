@@ -9,7 +9,7 @@
                 <h2>{{data.surname}} {{ data.other_names }}</h2>
                 <p><span>Account type:</span> <span>{{data.ac_type}}</span></p>
                 <p><span>Account number:</span> <span>{{data.ac_number}}</span></p>
-                <p><span>Balance:</span> <span>{{balanceDisplay}}</span></p>
+                <p><span>Balance:</span> <span>{{toLocale(data.balance)}}</span></p>
                 </div>
             </div>
         </div>
@@ -22,31 +22,20 @@
     import 'animate.css'
     import male from '@/components/images/male_avatar.svg'
     import female from '@/components/images/female_avatar.svg'
-    import { useLocalStorage } from '@vueuse/core'
+    // import { useLocalStorage } from '@vueuse/core'
 
 
     const props = defineProps({
         data: Object
     })
 
-    const balance = ref(useLocalStorage(`balance-${props.data.ac_number}`, 0));
-
-    const r = new Request;
-
-    const balanceDisplay = computed(() => balance.value.toLocaleString('en-US', {
+    const toLocale = (str) => {
+        if(str == undefined) return ""
+        return str.toLocaleString('en-US', {
             style: 'currency',
             currency: 'NGN',
-        }))
-
-    onMounted(async () => {   
-        await r.post(process.env.EVO_API_URL + `/t2w/api/balance/${props.data.ac_number}`).then(r => {
-            balance.value = r.data
         })
-    })
-
-    onUnmounted(() => {
-        r.abort()
-    })
+    }
 
     const tempImg = ref("#")
 

@@ -9,7 +9,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             data: useLocalStorage("t2wAccounts", []),
             processing: false,
             fetching: false,
-            limit: 20,
+            limit: 50,
             offset: 0,
             dbtable: new dbTable,
             lastTimeOut: null
@@ -23,13 +23,12 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             }
             this.fetching = true;
             this.processing = true;
-            this.dbtable.get("t2w_accounts", {
+            const r = new Request;
+            r.post(r.root+"/t2w/api/get/accounts", {
                 limit: this.limit,
                 offset: this.offset,
-                joinuserat: 'user_id',
-                rightcolumns: ['surname', 'other_names', 'profile_picture', 'middle_name', 'gender'],
                 ...params
-            }, 'account').then(r => {
+            }).then(r => {
                 if ("id" in params) {
                     const meta = JSON.parse(r.data.meta)
                     delete r.data.meta
@@ -66,7 +65,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     }
                     this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
-                    }, 60000)
+                    }, 300000)
                 }
             })
         },
@@ -85,10 +84,14 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         },
         get: (state) => {
             const data = state.data
-            return (params = {}) => {
-                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
-                    state.lastParams = params;
-                    state.loadFromServer(params)
+            return (params = {}, ...exclude) => {
+                let tempParams = {...params};
+                exclude.forEach(i => {
+                    delete tempParams[i]
+                })
+                if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
+                    state.lastParams = tempParams;
+                    state.loadFromServer(tempParams)
                 }
                 const r = data.filter(i => {
                     for (var k in params) {

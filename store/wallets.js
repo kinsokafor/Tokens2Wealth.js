@@ -85,7 +85,8 @@ export const useWalletsStore = defineStore('useWalletsStore', {
         get: (state) => {
             const data = state.data
             return (params = {}) => {
-                if (!state.fetching) {
+                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
+                    state.lastParams = params;
                     state.loadFromServer(params)
                 }
                 const r = data.filter(i => {

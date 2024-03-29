@@ -1,6 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/components/NotFound.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Savings from '../views/Savings/Savings.vue'
+import TermDeposit from '../views/Savings/TermDeposit.vue'
+import ThriftSavings from '../views/Savings/ThriftSavings.vue'
+import EWallet from '../views/Savings/EWallet.vue'
+import SpecialSavings from '../views/Savings/SpecialSavings.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -15,6 +20,36 @@ const router = createRouter({
             name: 'Dashboard',
             component: Dashboard,
             meta: { title: "Dashboard" }
+        },
+        {
+            path: '/savings/term-deposit',
+            name: 'Term Deposit',
+            component: TermDeposit,
+            meta: { title: "Savings - Term Deposit" }
+        },
+        {
+            path: '/savings/thrift',
+            name: 'ThriftSavings',
+            component: ThriftSavings,
+            meta: { title: "Savings - Thrift Savings" }
+        },
+        {
+            path: '/savings/e-wallet',
+            name: 'EWallet',
+            component: EWallet,
+            meta: { title: "Savings - Ewallet" }
+        },
+        {
+            path: '/savings',
+            name: 'Savings',
+            component: Savings,
+            meta: { title: "Savings" }
+        },
+        {
+            path: '/savings/special',
+            name: 'SpecialSavings',
+            component: SpecialSavings,
+            meta: { title: "Savings - Special Savings" }
         }
     ]
 });

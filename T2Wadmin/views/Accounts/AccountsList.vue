@@ -3,7 +3,8 @@
         <DataFilter 
             :data="store.get({ac_number: `${accountCode}%`})" 
             v-slot="{outputData}"
-            :search-columns="['surname', 'other_names', 'ac_number']">
+            :search-columns="['surname', 'other_names', 'ac_number']"
+            :quick-filters="quickFilters">
             <div class="row">
                 <div class="col-md-4" v-for="data in outputData" :key="data.id" v-memo="data">
                     <AccountCard :data="data"></AccountCard>
@@ -28,6 +29,24 @@
     onUnmounted(() => {
         store.abort()
     })
+
+    const quickFilters = [
+        {
+            label: "Active",
+            key: "td_active",
+            value: "active"
+        },
+        {
+            label: "Pending",
+            key: "td_active",
+            value: "inactive"
+        },
+        {
+            label: "Liquidated",
+            key: "td_active",
+            value: "liquidated"
+        }
+    ]
 
     const accountCode = computed(() => {
         switch (route.params.accountType) {

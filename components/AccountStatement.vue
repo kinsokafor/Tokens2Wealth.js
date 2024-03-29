@@ -29,11 +29,17 @@
 
     const statement = computed(() => {
         return store.get({account: props.accountNumber}).map(i => {
-            i.credit = i.ledger == 'credit' ? i.amount : '-';
-            i.debit = i.ledger == 'debit' ? i.amount : '-';
+            i.credit = i.ledger == 'credit' ? toLocale(i.amount) : '-';
+            i.debit = i.ledger == 'debit' ? toLocale(i.amount) : '-';
             return i;
         })
     })
+
+    const toLocale = (str) => {
+        return str.toLocaleString("en-US", {
+            type: "currency"
+        })
+    }
 </script>
 
 <style lang="scss" scoped>
