@@ -21,7 +21,7 @@
         <span class="temp">{{ rate }}<small>%</small></span>
 
         <div class="temp-scale">
-            <a href="#" class="btn btn-rounded">Get Started</a>
+            <router-link to="/savings/term-deposit/new" class="btn btn-rounded">Get Started</router-link>
         </div>
         </div>
 </template>

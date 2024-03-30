@@ -73,6 +73,33 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         abort() {
             this.dbtable.abort()
             this.fetching = false;
+        },
+
+        async getSingle(params) {
+            for (var k in params) {
+                //return when all data are not ready
+                if (params[k] == undefined) return;
+            }
+            this.fetching = true;
+            this.processing = true;
+            const r = new Request;
+            r.post(r.root+"/t2w/api/get/account/"+params.ac_type+"/"+params.user_id, {
+                limit: this.limit,
+                offset: this.offset,
+                ...params
+            }).then(r => {
+                let i = r.data
+                i = { ...i, ...(JSON.parse(i.meta)) }
+                delete i.meta
+                const index = this.data.findIndex(j => j.id == i.id)
+                if (index == -1) {
+                    this.data = [...this.data, i]
+                } else {
+                    if (!_.isEqual(this.data[index], i)) {
+                        this.data[index] = i
+                    }
+                }
+            })
         }
     },
     getters: {
@@ -91,17 +118,21 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 })
                 if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
                     state.lastParams = tempParams;
-                    state.loadFromServer(tempParams)
+                    if("user_id" in tempParams && "ac_type" in tempParams) {
+                        state.getSingle(tempParams)
+                    } else {
+                        state.loadFromServer(tempParams)
+                    }
                 }
                 const r = data.filter(i => {
+                    let test = true;
                     for (var k in params) {
                         if(typeof params[k] == "string") {
-                            return new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
+                            test = new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
                         }
-                        if (k in i && params[k] != i[k]) return false
-                        return true
+                        if (k in i && params[k] != i[k]) test = false
                     }
-                    return true
+                    return test
                 })
                 return r
             }

@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Accounts from '../views/Accounts/Accounts.vue'
 import AccountsList from '../views/Accounts/AccountsList.vue'
 import AccountStatement from '../views/Accounts/AccountStatement.vue'
+import Settings from '../views/Settings.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -12,6 +13,12 @@ const router = createRouter({
             name: 'NotFound',
             component: NotFound,
             meta: { title: "404 Not Found" }
+        },
+        {
+            path: '/settings',
+            name: 'Settings',
+            component: Settings,
+            meta: { title: "Settings" }
         },
         {
             path: '/',
