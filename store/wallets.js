@@ -1,11 +1,12 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { dbTable, Request, storeGetter } from '@/helpers';
 import _ from 'lodash';
+import { useLocalStorage } from '@vueuse/core'
 
 export const useWalletsStore = defineStore('useWalletsStore', {
     state: () => {
         return {
-            data: {},
+            data: useLocalStorage("t2wTransactions", {}),
             processing: false,
             fetching: false,
             limit: 100,
