@@ -8,8 +8,7 @@
             <div class="row">
                 <div class="col-md-4" v-for="data in outputData" :key="data.id" v-memo="data">
                     <AccountCard :data="data"></AccountCard>
-                </div>
-                
+                </div>  
             </div>
         </DataFilter>
     </div>

@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request } from '@/helpers';
+import { dbTable, Request, storeGetter } from '@/helpers';
 import _ from 'lodash';
 import { useLocalStorage } from '@vueuse/core'
 
@@ -65,7 +65,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     }
                     this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
-                    }, 300000)
+                    }, 3000000)
                 }
             })
         },
@@ -73,6 +73,9 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         abort() {
             this.dbtable.abort()
             this.fetching = false;
+            if(this.lastTimeOut != null) {
+                clearTimeout(this.lastTimeOut)
+            }
         },
 
         async getSingle(params) {
@@ -112,29 +115,13 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         get: (state) => {
             const data = state.data
             return (params = {}, ...exclude) => {
-                let tempParams = {...params};
-                exclude.forEach(i => {
-                    delete tempParams[i]
-                })
-                if (!state.fetching || !_.isEqual(tempParams, state.lastParams)) {
-                    state.lastParams = tempParams;
+                return storeGetter(state, data, (tempParams) => {
                     if("user_id" in tempParams && "ac_type" in tempParams) {
                         state.getSingle(tempParams)
                     } else {
                         state.loadFromServer(tempParams)
                     }
-                }
-                const r = data.filter(i => {
-                    let test = true;
-                    for (var k in params) {
-                        if(typeof params[k] == "string") {
-                            test = new RegExp('^' + params[k].replace(/\%/g, '.*') + '$').test(i[k])
-                        }
-                        if (k in i && params[k] != i[k]) test = false
-                    }
-                    return test
-                })
-                return r
+                }, params, exclude)
             }
         }
     }

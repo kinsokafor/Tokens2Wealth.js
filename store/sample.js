@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request } from '@/helpers';
+import { dbTable, Request, storeGetter } from '@/helpers';
 import _ from 'lodash';
 
 export const useSampleStore = defineStore('useSampleStore', {
@@ -85,19 +85,10 @@ export const useSampleStore = defineStore('useSampleStore', {
         },
         get: (state) => {
             const data = state.data
-            return (params = {}) => {
-                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
-                    state.lastParams = params;
-                    state.loadFromServer(params)
-                }
-                const r = data.filter(i => {
-                    for (var k in params) {
-                        if (k in i && params[k] != i[k]) return false
-                        return true
-                    }
-                    return true
-                })
-                return r
+            return (params = {}, ...exclude) => {
+                return storeGetter(state, data, (tempParams) => {
+                    state.loadFromServer(tempParams)
+                }, params, exclude)
             }
         }
     }

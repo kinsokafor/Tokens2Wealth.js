@@ -1,11 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request } from '@/helpers';
+import { dbTable, Request, storeGetter } from '@/helpers';
 import _ from 'lodash';
 
 export const useWalletsStore = defineStore('useWalletsStore', {
     state: () => {
         return {
-            data: [],
+            data: {},
             processing: false,
             fetching: false,
             limit: 100,
@@ -20,37 +20,44 @@ export const useWalletsStore = defineStore('useWalletsStore', {
                 //return when all data are not ready
                 if (params[k] == undefined) return;
             }
+            if(!("account" in params)) return;
             this.fetching = true;
             this.processing = true;
             this.dbtable.get("t2w_transactions", {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'asc',
-                order_by: 'id',
+                order: 'desc',
+                order_by: 'time_altered',
                 ...params
             }).then(r => {
                 if ("id" in params) {
                     const meta = JSON.parse(r.data.meta)
                     delete r.data.meta
                     let i = { ...r.data, ...meta }
-                    const index = this.data.findIndex(j => j.id == i.id)
+                    if(!(i.account in this.data)) {
+                        this.data[i.account] = []
+                    }
+                    const index = this.data[i.account].findIndex(j => j.id == i.id)
                     if (index == -1) {
-                        this.data = [...this.data, i]
+                        this.data[i.account] = [...this.data[i.account], i]
                     } else {
-                        if (!_.isEqual(this.data[index], i)) {
-                            this.data[index] = i
+                        if (!_.isEqual(this.data[i.account][index], i)) {
+                            this.data[i.account][index] = i
                         }
                     }
                 } else {
                     r.data.forEach(i => {
                         i = { ...i, ...(JSON.parse(i.meta)) }
                         delete i.meta
-                        const index = this.data.findIndex(j => j.id == i.id)
+                        if(!(i.account in this.data)) {
+                            this.data[i.account] = []
+                        }
+                        const index = this.data[i.account].findIndex(j => j.id == i.id)
                         if (index == -1) {
-                            this.data = [...this.data, i]
+                            this.data[i.account] = [...this.data[i.account], i]
                         } else {
-                            if (!_.isEqual(this.data[index], i)) {
-                                this.data[index] = i
+                            if (!_.isEqual(this.data[i.account][index], i)) {
+                                this.data[i.account][index] = i
                             }
                         }
                     })
@@ -84,19 +91,12 @@ export const useWalletsStore = defineStore('useWalletsStore', {
         },
         get: (state) => {
             const data = state.data
-            return (params = {}) => {
-                if (!state.fetching || !_.isEqual(params, state.lastParams)) {
-                    state.lastParams = params;
-                    state.loadFromServer(params)
-                }
-                const r = data.filter(i => {
-                    for (var k in params) {
-                        if (k in i && params[k] != i[k]) return false
-                        return true
-                    }
-                    return true
-                })
-                return r
+            return (params = {}, ...exclude) => {
+                if(!("account" in params)) return []
+                let datax = params.account in data ? data[params.account] : []
+                return storeGetter(state, datax, (tempParams) => {
+                    state.loadFromServer(tempParams)
+                }, params, exclude)
             }
         }
     }
