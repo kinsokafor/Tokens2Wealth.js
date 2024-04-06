@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="`/accounts/statement/${data.ac_number}`">
+    <router-link :to="`/accounts/view/${data.ac_type}/${data.ac_number}`">
         <div class="ac-card">
             <div class="ac-card-top">
                 <div class="img-containerx">
@@ -103,59 +103,60 @@
     }
     }
     .img-containerx {
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: top;
-    align-items: center;
-    align-content: center;
-    border-radius: 50%;
-    border: var(--color2) 2px solid;
-    img {
-        width: 100%;
-        height: auto;
-    }
+        width: 80px;
+        height: 80px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: top;
+        align-items: center;
+        align-content: center;
+        border-radius: 50%;
+        border: var(--color2) 2px solid;
+        img {
+            width: auto;
+            height: 100%;
+            transform: scale(1.35);
+        }
     }
     .ac-card-foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 0.9rem;
-    div {
-        padding: 10px;
-        border: 1px solid;
-        width: 40%;
-        border-radius: 5px;
-        position: relative;
-    }
-    div.ac-credit {
-        color: green;
-        background: lightgreen;
-    }
-    div.ac-debit {
-        color: red;
-        background: lightred;
-    }
-    h4 {
-        position: relative;
-    }
-    h4 span {
-        background: red;
-        border-radius: 50%;
-        color: white;
         display: flex;
-        width:20px;
-        height:20px;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: -8px;
-        right: 10px;
-        font-size: 0.6rem;
-    }
+        justify-content: space-between;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 0.9rem;
+        div {
+            padding: 10px;
+            border: 1px solid;
+            width: 40%;
+            border-radius: 5px;
+            position: relative;
+        }
+        div.ac-credit {
+            color: green;
+            background: lightgreen;
+        }
+        div.ac-debit {
+            color: red;
+            background: lightred;
+        }
+        h4 {
+            position: relative;
+        }
+        h4 span {
+            background: red;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            width:20px;
+            height:20px;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            font-size: 0.6rem;
+        }
     }
 
 </style>

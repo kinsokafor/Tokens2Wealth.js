@@ -103,6 +103,33 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     }
                 }
             })
+        },
+
+        async getByNumber(params) {
+            for (var k in params) {
+                //return when all data are not ready
+                if (params[k] == undefined) return;
+            }
+            this.fetching = true;
+            this.processing = true;
+            const r = new Request;
+            r.post(r.root+"/t2w/api/get/account-number/"+params.ac_number, {
+                limit: this.limit,
+                offset: this.offset,
+                ...params
+            }).then(r => {
+                let i = r.data
+                i = { ...i, ...(JSON.parse(i.meta)) }
+                delete i.meta
+                const index = this.data.findIndex(j => j.id == i.id)
+                if (index == -1) {
+                    this.data = [...this.data, i]
+                } else {
+                    if (!_.isEqual(this.data[index], i)) {
+                        this.data[index] = i
+                    }
+                }
+            })
         }
     },
     getters: {
@@ -118,7 +145,11 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 return storeGetter(state, data, (tempParams) => {
                     if("user_id" in tempParams && "ac_type" in tempParams) {
                         state.getSingle(tempParams)
-                    } else {
+                    } 
+                    else if("ac_number" in tempParams) {
+                        state.getByNumber(tempParams)
+                    }
+                    else {
                         state.loadFromServer(tempParams)
                     }
                 }, params, exclude)
