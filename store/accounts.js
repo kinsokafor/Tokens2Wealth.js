@@ -12,7 +12,8 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             limit: 50,
             offset: 0,
             dbtable: new dbTable,
-            lastTimeOut: null
+            lastTimeOut: null,
+            loaded: []
         }
     },
     actions: {
@@ -21,6 +22,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 //return when all data are not ready
                 if (params[k] == undefined) return;
             }
+            if(!("ac_number" in params)) return;
             this.fetching = true;
             this.processing = true;
             const r = new Request;
@@ -60,10 +62,15 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     this.loadFromServer(params)
                 } else {
                     this.offset = 0
+                    this.loaded.push(params?.ac_number)
                     if(this.lastTimeOut != null) {
                         clearTimeout(this.lastTimeOut)
                     }
                     this.lastTimeOut = setTimeout(() => {
+                        const index = this.loaded.findIndex(i => i == params?.ac_number)
+                        if(index != -1) {
+                            this.loaded.splice(index, 1)
+                        }
                         this.fetching = false
                     }, 3000000)
                 }
@@ -73,9 +80,39 @@ export const useAccountsStore = defineStore('useAccountsStore', {
         abort() {
             this.dbtable.abort()
             this.fetching = false;
+            this.offset = 0;
             if(this.lastTimeOut != null) {
                 clearTimeout(this.lastTimeOut)
             }
+        },
+
+        async getByUser(params = {}) {
+            for (var k in params) {
+                //return when all data are not ready
+                if (params[k] == undefined) return;
+            }
+            if(!("user_id" in params)) return;
+            this.fetching = true;
+            this.processing = true;
+            const r = new Request;
+            r.post(r.root+"/t2w/api/get/user-accounts", {
+                limit: this.limit,
+                offset: this.offset,
+                ...params
+            }).then(r => {
+                r.data.forEach(i => {
+                    i = { ...i, ...(JSON.parse(i.meta)) }
+                    delete i.meta
+                    const index = this.data.findIndex(j => j.id == i.id)
+                    if (index == -1) {
+                        this.data = [...this.data, i]
+                    } else {
+                        if (!_.isEqual(this.data[index], i)) {
+                            this.data[index] = i
+                        }
+                    }
+                })
+            })
         },
 
         async getSingle(params) {
@@ -146,11 +183,17 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                     if("user_id" in tempParams && "ac_type" in tempParams) {
                         state.getSingle(tempParams)
                     } 
-                    else if("ac_number" in tempParams) {
-                        state.getByNumber(tempParams)
+                    else if("user_id" in tempParams) {
+                        state.getByUser(tempParams)
+                    } 
+                    else if("ac_number" in tempParams && tempParams.ac_number.length > 4) {
+                        state.getByNumber(tempParams) 
                     }
                     else {
-                        state.loadFromServer(tempParams)
+                        if(state.loaded.findIndex(i => i == tempParams?.ac_number) == -1) {
+                            state.abort()
+                            state.loadFromServer(tempParams)
+                        }
                     }
                 }, params, exclude)
             }

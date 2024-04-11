@@ -6,6 +6,7 @@ import AccountsList from '../views/Accounts/AccountsList.vue'
 import AccountStatement from '../views/Accounts/AccountStatement.vue'
 import AccountView from '../views/Accounts/AccountView.vue'
 import Settings from '../views/Settings.vue'
+import EditThrift from '../views/Forms/EditThrift.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -50,6 +51,12 @@ const router = createRouter({
             name: 'AccountView',
             component: AccountView,
             meta: { title: "Account View" }
+        },
+        {
+            path: '/accounts/thrift/:accountNumber/edit',
+            name: 'EditThrift',
+            component: EditThrift,
+            meta: { title: "Edit Thrift" }
         }
     ]
 });

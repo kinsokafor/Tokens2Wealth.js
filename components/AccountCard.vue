@@ -1,6 +1,6 @@
 <template>
     <router-link :to="`/accounts/view/${data.ac_type}/${data.ac_number}`">
-        <div class="ac-card">
+        <div class="ac-card animate__animated animate__rubberBand">
             <div class="ac-card-top">
                 <div class="img-containerx">
                 <img :src="userImg" alt="profile">

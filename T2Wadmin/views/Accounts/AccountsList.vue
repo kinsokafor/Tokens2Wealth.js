@@ -29,23 +29,32 @@
         store.abort()
     })
 
-    const quickFilters = [
-        {
-            label: "Active",
-            key: "td_active",
-            value: "active"
-        },
-        {
-            label: "Pending",
-            key: "td_active",
-            value: "inactive"
-        },
-        {
-            label: "Liquidated",
-            key: "td_active",
-            value: "liquidated"
+    const quickFilters = computed(() => {
+        switch (route.params.accountType) {
+            case 'thrift-savings':
+                return [
+                    {label: "Active",key: "status",value: "active"},
+                    {label: "Inactive",key: "status",value: "inactive"},
+                    {label: "Liquidated",key: "status",value: "liquidated"}
+                ]
+                break;
+
+            case 'loans':
+                return [
+                    {label: "Active",key: "status",value: "approved"},
+                    {label: "In process",key: "status",value: "in process"},
+                    {label: "Defaulted",key: "status",value: "defaulted"},
+                    {label: "Cleared",key: "status",value: "cleared"},
+                    {label: "Declined",key: "status",value: "declined"}
+                ]
+                break;
+        
+            default:
+                return []
+                break;
         }
-    ]
+    })
+    
 
     const accountCode = computed(() => {
         switch (route.params.accountType) {

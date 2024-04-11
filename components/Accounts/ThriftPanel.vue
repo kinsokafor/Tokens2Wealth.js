@@ -1,29 +1,19 @@
 <template>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="ac-header" :style="`background-image: url(${bgMap})`">
-                <img :src="thrift" alt="image" class="image">
-                <div class="heading">
-                    <h1>Regular Thrift</h1>
-                    <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
-                    <MemberCard v-if="data?.user_id != undefined" :userId="parseInt(data.user_id)">
-                        Account Number: {{account}}
-                    </MemberCard>
-                </div>
-            </div>
+    <Header :data="data" :bg="bgMap" :img="thrift" caption="Regular Thrift">
+      <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
+      <template #status>
+        <span class="badge" 
+          :class="{
+            'bg-success': (data.status == 'active'), 
+            'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
+        </span>
+        <div class="form-check form-switch">
+            <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">
         </div>
-    </div>
+      </template>
+    </Header>
     <div class="row">
-      <div class="col-md-4">
-        <div class="card mb-2">
-          <div class="card-body">
-            <h5 class="card-title">Monthly Contribution</h5>
-            <p class="card-text">{{toLocale(parseFloat(data?.amount ?? 0))}}</p>
-            <a href="#" class="btn btn-primary">Edit Amount</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
+      <div class="col-md-4 animate__animated animate__pulse">
         <div class="card mb-2">
           <div class="card-body">
             <loading :active="processing2" 
@@ -41,7 +31,17 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 animate__animated animate__pulse">
+        <div class="card mb-2">
+          <div class="card-body">
+            <h5 class="card-title">Monthly Contribution</h5>
+            <p class="card-text">{{toLocale(parseFloat(data?.amount ?? 0))}}</p>
+            <router-link :to="`/accounts/thrift/${account}/edit`" class="btn btn-primary">Edit Amount</router-link>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 animate__animated animate__pulse">
         <ol class="list-group list-group-numbered mb-2">
           <li class="list-group-item d-flex justify-content-between align-items-start">
             <div class="ms-2 me-auto">
@@ -68,20 +68,29 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12 mt-4">
+        <PendingDebits :account="account"></PendingDebits>
+      </div>
+    </div>
 </template>
 
 <script setup>
-    import MemberCard from './MemberCard.vue';
-    import thrift from '../assets/img/thrift.png';
-    import { useAccountsStore } from '../store/accounts'
-    import {computed, onMounted, ref} from 'vue'
-    import bgMap from '../assets/img/bgMap.png'
+    import Header from './Header.vue';
+    import thrift from '../../assets/img/thrift.png';
+    import { useAccountsStore } from '../../store/accounts'
+    import PendingDebits from './PendingDebits.vue';
+    import {computed, onMounted, ref, watchEffect} from 'vue'
+    import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
     import {useConfigStore} from '@/store/config'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+    import 'animate.css'
 
     const store = useAccountsStore()
+
+    const status = ref(false)
 
     const configStore = useConfigStore()
 
@@ -137,6 +146,14 @@
 
     const data = computed(() => store.get({ac_number: props.account})[0] ?? {})
 
+    watchEffect(() => {
+      if(data.value?.status == 'active') {
+        status.value = true
+      } else {
+        status.value = false
+      }
+    })
+
     const toLocale = (str) => {
         if(str == "") str = 0;
         return str.toLocaleString("en-US", {
@@ -144,67 +161,31 @@
           currency:"NGN"
         })
     }
+
+    const updateStatus = () => {
+      if(confirm(`Are you sure you want to ${status.value ? 'deactivate' : 'activate'} this account?`)) {
+        r.post(r.root+"/t2w/api/account/edit-status", {
+          id: data.value.id,
+          status: status.value ? 'inactive' : 'active'
+        }).then(r => {
+            let i = r.data
+            i = { ...i, ...(JSON.parse(i.meta)) }
+            delete i.meta
+            const index = store.data.findIndex(j => j.id == i.id)
+            if (index == -1) {
+                store.data = [...store.data, i]
+            } else {
+                if (!_.isEqual(store.data[index], i)) {
+                    store.data[index] = i
+                }
+            }
+        })
+      } else {
+        status.value = !status.value
+      }
+    }
 </script>
 
 <style lang="scss" scoped>
-    .ac-header {
-        text-align: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-x: 0px;
-        .image {
-            width: 100%;
-            max-width: 380px;
-        }
-        h1 {
-            font-size: 1.5em;
-            text-transform: uppercase;
-            font-weight: 800;
-            background-image: linear-gradient(180deg,#032618 10%,#00af43 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    }
-
-@media only screen and (max-width: 600px) {}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .ac-header {
-    background-position-x: 46px;
-  }
-  .ac-header h1 {
-    font-size: 1.8em;
-  }
-  .ac-header {
-    display: flex;
-    align-items: center;
-    text-align: left;
-  }
-  .ac-header .image {
-    width: 50%;
-  }
-  .ac-header .heading {
-    width: 50%;
-  }
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-  .ac-header .image {
-    width: 40%;
-  }
-  .ac-header .heading {
-    width: 60%;
-  }
-  .ac-header h1 {
-    font-size: 2.2em;
-  }
-}
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {}
-
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {}
+    
 </style>
