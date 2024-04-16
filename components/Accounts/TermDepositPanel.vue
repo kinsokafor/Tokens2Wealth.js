@@ -1,5 +1,5 @@
 <template>
-    <Header :data="data" :bg="bgMap" :img="thrift" caption="Regular Thrift">
+    <Header :data="data" :bg="bgMap" :img="termdeposit" caption="Term Deposit">
       <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
       <template #status>
         <span class="badge" 
@@ -14,14 +14,34 @@
     </Header>
     <div class="row">
       <div class="col-md-4 animate__animated animate__pulse">
-        <balance :account="account" title="Thrift Savings Balance"></balance>
+        <balance :account="account" title="Term Deposit Balance" @onready="b => bal = b"></balance>
       </div>
-      <div class="col-md-4 animate__animated animate__pulse">
+      <div class="col-md-4 animate__animated animate__pulse" v-show="bal > 0">
         <div class="card mb-2">
           <div class="card-body">
-            <h5 class="card-title">Monthly Contribution</h5>
-            <p class="card-text">{{toLocale(parseFloat(data?.amount ?? 0))}}</p>
-            <router-link :to="`/accounts/thrift/${account}/edit`" class="btn btn-primary">Edit Amount</router-link>
+            <h5 class="card-title">Term Deposit Particulars</h5>
+            <div class="justify-content-between d-flex">
+              <span>Rate</span>
+              <em>{{ data.td_rate }}%</em>
+            </div>
+            <div class="justify-content-between d-flex">
+              <span>Tenure</span>
+              <em>{{ data.td_tenure }} month(s)</em>
+            </div>
+            <div class="justify-content-between d-flex">
+              <span>Tenure Started</span>
+              <em>{{ timeStampToDate(data.tenure_begins) }}</em>
+            </div>
+            <div class="justify-content-between d-flex">
+              <span>Maturity</span>
+              <em>{{ timeStampToDate(data.maturity) }}</em>
+            </div>
+            <div class="justify-content-between d-flex">
+              <span>Interest Earned</span>
+              <em>{{ toLocale(parseFloat(data.interest_earned)) }}</em>
+            </div>
+            <hr/>
+            <button class="btn btn-primary2">Liquidate</button>
           </div>
         </div>
       </div>
@@ -43,7 +63,7 @@
 
 <script setup>
     import Header from './Header.vue';
-    import thrift from '../../assets/img/thrift.png';
+    import termdeposit from '../../assets/img/term-deposit.png';
     import { useAccountsStore } from '../../store/accounts'
     import PendingDebits from './PendingDebits.vue';
     import {computed, onMounted, ref, watchEffect} from 'vue'
@@ -59,6 +79,8 @@
     const status = ref(false)
 
     const configStore = useConfigStore()
+
+    const bal = ref(0)
 
     const r = new Request();
     
@@ -82,6 +104,12 @@
           style:"currency", 
           currency:"NGN"
         })
+    }
+
+    const timeStampToDate = (timestamp) => {
+        const d = new Date(parseInt(timestamp) * 1000);
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
     }
 
     const updateStatus = () => {

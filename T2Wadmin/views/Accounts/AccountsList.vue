@@ -48,6 +48,16 @@
                     {label: "Declined",key: "status",value: "declined"}
                 ]
                 break;
+
+            case 'wallets':
+                return [
+                    {label: "Level 1",key: "level",value: "1"},
+                    {label: "Level 2",key: "level",value: "2"},
+                    {label: "Level 3",key: "level",value: "3"},
+                    {label: "Level 4",key: "level",value: "4"},
+                    {label: "Level 5",key: "level",value: "5"}
+                ]
+                break;
         
             default:
                 return []

@@ -1,13 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/components/NotFound.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Profile from '../views/Profile.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
 import EWallet from '../views/Savings/EWallet.vue'
 import SpecialSavings from '../views/Savings/SpecialSavings.vue'
 import Statements from '../views/Savings/Statements.vue'
-import NewTD from '../views/Savings/NewTD.vue'
+import NewTD from '../views/Forms/NewTD.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -22,6 +23,12 @@ const router = createRouter({
             name: 'Dashboard',
             component: Dashboard,
             meta: { title: "Dashboard" }
+        },
+        {
+            path: '/profile/:id',
+            name: 'Profile',
+            component: Profile,
+            meta: { title: "Profile" }
         },
         {
             path: '/savings/term-deposit',
