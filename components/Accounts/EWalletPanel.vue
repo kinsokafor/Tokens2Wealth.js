@@ -68,6 +68,11 @@
         <OtherBalances :account="account" :userId="data.user_id"></OtherBalances>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <Menu :items="items"></Menu>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -82,6 +87,7 @@
     import balance from './balance.vue'
     import OtherBalances from './OtherBalances.vue'
     import 'animate.css'
+    import Menu from '@/components/menu/Menu.vue'
 
     const store = useAccountsStore()
 
@@ -110,6 +116,21 @@
           currency:"NGN"
         })
     }
+    // /accounts/post/credit/:accountNumber
+    const items = computed(() => [
+      {
+        label: "Credit E-wallet",
+        isRouter: false,
+        link: `/t2w/a/#/accounts/post/credit/${props.account}`,
+        iconClass: "fa-solid fa-file-circle-plus"
+      },
+      {
+        label: "Debit E-wallet",
+        isRouter: false,
+        link: `/t2w/a/#/accounts/post/debit/${props.account}`,
+        iconClass: "fa-solid fa-file-circle-minus"
+      }
+    ])
 </script>
 
 <style lang="scss" scoped>

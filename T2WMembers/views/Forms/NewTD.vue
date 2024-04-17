@@ -62,7 +62,6 @@
 
     const handleSubmit = (data, actions) => {
         processing.value = true;
-        data.id = account.value.id
         req.post(req.root+"/t2w/api/new-term-deposit", data).then(r => {
             let i = r.data
             i = { ...i, ...(JSON.parse(i.meta)) }
@@ -78,7 +77,8 @@
             processing.value = false
             router.back()
         }).catch(e => {
-            alertStore.add(e.data, "danger")
+            processing.value = false
+            alertStore.add(e.response.data, "danger")
         })
     }
 </script>

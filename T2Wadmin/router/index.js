@@ -7,6 +7,8 @@ import AccountStatement from '../views/Accounts/AccountStatement.vue'
 import AccountView from '../views/Accounts/AccountView.vue'
 import Settings from '../views/Settings.vue'
 import EditThrift from '../views/Forms/EditThrift.vue'
+import CreditWallet from '../views/Forms/CreditWallet.vue'
+import DebitWallet from '../views/Forms/DebitWallet.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -57,6 +59,18 @@ const router = createRouter({
             name: 'EditThrift',
             component: EditThrift,
             meta: { title: "Edit Thrift" }
+        },
+        {
+            path: '/accounts/post/credit/:accountNumber',
+            name: 'CreditWallet',
+            component: CreditWallet,
+            meta: { title: "Credit E-Wallet" }
+        },
+        {
+            path: '/accounts/post/debit/:accountNumber',
+            name: 'DebitWallet',
+            component: DebitWallet,
+            meta: { title: "Debit E-Wallet" }
         }
     ]
 });

@@ -70,5 +70,43 @@
                 "index": "/t2w/a/#/"
             }
         }
+    },
+    "classification": {
+        "Investment": "Investment",
+		"Loan": "Loan",
+		"Savings": "Savings",
+		"Shares": "Shares",
+		"FTD": "FTD",
+		"Registration fee": "Registration fee",
+		"Creditors": "Creditors",
+		"Debtors": "Debtors",
+		"Bank charges": "Bank charges",
+		"Transport": "Transport",
+		"Traveling": "Traveling",
+		"Stationary": "Stationary",
+		"Utility bill": "Utility bill",
+		"Penalty": "Penalty",
+		"Admin charges": "Admin charges",
+		"Fuel": "Fuel",
+		"Telephone": "Telephone",
+		"Union": "Union",
+		"Edu Fund": "Edu Fund",
+		"Seminar": "Seminar",
+		"Meeting": "Meeting",
+		"Honorarium": "Honorarium",
+		"Prof. fee": "Prof. fee",
+		"Rent": "Rent",
+		"Internet": "Internet",
+		"ROI": "ROI",
+		"Brand": "Brand",
+		"Renovation": "Renovation",
+		"AGM": "AGM",
+		"Office mtce": "Office mtce",
+		"Commission": "Commission",
+		"Website": "Website", 
+		"Wage": "Wage",
+		"E-wallet": "E-wallet",
+		"Office supplies": "Office supplies",
+		"Other expense": "Other expense"
     }
 }
