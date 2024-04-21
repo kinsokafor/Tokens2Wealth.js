@@ -44,6 +44,13 @@
             isRouter: true,
             iconClass: "fa-gear",
             access: "1,2"
+        },
+        {
+            label: "E-Wallet Credits",
+            link: "/ewallet-credits",
+            isRouter: true,
+            iconClass: "fa-gear",
+            access: "1,2"
         }
     ])
 </script>

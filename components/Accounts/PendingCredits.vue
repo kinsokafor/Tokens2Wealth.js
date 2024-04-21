@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h3>Pending Debits</h3>
-        <list-item v-for="item in PDStore.get({status: 'pending', debit_account: account}, 'debit_account')" :key="item.id">
+        <h3>Pending Credits</h3>
+        <list-item v-for="item in PDStore.get({status: 'pending', credit_account: account})" :key="item.id">
           <h6>{{ toLocale(item.amount) }}</h6>
           <p>{{ item.narration }}</p>
           <template #right>

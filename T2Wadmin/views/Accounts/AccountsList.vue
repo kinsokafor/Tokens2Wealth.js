@@ -39,6 +39,15 @@
                 ]
                 break;
 
+            case 'term-deposits':
+                return [
+                    {label: "Active",key: "status",value: "active"},
+                    {label: "Inactive",key: "status",value: "inactive"},
+                    {label: "Pending",key: "status",value: "pending"},
+                    {label: "Liquidated",key: "status",value: "liquidated"}
+                ]
+                break;
+
             case 'loans':
                 return [
                     {label: "Active",key: "status",value: "approved"},

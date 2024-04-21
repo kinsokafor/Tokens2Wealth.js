@@ -19,6 +19,7 @@
 
 <script setup>
     import { useAccountsStore } from '../../../store/accounts'
+    import { useEWalletTxnsStore } from '../../../store/ewalletTransactions'
     import { computed, ref } from 'vue'
     import {useRoute,useRouter} from 'vue-router'
     import CreateForm from '@/components/form/CreateForm.vue'
@@ -27,10 +28,11 @@
     import {useAlertStore} from '@/store/alert'
     import {useConfigStore} from '@/store/config'
 
-    const store = useAccountsStore()
+    const store = useEWalletTxnsStore()
+    const accountsStore = useAccountsStore()
     const route = useRoute()
     const router = useRouter()
-    const account = computed(() => store.get({ac_number: route.params.accountNumber})[0] ?? {})
+    const account = computed(() => accountsStore.get({ac_number: route.params.accountNumber})[0] ?? {})
     const fullname = computed(() => getFullname(account.value))
     const req = new Request();
     const processing = ref(false)
@@ -85,8 +87,8 @@
 
     const handleSubmit = (data, actions) => {
         processing.value = true;
-        data.id = account.value.id
-        req.post(req.root+"/t2w/api/edit-thrift-amount", data).then(r => {
+        data.account = route.params.accountNumber
+        req.post(req.root+"/t2w/api/credit-ewallet", data).then(r => {
             let i = r.data
             i = { ...i, ...(JSON.parse(i.meta)) }
             delete i.meta
@@ -99,9 +101,9 @@
                 }
             }
             processing.value = false
-            router.back()
+            // router.back()
         }).catch(e => {
-            alertStore.add(e.data, "danger")
+            alertStore.add(e.response.data, "danger")
         })
     }
 </script>

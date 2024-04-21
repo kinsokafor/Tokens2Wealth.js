@@ -17,12 +17,9 @@
 </template>
 
 <script setup>
-    import { computed, ref, onMounted, onUnmounted } from 'vue';
-    import { Request, imageExists } from '@/helpers'
+    import { ref } from 'vue';
+    import { getProfilePicture } from '@/helpers'
     import 'animate.css'
-    import male from '@/components/images/male_avatar.svg'
-    import female from '@/components/images/female_avatar.svg'
-    // import { useLocalStorage } from '@vueuse/core'
 
 
     const props = defineProps({
@@ -37,31 +34,13 @@
         })
     }
 
-    const tempImg = ref("#")
+    const userImg = ref("#")
 
-    const userImg = computed(() => {
-        const setTemp = () => {
-            switch(props.data.gender) {
-                case "female":
-                case "Female":
-                tempImg.value = female
-                    break;
-                default:
-                tempImg.value = male
-                    break;
-            }
-        }
-        if(props.data.profile_picture == undefined) {
-            setTemp()
-            return tempImg.value
-        }
-        imageExists("/"+props.data.profile_picture, () => {
-            tempImg.value = "/"+props.data.profile_picture
-        }, () => {
-            setTemp()
-        })
-        return tempImg.value
+    getProfilePicture(props.data).then(r => {
+        userImg.value = r
     })
+
+    
 </script>
 
 <style lang="scss" scoped>

@@ -42,7 +42,7 @@
     import Header from './Header.vue';
     import share from '../../assets/img/share.png';
     import { useAccountsStore } from '../../store/accounts'
-    import PendingDebits from './PendingDebits.vue';
+    import PendingDebits from './PendingCredits.vue';
     import {computed, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import balance from './balance.vue'

@@ -1,12 +1,12 @@
-import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request, storeGetter } from '@/helpers';
+import { defineStore } from 'pinia';
+import { dbTable, storeGetter } from '@/helpers';
 import _ from 'lodash';
-import { useLocalStorage } from '@vueuse/core'
 
 export const usePDStore = defineStore('usePDStore', {
     state: () => {
         return {
-            data: useLocalStorage("t2wPendingDebits", {}),
+            data: {"credit_account": {}, "debit_account": {}},
+            debits: {},
             processing: false,
             fetching: false,
             limit: 100,
@@ -16,18 +16,18 @@ export const usePDStore = defineStore('usePDStore', {
         }
     },
     actions: {
-        async loadFromServer(params = {}) {
+        async loadFromServer(params = {}, type = "credit_account") {
             for (var k in params) {
                 //return when all data are not ready
                 if (params[k] == undefined) return;
             }
-            if(!("credit_account" in params)) return;
+            if(!(type in params)) return;
             this.fetching = true;
             this.processing = true;
-            this.dbtable.get('t2w_pending_debits', {
+            await this.dbtable.get('t2w_pending_debits', {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'asc',
+                order: 'desc',
                 order_by: 'id',
                 ...params
             }).then(r => {
@@ -35,30 +35,30 @@ export const usePDStore = defineStore('usePDStore', {
                     const meta = JSON.parse(r.data.meta)
                     delete r.data.meta
                     let i = { ...r.data, ...meta }
-                    if(!(i.credit_account in this.data)) {
-                        this.data[i.credit_account] = []
+                    if(!(i[type] in this.data[type])) {
+                        this.data[type][i[type]] = []
                     }
-                    const index = this.data[i.credit_account].findIndex(j => j.id == i.id)
+                    const index = this.data[type][i[type]].findIndex(j => j.id == i.id)
                     if (index == -1) {
-                        this.data[i.credit_account] = [...this.data[i.credit_account], i]
+                        this.data[type][i[type]] = [...this.data[type][i[type]], i]
                     } else {
-                        if (!_.isEqual(this.data[i.credit_account][index], i)) {
-                            this.data[i.credit_account][index] = i
+                        if (!_.isEqual(this.data[type][i[type]][index], i)) {
+                            this.data[type][i[type]][index] = i
                         }
                     }
                 } else {
                     r.data.forEach(i => {
                         i = { ...i, ...(JSON.parse(i.meta)) }
                         delete i.meta
-                        if(!(i.credit_account in this.data)) {
-                            this.data[i.credit_account] = []
+                        if(!(i[type] in this.data[type])) {
+                            this.data[type][i[type]] = []
                         }
-                        const index = this.data[i.credit_account].findIndex(j => j.id == i.id)
+                        const index = this.data[type][i[type]].findIndex(j => j.id == i.id)
                         if (index == -1) {
-                            this.data[i.credit_account] = [...this.data[i.credit_account], i]
+                            this.data[type][i[type]] = [...this.data[type][i[type]], i]
                         } else {
-                            if (!_.isEqual(this.data[i.credit_account][index], i)) {
-                                this.data[i.credit_account][index] = i
+                            if (!_.isEqual(this.data[type][i[type]][index], i)) {
+                                this.data[type][i[type]][index] = i
                             }
                         }
                     })
@@ -92,11 +92,11 @@ export const usePDStore = defineStore('usePDStore', {
         },
         get: (state) => {
             const data = state.data
-            return (params = {}, ...exclude) => {
-                if(!("credit_account" in params)) return []
-                let datax = params.credit_account in data ? data[params.credit_account] : []
+            return (params = {}, type = "credit_account", ...exclude) => {
+                if(!(type in params)) return []
+                let datax = params[type] in data[type] ? data[type][params[type]] : []
                 return storeGetter(state, datax, (tempParams) => {
-                    state.loadFromServer(tempParams)
+                    state.loadFromServer(tempParams, type)
                 }, params, exclude)
             }
         }

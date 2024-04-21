@@ -1,12 +1,12 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { dbTable, Request, storeGetter } from '@/helpers';
 import _ from 'lodash';
-import { useLocalStorage } from '@vueuse/core'
+import { useSessionStorage } from '@vueuse/core'
 
 export const useAccountsStore = defineStore('useAccountsStore', {
     state: () => {
         return {
-            data: useLocalStorage("t2wAccounts", []),
+            data: useSessionStorage("t2wAccounts", []),
             processing: false,
             fetching: false,
             limit: 50,
@@ -26,7 +26,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
             this.fetching = true;
             this.processing = true;
             const r = new Request;
-            r.post(r.root+"/t2w/api/get/accounts", {
+            await r.post(r.root+"/t2w/api/get/accounts", {
                 limit: this.limit,
                 offset: this.offset,
                 ...params

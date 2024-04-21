@@ -5,9 +5,10 @@
         <span class="badge" 
           :class="{
             'bg-success': (data.status == 'active'), 
+            'bg-danger': (data.status == 'pending'), 
             'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
         </span>
-        <div class="form-check form-switch">
+        <div class="form-check form-switch" v-if="data.status != 'pending'">
             <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">
         </div>
       </template>
@@ -28,20 +29,28 @@
               <span>Tenure</span>
               <em>{{ data.td_tenure }} month(s)</em>
             </div>
-            <div class="justify-content-between d-flex">
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
               <span>Tenure Started</span>
               <em>{{ timeStampToDate(data.tenure_begins) }}</em>
             </div>
-            <div class="justify-content-between d-flex">
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
               <span>Maturity</span>
               <em>{{ timeStampToDate(data.maturity) }}</em>
             </div>
-            <div class="justify-content-between d-flex">
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
               <span>Interest Earned</span>
               <em>{{ toLocale(parseFloat(data.interest_earned)) }}</em>
             </div>
+            <div class="justify-content-between d-flex" v-if="data.status == 'pending'">
+              <span></span>
+              <em><a href="#" class="link-success">Modify</a></em>
+            </div>
             <hr/>
-            <button class="btn btn-primary2">Liquidate</button>
+            <button class="btn btn-primary2" v-if="data.status != 'pending'">Liquidate</button>
+            <div class="d-flex gap-2 justify-content-between buttons" v-else>
+              <button  class="btn btn-primary2 red" @click.prevent="decline">Decline</button>
+              <button  class="btn btn-primary2" @click.prevent="approve">Approve</button>
+            </div>
           </div>
         </div>
       </div>
@@ -56,7 +65,7 @@
     </div>
     <div class="row">
       <div class="col-md-12 mt-4">
-        <PendingDebits :account="account"></PendingDebits>
+        <PendingCredits :account="account"></PendingCredits>
       </div>
     </div>
 </template>
@@ -65,7 +74,7 @@
     import Header from './Header.vue';
     import termdeposit from '../../assets/img/term-deposit.png';
     import { useAccountsStore } from '../../store/accounts'
-    import PendingDebits from './PendingDebits.vue';
+    import PendingCredits from './PendingCredits.vue';
     import {computed, onMounted, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
@@ -133,6 +142,14 @@
       } else {
         status.value = !status.value
       }
+    }
+
+    const approve = () => {
+
+    }
+
+    const decline = () => {
+      
     }
 </script>
 

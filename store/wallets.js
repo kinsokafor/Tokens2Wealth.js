@@ -1,12 +1,12 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request, storeGetter } from '@/helpers';
+import { dbTable, dynamicSort, storeGetter } from '@/helpers';
 import _ from 'lodash';
-import { useLocalStorage } from '@vueuse/core'
+import { useSessionStorage } from '@vueuse/core'
 
 export const useWalletsStore = defineStore('useWalletsStore', {
     state: () => {
         return {
-            data: useLocalStorage("t2wTransactions", {}),
+            data: useSessionStorage("t2wTransactions", {}),
             processing: false,
             fetching: false,
             limit: 100,
@@ -24,10 +24,10 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             if(!("account" in params)) return;
             this.fetching = true;
             this.processing = true;
-            this.dbtable.get("t2w_transactions", {
+            await this.dbtable.get("t2w_transactions", {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'desc',
+                order: 'ASC',
                 order_by: 'time_altered',
                 ...params
             }).then(r => {
@@ -73,7 +73,7 @@ export const useWalletsStore = defineStore('useWalletsStore', {
                     }
                     this.lastTimeOut = setTimeout(() => {
                         this.fetching = false
-                    }, 60000)
+                    }, 3600000)
                 }
             })
         },

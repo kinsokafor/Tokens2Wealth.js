@@ -73,6 +73,11 @@
         <Menu :items="items"></Menu>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12 mt-4">
+        <PendingDebits :account="account"></PendingDebits>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -88,6 +93,7 @@
     import OtherBalances from './OtherBalances.vue'
     import 'animate.css'
     import Menu from '@/components/menu/Menu.vue'
+    import PendingDebits from './PendingDebits.vue';
 
     const store = useAccountsStore()
 

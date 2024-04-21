@@ -45,7 +45,7 @@
     import Header from './Header.vue';
     import thrift from '../../assets/img/thrift.png';
     import { useAccountsStore } from '../../store/accounts'
-    import PendingDebits from './PendingDebits.vue';
+    import PendingDebits from './PendingCredits.vue';
     import {computed, onMounted, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'

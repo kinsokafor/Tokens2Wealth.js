@@ -7,6 +7,7 @@
                     <span class="badge" 
                     :class="{
                         'bg-success': (data.status == 'active'), 
+                        'bg-danger': (data.status == 'pending'),
                         'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
                     </span>
                 </template>

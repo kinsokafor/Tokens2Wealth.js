@@ -112,7 +112,7 @@
     </div>
     <div class="row">
       <div class="col-md-12 mt-4">
-        <PendingDebits :account="account"></PendingDebits>
+        <PendingCredits :account="account"></PendingCredits>
       </div>
     </div>
 </template>
@@ -121,7 +121,7 @@
     import Header from './Header.vue';
     import loan from '../../assets/img/loan.png';
     import { useAccountsStore } from '../../store/accounts'
-    import PendingDebits from './PendingDebits.vue';
+    import PendingCredits from './PendingCredits.vue';
     import {computed, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
