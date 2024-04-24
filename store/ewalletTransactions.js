@@ -26,7 +26,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
             await this.dbtable.get('t2w_ewallet_transactions', {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'desc',
+                order: 'DESC',
                 order_by: 'id',
                 ...params
             }).then(r => {
@@ -36,7 +36,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                     let i = { ...r.data, ...meta }
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
-                        this.data = [i, ...this.data]
+                        this.data = [...this.data, i]
                     } else {
                         if (!_.isEqual(this.data[index], i)) {
                             this.data[index] = i
@@ -48,7 +48,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                         delete i.meta
                         const index = this.data.findIndex(j => j.id == i.id)
                         if (index == -1) {
-                            this.data = [i, ...this.data];
+                            this.data = [...this.data, i];
                         } else {
                             if (!_.isEqual(this.data[index], i)) {
                                 this.data[index] = i

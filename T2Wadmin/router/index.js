@@ -7,6 +7,7 @@ import AccountStatement from '../views/Accounts/AccountStatement.vue'
 import AccountView from '../views/Accounts/AccountView.vue'
 import Settings from '../views/Settings.vue'
 import EditThrift from '../views/Forms/EditThrift.vue'
+import ModifyTD from '../views/Forms/ModifyTD.vue'
 import CreditWallet from '../views/Forms/CreditWallet.vue'
 import DebitWallet from '../views/Forms/DebitWallet.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
@@ -61,6 +62,12 @@ const router = createRouter({
             name: 'EditThrift',
             component: EditThrift,
             meta: { title: "Edit Thrift" }
+        },
+        {
+            path: '/accounts/term-deposit/:accountNumber/modify',
+            name: 'ModifyTD',
+            component: ModifyTD,
+            meta: { title: "Modify Term Deposit" }
         },
         {
             path: '/accounts/post/credit/:accountNumber',

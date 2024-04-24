@@ -1,56 +1,58 @@
 <template>
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    Loan options
+    <Restricted access="1,2">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Loan options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="loan_options"></SetOption>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <SetOption :fields="loan_options"></SetOption>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Thrift options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="thrift_options"></SetOption>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Shares options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="shares_options"></SetOption>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Term deposit options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="td_options"></SetOption>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Payout options
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="payout_options"></SetOption>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    Thrift options
-                </div>
-                <div class="card-body">
-                    <SetOption :fields="thrift_options"></SetOption>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    Shares options
-                </div>
-                <div class="card-body">
-                    <SetOption :fields="shares_options"></SetOption>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    Term deposit options
-                </div>
-                <div class="card-body">
-                    <SetOption :fields="td_options"></SetOption>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    Payout options
-                </div>
-                <div class="card-body">
-                    <SetOption :fields="payout_options"></SetOption>
-                </div>
-            </div>
-        </div>
-    </div>
+    </Restricted>
 </template>
 
 <script setup>

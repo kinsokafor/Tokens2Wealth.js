@@ -49,7 +49,7 @@
                 <CounterCard 
                 end-point="api/dbtable/t2w_accounts?ac_number=313%&status=active" 
                 title="Shares" 
-                icon-class="fa-solid fa-business-time" 
+                icon-class="fa-solid fa-share-nodes" 
                 color="var(--color2)"
                 text-color="var(--color2)"
                 />

@@ -2,7 +2,11 @@
     <div class="row">
         <div class="col-md-4 col-sm-6" v-for="account in filtered" :key="account.id">
             <router-link :to="`/accounts/view/${account.ac_type}/${account.ac_number}`">
-                <div class="card text-bg-success mb-3">
+                <div class="card mb-3"
+                    :class="{
+                        'text-bg-success': (account.balance >= 0),
+                        'text-bg-warning': (account.balance < 0)}"
+                >
                     <div class="card-body">
                         <h5 class="card-title">{{titleCase(account.ac_type)}}</h5>
                         <p class="card-text">{{ toLocale(account.balance) }}</p>

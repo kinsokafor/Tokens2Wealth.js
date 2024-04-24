@@ -6,9 +6,9 @@
           :class="{
             'bg-success': (data.status == 'active'), 
             'bg-danger': (data.status == 'pending'), 
-            'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
+            'bg-warning text-black': (data.status == 'inactive' || data.status == 'liquidated')}">{{ data.status }}
         </span>
-        <div class="form-check form-switch" v-if="data.status != 'pending'">
+        <div class="form-check form-switch" v-if="data.status != 'pending' && data.status != 'liquidated'">
             <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">
         </div>
       </template>
@@ -43,14 +43,17 @@
             </div>
             <div class="justify-content-between d-flex" v-if="data.status == 'pending'">
               <span></span>
-              <em><a href="#" class="link-success">Modify</a></em>
+              <em><router-link :to="`/accounts/term-deposit/${data.ac_number}/modify`" class="link-success">Modify</router-link></em>
             </div>
             <hr/>
-            <button class="btn btn-primary2" v-if="data.status != 'pending'">Liquidate</button>
+            <button class="btn btn-primary2" v-if="data.status != 'pending'" @click.prevent="liquidate">Liquidate</button>
             <div class="d-flex gap-2 justify-content-between buttons" v-else>
               <button  class="btn btn-primary2 red" @click.prevent="decline">Decline</button>
               <button  class="btn btn-primary2" @click.prevent="approve">Approve</button>
             </div>
+            <loading :active="processing" 
+              :can-cancel="true" 
+              :is-full-page=false></loading>
           </div>
         </div>
       </div>
@@ -75,13 +78,15 @@
     import termdeposit from '../../assets/img/term-deposit.png';
     import { useAccountsStore } from '../../store/accounts'
     import PendingCredits from './PendingCredits.vue';
-    import {computed, onMounted, ref, watchEffect} from 'vue'
+    import {computed, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
     import {useConfigStore} from '@/store/config'
     import balance from './balance.vue'
     import OtherBalances from './OtherBalances.vue'
     import 'animate.css'
+    import Loading from 'vue3-loading-overlay';
+    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 
     const store = useAccountsStore()
 
@@ -92,6 +97,8 @@
     const bal = ref(0)
 
     const r = new Request();
+
+    const processing = ref(false)
     
     const props = defineProps({
         account: String
@@ -144,12 +151,66 @@
       }
     }
 
-    const approve = () => {
+    const updateData = (response) => {
+      const meta = JSON.parse(response.data.meta)
+      delete response.data.meta
+      let i = { ...response.data, ...meta }
+      const index = store.data.findIndex(j => j.id == i.id)
+      if (index == -1) {
+        store.data = [...store.data, i]
+      } else {
+          if (!_.isEqual(store.data[index], i)) {
+            store.data[index] = i
+          }
+      }
+    }
 
+    const approve = () => {
+      if(confirm("Are you sure you want to approve this term deposit?")) {
+        processing.value = true
+        r.post(r.root+"/t2w/api/term-deposit/approve/"+data.value.id).then(response => {
+          updateData(response);
+          processing.value = false
+        }).catch(e => {
+          processing.value = false
+        })
+      }
     }
 
     const decline = () => {
-      
+      if(confirm("Are you sure you want to decline this term deposit?")) {
+        processing.value = true
+        r.post(r.root+"/t2w/api/term-deposit/decline/"+data.value.id).then(response => {
+          updateData(response);
+          processing.value = false
+        }).catch(e => {
+          processing.value = false
+        })
+      }
+    }
+    
+    const liquidate = () => {
+      if(confirm("Are you sure you want to liquidate this term deposit?")) {
+        if(confirm("Do you want to liquidate without paying interest except the deposit is past maturity date? Click cancel for other options.")) {
+          processing.value = true
+          r.post(r.root+"/t2w/api/term-deposit/liquidate/"+data.value.id).then(response => {
+            updateData(response);
+            processing.value = false
+          }).catch(e => {
+            processing.value = false
+          })
+        } else {
+          if(confirm("Click okay to liquidate with all the interests earned over the period invested. Click cancel to exit.")) {
+            processing.value = true
+            r.post(r.root+"/t2w/api/term-deposit/liquidate/"+data.value.id, {withInterest: true}).then(response => {
+              updateData(response);
+              processing.value = false
+            }).catch(e => {
+              processing.value = false
+            })
+          }
+        }
+      }
     }
 </script>
 

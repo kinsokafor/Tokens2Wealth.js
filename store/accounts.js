@@ -60,7 +60,8 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 if (r.data.length >= this.limit) {
                     this.offset = this.limit + this.offset
                     this.loadFromServer(params)
-                } else {
+                } 
+                else {
                     this.offset = 0
                     this.loaded.push(params?.ac_number)
                     if(this.lastTimeOut != null) {

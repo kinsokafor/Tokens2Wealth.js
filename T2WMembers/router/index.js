@@ -9,6 +9,7 @@ import EWallet from '../views/Savings/EWallet.vue'
 import SpecialSavings from '../views/Savings/SpecialSavings.vue'
 import Statements from '../views/Savings/Statements.vue'
 import NewTD from '../views/Forms/NewTD.vue'
+import TopUpTD from '../views/Forms/TopUpTD.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -41,6 +42,12 @@ const router = createRouter({
             name: 'NewTD',
             component: NewTD,
             meta: { title: "Savings - New Term Deposit" }
+        },
+        {
+            path: '/savings/term-deposit/top-up',
+            name: 'TopUpTD',
+            component: TopUpTD,
+            meta: { title: "Savings - Top Up Term Deposit" }
         },
         {
             path: '/savings/thrift',

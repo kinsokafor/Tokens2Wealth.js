@@ -4,9 +4,15 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">New term deposit</h5>
+                    
                     <CreateForm :fields="fields" 
                         @submit="handleSubmit"
+                        @values="v => values = v"
                         :processing="processing">
+                    <div class="alert alert-info">
+                        Today's rate is {{ rate }}% per annum.
+                        <span v-if="emv">Estimated maturity value is {{ emv }} in {{ values.tenure }} month(s)</span>
+                    </div>
                     </CreateForm>
                 </div>
             </div>
@@ -30,6 +36,19 @@
     const alertStore = useAlertStore()
     const tenure = ref([])
     const min_td = ref(0)
+    const rate = ref(0)
+    const values = ref({})
+    const emv = computed(() => {
+        if(values.value?.tenure != undefined && values.value?.amount != undefined) {
+            const a = parseFloat(values.value.amount)
+            const t = parseInt(values.value.tenure)
+            return (((rate.value * a * t)/1200)+a).toLocaleString("en-US", {
+                style: 'currency',
+                currency: 'NGN',
+            })
+        }
+        return false;
+    })
 
     const options = new Options()
 
@@ -49,8 +68,9 @@
     ])
 
     onMounted(() => {
-        options.get("td_tenure,min_td").then(r => {
+        options.get("td_tenure,min_td,td_rate").then(r => {
             min_td.value = r.data.min_td
+            rate.value = r.data.td_rate
             tenure.value = r.data.td_tenure.split(",").map(i => {
                 return {
                     name: `${i} month(s)`,
