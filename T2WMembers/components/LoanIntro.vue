@@ -14,14 +14,14 @@
         </div>
 
         <div class="card-header">
-            <span>Term Deposit <br/>Today's Rate</span>
+            <span>Loan Interest Rate <br/>Today</span>
             <span>{{ today }}</span>
         </div>
 
         <span class="temp">{{ rate }}<small>%</small></span>
 
         <div class="temp-scale">
-            <router-link to="/savings/term-deposit/new" class="btn btn-rounded">Get Started</router-link>
+            <router-link to="/loan/new" class="btn btn-rounded">Get Started</router-link>
         </div>
         </div>
 </template>
@@ -39,7 +39,7 @@
                         "July", "August", "September", "October", "November", "December"]
         const d = new Date;
         today.value = d.getDate() + " " + months[d.getMonth()]
-        options.get("td_rate").then(r => {
+        options.get("loan_rate").then(r => {
             rate.value = r.data
         })
     })
@@ -51,10 +51,9 @@
         height: 235px;
         position: relative;
         padding: 25px;
-        background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #FFF7B1 0%, rgba(255, 255, 255, 0) 71.88%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, #FFFFFF;
+        background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #E0F78E 0%, rgba(255, 255, 255, 0) 71.88%), #FFF;
         box-shadow: 0px 155px 62px rgba(0, 0, 0, 0.01), 0px 87px 52px rgba(0, 0, 0, 0.05), 0px 39px 39px rgba(0, 0, 0, 0.09), 0px 10px 21px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
         transition: all 0.8s cubic-bezier(0.15, 0.83, 0.66, 1);
-        // cursor: pointer;
     }
 
     .card:hover {

@@ -67,6 +67,12 @@
             name: "bad_loan"
         },
         {
+            label: "Loan Interest Rate",
+            type: "number",
+            name: "loan_rate",
+            rules: yup.number()
+        },
+        {
             label: "Loanable Sum (% of Balance)",
             type: "number",
             name: "loanable_sum"

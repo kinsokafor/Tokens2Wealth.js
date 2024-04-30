@@ -23,7 +23,7 @@
 <script setup>
     import { useAccountsStore } from '../../../store/accounts'
     import { computed, ref, onMounted } from 'vue'
-    import {useRoute,useRouter} from 'vue-router'
+    import {useRouter} from 'vue-router'
     import CreateForm from '@/components/form/CreateForm.vue'
     import * as yup from 'yup'
     import {Options, Request} from '@/helpers'

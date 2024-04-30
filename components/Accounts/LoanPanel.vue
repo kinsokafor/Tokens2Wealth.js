@@ -6,6 +6,7 @@
           :class="{
             'bg-success': (data.status == 'approved'), 
             'bg-danger': (data.status == 'defaulted'), 
+            'bg-warning text-black': (data.status == 'in process'),
             'bg-primary': (data.status == 'cleared')}">{{ data.status }}
         </span>
       </template>
@@ -47,7 +48,7 @@
             <div class="justify-content-between d-flex" v-if="data.gt1_fullname != 'NA'">
               <span>First Guarantor</span>
               <span style="text-align: end;">
-                <em>{{data.gt1_fullname}}</em>
+                <em>{{data.gt1_fullname}} <GuarantorStatus :status="data?.gt1_approval ?? ''" /></em>
                 <br/>
                 <em><small>ID: {{ data.gt1_id }}</small></em>
               </span>
@@ -55,7 +56,7 @@
             <div class="justify-content-between d-flex" v-if="data.gt2_fullname != 'NA'">
               <span>Second Guarantor</span>
               <span style="text-align: end;">
-                <em>{{data.gt2_fullname}}</em>
+                <em>{{data.gt2_fullname}} <GuarantorStatus :status="data?.gt2_approval ?? ''" /></em>
                 <br/>
                 <em><small>ID: {{ data.gt2_id }}</small></em>
               </span>
@@ -63,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 animate__animated animate__pulse" v-if="hasLoan">
+      <div class="col-md-4 animate__animated animate__pulse" v-if="hasLoan && data.status != 'in process'">
         <div class="card mb-2">
           <div class="card-body">
             <h5 class="card-title">Repayment status</h5>
@@ -129,6 +130,7 @@
     import OtherBalances from './OtherBalances.vue'
     import balance from './balance.vue'
     import 'animate.css'
+    import GuarantorStatus from '../GuarantorStatus.vue';
 
     const store = useAccountsStore()
 

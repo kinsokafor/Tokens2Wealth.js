@@ -4,12 +4,14 @@ import Dashboard from '../views/Dashboard.vue'
 import Profile from '../views/Profile.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
+import Loan from '../views/Loan.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
 import EWallet from '../views/Savings/EWallet.vue'
 import SpecialSavings from '../views/Savings/SpecialSavings.vue'
 import Statements from '../views/Savings/Statements.vue'
 import NewTD from '../views/Forms/NewTD.vue'
 import TopUpTD from '../views/Forms/TopUpTD.vue'
+import NewLoan from '../views/Forms/NewLoan.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -30,6 +32,18 @@ const router = createRouter({
             name: 'Profile',
             component: Profile,
             meta: { title: "Profile" }
+        },
+        {
+            path: '/loan',
+            name: 'Loan',
+            component: Loan,
+            meta: { title: "Savings - Loan" }
+        },
+        {
+            path: '/loan/new',
+            name: 'NewLoan',
+            component: NewLoan,
+            meta: { title: "Savings - New Loan" }
         },
         {
             path: '/savings/term-deposit',
