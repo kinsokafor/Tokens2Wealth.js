@@ -34,7 +34,7 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 if ("id" in params) {
                     const meta = JSON.parse(r.data.meta)
                     delete r.data.meta
-                    let i = { ...r.data }
+                    let i = { ...r.data, ...meta }
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
                         this.data = [...this.data, i]

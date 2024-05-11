@@ -64,8 +64,24 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 animate__animated animate__pulse" v-if="hasLoan && data.status != 'in process'">
-        <div class="card mb-2">
+      <div class="col-md-4 animate__animated animate__pulse">
+        <Restricted access="1,2" class="card mb-2" v-if="enableApproval()">
+          <loading :active="processing" 
+            :can-cancel="true" 
+            :is-full-page=false></loading>
+          <div class="card-body">
+            <h5 class="card-title">Approval</h5>
+            <hr>
+            <div class="d-flex gap-2 justify-content-between buttons">
+                <button  class="btn btn-primary2 red" @click.prevent="decline">Decline</button>
+                <button  class="btn btn-primary2" @click.prevent="approve">Approve</button>
+            </div>
+          </div>
+          <template #message>
+            <span></span>
+          </template>
+        </Restricted>
+        <div class="card mb-2" v-if="hasLoan && data.status != 'in process'">
           <div class="card-body">
             <h5 class="card-title">Repayment status</h5>
             <div class="justify-content-between d-flex">
@@ -131,6 +147,8 @@
     import balance from './balance.vue'
     import 'animate.css'
     import GuarantorStatus from '../GuarantorStatus.vue';
+    import Loading from 'vue3-loading-overlay';
+    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 
     const store = useAccountsStore()
 
@@ -142,6 +160,8 @@
 
     const loanComponents = ref({})
 
+    const processing = ref(false)
+
     const props = defineProps({
         account: String
     })
@@ -149,7 +169,10 @@
     const data = computed(() => store.get({ac_number: props.account})[0] ?? {})
 
     const hasLoan = computed(() => {
-      if(parseFloat(data.value?.amount) > 0) return true
+      if(parseFloat(data.value?.amount) > 0 && 
+      (data.value?.status == "in process" || 
+      data.value?.status == "approved"|| 
+      data.value?.status == "defaulted")) return true
       return false
     })
 
@@ -175,6 +198,55 @@
           style:"currency", 
           currency:"NGN"
         })
+    }
+
+    const enableApproval = () => {
+      if(data.value?.gt1_id == "NA" 
+          && data.value?.gt2_id == "NA" 
+          && data.value?.status == "in process") {
+        return true
+      }
+      else if(data.value?.gt1_approval == "approved" 
+          && data.value?.gt2_approval == "approved" 
+          && data.value?.status == "in process") {
+        return true
+      } else return false
+    }
+
+    const approve = async () => {
+      if(confirm("Are you sure you want to approve this loan application?")) {
+        processing.value = true
+        await r.post(r.root+"/t2w/api/approve-loan", {id: data.value?.id}).then(response => {
+          const meta = JSON.parse(response.data.meta)
+          delete response.data.meta
+          let i = { ...response.data, ...meta }
+          const index = store.data.findIndex(j => j.id == i.id)
+          if (index == -1) {
+            store.data = [...store.data, i]
+          } else {
+            store.data[index] = i
+          }
+          processing.value = false
+        })
+      }
+    }
+
+    const decline = async () => {
+      if(confirm("Are you sure you want to decline this loan application?")) {
+        processing.value = true
+        await r.post(r.root+"/t2w/api/decline-loan", {id: data.value?.id}).then(response => {
+          const meta = JSON.parse(response.data.meta)
+          delete response.data.meta
+          let i = { ...response.data, ...meta }
+          const index = store.data.findIndex(j => j.id == i.id)
+          if (index == -1) {
+            store.data = [...store.data, i]
+          } else {
+            store.data[index] = i
+          }
+          processing.value = false
+        })
+      }
     }
 </script>
 

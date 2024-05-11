@@ -51,7 +51,7 @@
             case 'loans':
                 return [
                     {label: "Approved",key: "status",value: "approved"},
-                    {label: "In process",key: "status",value: "in process"},
+                    {label: "Pending",key: "status",value: "in process"},
                     {label: "Defaulted",key: "status",value: "defaulted"},
                     {label: "Cleared",key: "status",value: "cleared"},
                     {label: "Declined",key: "status",value: "declined"}

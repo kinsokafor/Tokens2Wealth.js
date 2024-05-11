@@ -16,6 +16,15 @@
                 link="/t2w/a/#/ewallet-credits"
             />
         </div>
+        <div class="col-md-4">
+            <CounterCard 
+                end-point="t2w/api/pending-loan/count" 
+                title="Pending Loan Requests" 
+                :template="CountCard"
+                link="/t2w/a/#/accounts/loans"
+                method="post"
+            />
+        </div>
     </div>
     <Menu :items="accounts" 
         :template="MenuButton" 

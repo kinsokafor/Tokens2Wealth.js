@@ -152,7 +152,10 @@
     })
 
     const hasLoan = computed(() => {
-      if(parseFloat(data.value?.amount) > 0) return true
+      if(parseFloat(data.value?.amount) > 0 && 
+      (data.value?.status == "in process" || 
+      data.value?.status == "approved"|| 
+      data.value?.status == "defaulted")) return true
       return false
     })
 

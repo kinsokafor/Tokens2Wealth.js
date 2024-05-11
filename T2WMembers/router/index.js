@@ -12,6 +12,7 @@ import Statements from '../views/Savings/Statements.vue'
 import NewTD from '../views/Forms/NewTD.vue'
 import TopUpTD from '../views/Forms/TopUpTD.vue'
 import NewLoan from '../views/Forms/NewLoan.vue'
+import ChangeGuarantor from '../views/Forms/ChangeGuarantor.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -37,13 +38,19 @@ const router = createRouter({
             path: '/loan',
             name: 'Loan',
             component: Loan,
-            meta: { title: "Savings - Loan" }
+            meta: { title: "Loan" }
         },
         {
             path: '/loan/new',
             name: 'NewLoan',
             component: NewLoan,
-            meta: { title: "Savings - New Loan" }
+            meta: { title: "Loan - New Loan" }
+        },
+        {
+            path: '/loan/change-guarantor',
+            name: 'ChangeGuarantor',
+            component: ChangeGuarantor,
+            meta: { title: "Loan - Change Guarantor" }
         },
         {
             path: '/savings/term-deposit',
