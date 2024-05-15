@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-4 col-sm-6" v-for="account in filtered" :key="account.id">
-            <router-link :to="`/accounts/view/${account.ac_type}/${account.ac_number}`">
+            <router-link :to="`/accounts/view/${account?.ac_type}/${account?.ac_number}`">
                 <div class="card mb-3"
                     :class="{
                         'text-bg-success': (account.balance >= 0),
@@ -20,7 +20,12 @@
 <script setup>
     import {Request, titleCase} from '@/helpers'
     import {ref, watchEffect, computed} from 'vue'
+    import {useAuthStore} from '@/store/auth'
 
+    const authStore = useAuthStore()
+
+    const user = computed(() => authStore.getUser)
+    
     const r = new Request
 
     const accounts = ref([])
@@ -48,6 +53,14 @@
           style:"currency", 
           currency:"NGN"
         })
+    }
+
+    const getLink = (a) => {
+        if(a?.user_id == parseInt(user.value?.id ?? 0)) {
+            return `#`
+        } else {
+            return 
+        }
     }
 </script>
 

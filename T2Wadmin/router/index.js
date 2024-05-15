@@ -12,6 +12,8 @@ import CreditWallet from '../views/Forms/CreditWallet.vue'
 import DebitWallet from '../views/Forms/DebitWallet.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
 import EWalletCreditView from '../views/Reports/EWalletCreditView.vue'
+import Members from '../views/Members/Members.vue'
+import MemberProfile from '../views/Members/Profile.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -20,6 +22,12 @@ const router = createRouter({
             name: 'NotFound',
             component: NotFound,
             meta: { title: "404 Not Found" }
+        },
+        {
+            path: '/profile/:id',
+            name: 'MemberProfile',
+            component: MemberProfile,
+            meta: { title: "MemberProfile" }
         },
         {
             path: '/settings',
@@ -92,6 +100,12 @@ const router = createRouter({
             name: 'EWalletCreditView',
             component: EWalletCreditView,
             meta: { title: "E-Wallet Credit" }
+        },
+        {
+            path: '/members',
+            name: 'Members',
+            component: Members,
+            meta: { title: "Members" }
         }
     ]
 });

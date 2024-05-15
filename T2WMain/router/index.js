@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/components/NotFound.vue'
-import Dashboard from '../views/Dashboard.vue'
+import Registration from '../views/Registration.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -11,10 +11,10 @@ const router = createRouter({
             meta: { title: "404 Not Found" }
         },
         {
-            path: '/',
+            path: '/registration/:referrer?',
             name: 'Dashboard',
-            component: Dashboard,
-            meta: { title: "Dashboard" }
+            component: Registration,
+            meta: { title: "Registration" }
         }
     ]
 });

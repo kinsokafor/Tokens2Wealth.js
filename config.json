@@ -16,7 +16,7 @@
     "Auth": {
         "roles": {
             "member": {
-                "name": "Users",
+                "name": "Members",
                 "capacity": [
                     6,
                     7,

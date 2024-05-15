@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/components/NotFound.vue'
 import Dashboard from '../views/Dashboard.vue'
-import Profile from '../views/Profile.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
 import Loan from '../views/Loan.vue'
@@ -27,12 +26,6 @@ const router = createRouter({
             name: 'Dashboard',
             component: Dashboard,
             meta: { title: "Dashboard" }
-        },
-        {
-            path: '/profile/:id',
-            name: 'Profile',
-            component: Profile,
-            meta: { title: "Profile" }
         },
         {
             path: '/loan',

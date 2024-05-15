@@ -26,6 +26,12 @@
             />
         </div>
     </div>
+    <Menu :items="members" 
+        :template="MenuButton" 
+        containerClass="col-4 col-md-2 col-sm-3"
+        :enable-search="false"
+        title="Members"
+    ></Menu>
     <Menu :items="accounts" 
         :template="MenuButton" 
         containerClass="col-4 col-md-2 col-sm-3"
@@ -51,6 +57,16 @@
     import { computed } from 'vue'
     import CounterCard from '@/components/theme/CounterCard.vue';
     import CountCard from '../../components/CountCard.vue';
+
+    const members = computed(() => [
+        {
+            label: "Members",
+            link: "/members",
+            isRouter: true,
+            iconClass: "fa-users",
+            access: "1,2,3,4"
+        }
+    ])
 
     const accounts = computed(() => [
         {
