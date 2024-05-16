@@ -85,7 +85,7 @@
             name: "gender",
             as: "radio",
             class: "pr-3",
-            options: ["Male", "Female"],
+            options: ["male", "female"],
             column: "center",
             rules: yup.string().required()
         },
@@ -110,6 +110,12 @@
                 width: 260,
                 height: 260
             }
+        },
+        {
+            label: "Occupation *",
+            name: "occupation",
+            rules: yup.string().required(),
+            position: "middle"
         },
         {
             label: "Address *",
@@ -168,14 +174,15 @@
 
     const handleSubmit = (data, actions) => {
         if(affirm.value == false) {
-            alertStore.add("You must affirm that all information provided are true")
+            alertStore.add("You must affirm that all information provided are true", "danger")
             return
         }
         if(terms.value == false) {
-            alertStore.add("You have not accepted our terms and conditions")
+            alertStore.add("You have not accepted our terms and conditions", "danger")
             return
         }
         delete data.cpassword
+        data.file_attachments = ["profile_picture"]
         processing.value = true;
         req.post(req.root+"/t2w/api/registration", data).then(r => {
             processing.value = false
@@ -193,7 +200,7 @@
         const d = new Date()
         const currentMonth = months[d.getMonth()];
         options.get("regava").then(r => {
-            if(r.data.findIndex(i => i == currentMonth) != -1) {
+            if(r.data.map(j => j.month).findIndex(i => i == currentMonth) != -1) {
                 showForm.value = true
             }
         })

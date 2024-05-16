@@ -10,10 +10,13 @@ import EditThrift from '../views/Forms/EditThrift.vue'
 import ModifyTD from '../views/Forms/ModifyTD.vue'
 import CreditWallet from '../views/Forms/CreditWallet.vue'
 import DebitWallet from '../views/Forms/DebitWallet.vue'
+import UploadPop from '../views/Forms/UploadPop.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
 import EWalletCreditView from '../views/Reports/EWalletCreditView.vue'
 import Members from '../views/Members/Members.vue'
+import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
+import PendingProfile from '../views/Members/PendingProfile.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -24,10 +27,16 @@ const router = createRouter({
             meta: { title: "404 Not Found" }
         },
         {
-            path: '/profile/:id',
+            path: '/member/profile/:id',
             name: 'MemberProfile',
             component: MemberProfile,
-            meta: { title: "MemberProfile" }
+            meta: { title: "Member Profile" }
+        },
+        {
+            path: '/pending/profile/:id',
+            name: 'PendingProfile',
+            component: PendingProfile,
+            meta: { title: "Member Profile" }
         },
         {
             path: '/settings',
@@ -102,10 +111,22 @@ const router = createRouter({
             meta: { title: "E-Wallet Credit" }
         },
         {
+            path: '/upload-pop/:id',
+            name: 'UploadPop',
+            component: UploadPop,
+            meta: { title: "Upload Payment Receipt" }
+        },
+        {
             path: '/members',
             name: 'Members',
             component: Members,
             meta: { title: "Members" }
+        },
+        {
+            path: '/members/pending',
+            name: 'PendingMembers',
+            component: PendingMembers,
+            meta: { title: "Pending Members" }
         }
     ]
 });

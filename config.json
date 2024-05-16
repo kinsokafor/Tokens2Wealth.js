@@ -6,7 +6,8 @@
             "entry": [
                 "T2WMain/index",
                 "T2WAdmin/index",
-                "T2WMembers/index"
+                "T2WMembers/index",
+                "T2WPending/index"
             ],
             "active": true,
             "installed": false,
@@ -16,14 +17,14 @@
     "Auth": {
         "roles": {
             "member": {
-                "name": "Members",
+                "name": "Member",
                 "capacity": [
                     6,
                     7,
                     8,
                     13
                 ],
-                "profile": "/t2w/m/#/profile/",
+                "profile": "/t2w/a/#/member/profile/",
                 "index": "/t2w/m/#/"
             },"software_engineer": {
                 "name": "Software Engineer",
@@ -69,6 +70,14 @@
                 ],
                 "profile": "/t2w/a/#/profile/",
                 "index": "/t2w/a/#/"
+            },
+            "pending": {
+                "name": "Pending Member",
+                "capacity": [
+                    10
+                ],
+                "profile": "/t2w/a/#/pending/profile/",
+                "index": "/t2w/pending/#/"
             }
         }
     },

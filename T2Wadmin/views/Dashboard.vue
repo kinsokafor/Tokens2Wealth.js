@@ -25,6 +25,14 @@
                 method="post"
             />
         </div>
+        <div class="col-md-4">
+            <CounterCard 
+                end-point="api/user?role=pending&payment_status=paid" 
+                title="Pending Members" 
+                :template="CountCard"
+                link="/t2w/a/#/members/pending"
+            />
+        </div>
     </div>
     <Menu :items="members" 
         :template="MenuButton" 

@@ -51,6 +51,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Bank Details
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="bank_options"></SetOption>
+                    </div>
+                </div>
+            </div>
         </div>
     </Restricted>
 </template>
@@ -131,7 +141,19 @@
         },
         {
             label: "Registration & Thrift Available",
-            name: "regava"
+            name: "regava",
+            as: "collection",
+            rows: 3,
+            fields: [
+                {
+                    label: "",
+                    name: "month",
+                    as: "select",
+                    options: ["January", "February", "March", 
+                    "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    col: 12
+                }
+            ]
         }
     ])
 
@@ -194,12 +216,28 @@
             fields: [
                 {
                     label: "",
-                    name: "",
+                    name: "day",
                     as: "select",
-                    options: ["Monday", "Tuesday", "Wednesday", "Friday", "Saturday", "Sunday"],
+                    options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                     col: 12
                 }
             ]
+        }
+    ])
+
+    const bank_options = computed(() => [
+        {
+            label: "Account Number",
+            name: "co_ac_number",
+            rules: yup.number()
+        },
+        {
+            label: "Account Name",
+            name: "co_ac_name"
+        },
+        {
+            label: "Bank Name",
+            name: "co_bank"
         }
     ])
 </script>
