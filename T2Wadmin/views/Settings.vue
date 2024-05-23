@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header">
                         Payout options
@@ -51,13 +51,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header">
                         Bank Details
                     </div>
                     <div class="card-body">
                         <SetOption :fields="bank_options"></SetOption>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Other Settings
+                    </div>
+                    <div class="card-body">
+                        <SetOption :fields="other_options"></SetOption>
                     </div>
                 </div>
             </div>
@@ -233,11 +243,30 @@
         },
         {
             label: "Account Name",
-            name: "co_ac_name"
+            name: "co_ac_name",
+            as: "textarea"
         },
         {
             label: "Bank Name",
             name: "co_bank"
+        }
+    ])
+
+    const other_options = computed(() => [
+        {
+            label: "Registration fee",
+            name: "t2w_registration_fee",
+            rules: yup.number().required()
+        },
+        {
+            label: "Referral bonus",
+            name: "ref_bonus",
+            rules: yup.number().required()
+        },
+        {
+            label: "Percentage Lien",
+            name: "percentage_lien",
+            rules: yup.number().required()
         }
     ])
 </script>

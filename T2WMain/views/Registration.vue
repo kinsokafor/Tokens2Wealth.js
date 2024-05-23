@@ -148,9 +148,8 @@
             position: "bottom"
         },
         {
-            label: "Referrer *",
+            label: "Referrer",
             name: "referral",
-            rules: yup.string().required(),
             position: "bottom",
             column: "right",
             readonly: (initialValues.value?.referral != undefined)

@@ -58,7 +58,8 @@
   .card-size {
     height: 70px;
     width: 100%;
-    max-width: 300px;
+    // max-width: 300px;
+    margin-bottom: 20px;
     border-radius: 6px;
   }
   .display-card {

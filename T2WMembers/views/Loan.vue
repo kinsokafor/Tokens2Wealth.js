@@ -99,10 +99,10 @@
                             <em>{{ toLocale(loanComponents.sumRepaid) }}</em>
                         </div>
                         <hr/>
-                        <div class="d-flex justify-content-between">
+                        <!-- <div class="d-flex justify-content-between">
                             <button class="btn btn-primary">Settle Balance</button>
                             <button class="btn btn-primary2">Recover</button>
-                        </div>
+                        </div> -->
                         
                     </div>
                     </div>
