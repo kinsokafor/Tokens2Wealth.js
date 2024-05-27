@@ -135,6 +135,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
     import Header from './Header.vue';
     import loan from '../../assets/img/loan.png';
     import { useAccountsStore } from '../../store/accounts'
@@ -191,14 +192,6 @@
         })
       }
     })
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const enableApproval = () => {
       if(data.value?.gt1_id == "NA" 

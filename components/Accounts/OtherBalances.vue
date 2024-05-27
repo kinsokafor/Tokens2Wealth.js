@@ -9,7 +9,8 @@
                 >
                     <div class="card-body">
                         <h5 class="card-title">{{titleCase(account.ac_type)}}</h5>
-                        <p class="card-text">{{ toLocale(account.balance) }}</p>
+                        <p class="card-text" v-if="account.ac_type == 'share'">{{ toLocale(account.balance, "", " Units") }}</p>
+                        <p class="card-text" v-else>{{ toLocale(account.balance) }}</p>
                     </div>
                 </div>
             </router-link>
@@ -18,6 +19,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
     import {Request, titleCase} from '@/helpers'
     import {ref, watchEffect, computed} from 'vue'
     import {useAuthStore} from '@/store/auth'
@@ -46,14 +48,6 @@
             getBalances()
         }
     })
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const getLink = (a) => {
         if(a?.user_id == parseInt(user.value?.id ?? 0)) {

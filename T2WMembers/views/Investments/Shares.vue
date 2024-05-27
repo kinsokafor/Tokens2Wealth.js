@@ -1,7 +1,7 @@
 <template>
     <Restricted access="1,2,3,4,5,6,7,8,9,10">
         <div class="hasAccount"  v-if="!_.isEmpty(data)">
-            <Header :data="data" :bg="bgMap" :img="thriftsavings" caption="Regular Thrift Savings">
+            <Header :data="data" :bg="bgMap" :img="shares" caption="Shares">
                 <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
                 <template #status>
                     <span class="badge" 
@@ -20,7 +20,7 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <h5 class="card-title">Particulars</h5>
-                            <div class="justify-content-between d-flex">
+                            <!-- <div class="justify-content-between d-flex">
                                 <span>Monthly Contribution</span>
                                 <em>{{ toLocale(parseFloat(data.amount)) }}</em>
                             </div>
@@ -28,11 +28,8 @@
                                 <span>Next Settlement Date</span>
                                 <em>{{ nsd }}</em>
                             </div>
-                            <hr>
-                            <router-link 
-                                v-if="canEdit"
-                                :to="`/savings/thrift/edit`" 
-                                class="btn btn-primary">Edit Amount</router-link>
+                            <hr> -->
+                            
                         </div>
                     </div>
                 </div>
@@ -44,17 +41,16 @@
 </template>
 
 <script setup>
-    import AccountIntro from '../../components/ThriftIntro.vue';
+    import AccountIntro from '../../components/SharesIntro.vue';
     import { ref, computed, onMounted } from 'vue';
     import { useAccountsStore } from '../../../store/accounts'
     import { useAuthStore } from '@/store/auth'
     import Header from '../../../components/Accounts/Header.vue';
-    import thriftsavings from '../../../assets/img/thrift.png';
+    import shares from '../../../assets/img/share.png';
     import {useConfigStore} from '@/store/config'
     import _ from 'lodash';
     import balance from '../../components/balance.vue'
     import { Request, Options } from '@/helpers'
-    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const store = useAccountsStore()
     const auth = useAuthStore()
@@ -68,11 +64,11 @@
     const u = computed(() => auth.getUser)
 
     const data = computed(() => {
-        const myAcc = store.get({ac_type: 'regular_thrift', user_id: u.value.id})
+        const myAcc = store.get({ac_type: 'share', user_id: u.value.id})
         if(myAcc.length > 0) return myAcc[0]
         return {}
     })
-
+    
     onMounted(() => {
         r.post(r.root+"/t2w/api/thrift/next-settlement-date").then(res => {
             nsd.value = res.data

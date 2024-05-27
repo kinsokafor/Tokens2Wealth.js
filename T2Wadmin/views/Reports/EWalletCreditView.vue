@@ -80,6 +80,7 @@
     import {useAlertStore} from '@/store/alert'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const props = defineProps({
             id: Number
@@ -98,14 +99,6 @@
     const processing = ref(false)
 
     const req = new Request();
-
-    const toLocale = (str) => {
-        if(str == undefined) return ""
-        return str.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'NGN',
-        })
-    }
 
     const confirmPayment = () => {
         if(confirm("Are you sure you want to confirm this payment?")) {

@@ -99,10 +99,6 @@
                             <em>{{ toLocale(loanComponents.sumRepaid) }}</em>
                         </div>
                         <hr/>
-                        <!-- <div class="d-flex justify-content-between">
-                            <button class="btn btn-primary">Settle Balance</button>
-                            <button class="btn btn-primary2">Recover</button>
-                        </div> -->
                         
                     </div>
                     </div>
@@ -135,6 +131,7 @@
     import balance from '../components/balance.vue'
     import {Request} from '@/helpers'
     import GuarantorStatus from '../../components/GuarantorStatus.vue';
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const store = useAccountsStore()
     const auth = useAuthStore()
@@ -166,20 +163,6 @@
         })
       }
     })
-
-    const timeStampToDate = (timestamp) => {
-        const d = new Date(parseInt(timestamp) * 1000);
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
-    }
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const items = computed(() => [
         {

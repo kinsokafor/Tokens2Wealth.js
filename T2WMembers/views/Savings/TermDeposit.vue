@@ -69,6 +69,7 @@
     import _ from 'lodash';
     import MenuButton from '../../../components/Menu/MenuButton.vue'
     import balance from '../../components/balance.vue'
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const store = useAccountsStore()
     const auth = useAuthStore()
@@ -87,14 +88,6 @@
         const d = new Date(parseInt(timestamp) * 1000);
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`
-    }
-
-    const toLocale = (str) => {
-        if(str == "") str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
     }
 
     const items = computed(() => [

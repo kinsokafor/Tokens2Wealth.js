@@ -16,6 +16,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
     import { usePDStore } from '../../store/pendingDebits'
     import ListItem from '@/components/theme/ListItem.vue'
     import {dbTable} from '@/helpers'
@@ -28,14 +29,6 @@
     const props = defineProps({account: String})
 
     const req = new dbTable();
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const deletePD = (item) => {
       if(confirm(`Are you sure you want to delete this pending debit of ${toLocale(item.amount)}?`)) {

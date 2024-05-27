@@ -11,7 +11,7 @@
     </Header>
     <div class="row">
       <div class="col-md-4 animate__animated animate__pulse">
-        <balance :account="account" title="Shares Balance"></balance>
+        <balance :account="account" title="Shares Balance" suffix=" units"></balance>
       </div>
       <div class="col-md-4 animate__animated animate__pulse">
         <!-- <div class="card mb-2">

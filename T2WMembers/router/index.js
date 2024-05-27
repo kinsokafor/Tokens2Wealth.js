@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
 import Loan from '../views/Loan.vue'
+import Shares from '../views/Investments/Shares.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
 import EWallet from '../views/Savings/EWallet.vue'
 import SpecialSavings from '../views/Savings/SpecialSavings.vue'
@@ -11,6 +12,10 @@ import Statements from '../views/Savings/Statements.vue'
 import NewTD from '../views/Forms/NewTD.vue'
 import TopUpTD from '../views/Forms/TopUpTD.vue'
 import NewLoan from '../views/Forms/NewLoan.vue'
+import BuyShares from '../views/Forms/BuyShares.vue'
+import SellShares from '../views/Forms/SellShares.vue'
+import NewThrift from '../views/Forms/NewThrift.vue'
+import EditThrift from '../views/Forms/EditThrift.vue'
 import ChangeGuarantor from '../views/Forms/ChangeGuarantor.vue'
 
 const router = createRouter({
@@ -46,6 +51,24 @@ const router = createRouter({
             meta: { title: "Loan - Change Guarantor" }
         },
         {
+            path: '/investments/shares',
+            name: 'Shares',
+            component: Shares,
+            meta: { title: "Shares" }
+        },
+        {
+            path: '/investments/shares/buy',
+            name: 'BuyShares',
+            component: BuyShares,
+            meta: { title: "Buy Shares" }
+        },
+        {
+            path: '/investments/shares/sell',
+            name: 'SellShares',
+            component: SellShares,
+            meta: { title: "Sell Shares" }
+        },
+        {
             path: '/savings/term-deposit',
             name: 'Term Deposit',
             component: TermDeposit,
@@ -68,6 +91,18 @@ const router = createRouter({
             name: 'ThriftSavings',
             component: ThriftSavings,
             meta: { title: "Savings - Thrift Savings" }
+        },
+        {
+            path: '/savings/thrift/edit',
+            name: 'EditThrift',
+            component: EditThrift,
+            meta: { title: "Savings - Edit Thrift Savings" }
+        },
+        {
+            path: '/savings/thrift/new',
+            name: 'NewThrift',
+            component: NewThrift,
+            meta: { title: "Savings - New Thrift Savings" }
         },
         {
             path: '/savings/e-wallet',

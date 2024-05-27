@@ -39,16 +39,9 @@
     import {container} from "jenesius-vue-modal";
     import {openModal} from "jenesius-vue-modal";
     import PaymentInvoicePopUp from '@/Modules/Tokens2Wealth/components/PaymentInvoicePopUp.vue';
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const store = useEWalletTxnsStore()
-
-    const toLocale = (str) => {
-        if(str == undefined) return ""
-        return str.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'NGN',
-        })
-    }
 
     const quickFilters = ref([
         {

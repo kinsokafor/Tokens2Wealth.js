@@ -111,6 +111,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
     import {ref, watchEffect, inject} from 'vue'
     import {getFullname, getProfilePicture, Request} from '@/helpers'
     import GuarantorStatus from '../../components/GuarantorStatus.vue'
@@ -138,14 +139,6 @@
             profilePicture.value = r
         })
     })
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const accept = () => {
         if(confirm("Are you sure you want to accept to surety this loan?")) {

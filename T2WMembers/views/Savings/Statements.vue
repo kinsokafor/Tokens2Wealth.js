@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { computed } from 'vue';
     import { useAccountsStore } from '../../../store/accounts'
     import { useAuthStore } from '@/store/auth'
     import {useRoute} from 'vue-router'

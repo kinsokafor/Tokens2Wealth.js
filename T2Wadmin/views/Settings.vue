@@ -182,6 +182,16 @@
             label: "Maximum Shares (in units)",
             type: "number",
             name: "max_shares"
+        },
+        {
+            label: "Total Shares",
+            type: "number",
+            name: "total_shares"
+        },
+        {
+            label: "Buyable Shares",
+            type: "number",
+            name: "available_shares"
         }
     ])
 

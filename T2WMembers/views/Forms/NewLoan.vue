@@ -44,6 +44,7 @@
     const tenure = ref([])
     const balance = ref(0)
     const require_guarantor = ref(true);
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     const options = new Options()
 
@@ -126,14 +127,6 @@
         }).catch(e => {
             processing.value = false
             alertStore.add(e.response.data, "danger")
-        })
-    }
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
         })
     }
 </script>

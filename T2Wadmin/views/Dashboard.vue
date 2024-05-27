@@ -1,6 +1,6 @@
 <template>
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <CounterCard 
                 end-point="api/dbtable/t2w_accounts?ac_type=term_deposit&status=pending" 
                 title="Pending Term deposits" 
@@ -8,7 +8,7 @@
                 link="/t2w/a/#/accounts/term-deposits"
             />
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <CounterCard 
                 end-point="api/dbtable/t2w_ewallet_transactions?status=unconfirmed" 
                 title="Unconfirmed deposits" 
@@ -16,7 +16,7 @@
                 link="/t2w/a/#/ewallet-credits"
             />
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <CounterCard 
                 end-point="t2w/api/pending-loan/count" 
                 title="Pending Loan Requests" 
@@ -25,10 +25,26 @@
                 method="post"
             />
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <CounterCard 
                 end-point="api/user?role=pending&payment_status=paid" 
                 title="Pending Members" 
+                :template="CountCard"
+                link="/t2w/a/#/members/pending"
+            />
+        </div>
+        <div class="col-6 col-md-4">
+            <CounterCard 
+                end-point="api/store/type/buy_share?approval=0" 
+                title="Pending Shares: Buy" 
+                :template="CountCard"
+                link="/t2w/a/#/members/pending"
+            />
+        </div>
+        <div class="col-6 col-md-4">
+            <CounterCard 
+                end-point="api/store/type/sell_share?approval=0" 
+                title="Pending Shares: Sell" 
                 :template="CountCard"
                 link="/t2w/a/#/members/pending"
             />

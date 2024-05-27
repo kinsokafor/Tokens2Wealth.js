@@ -7,7 +7,7 @@
             :is-full-page=false></loading>
             <h5 class="card-title">{{title}}</h5>
             <div class="card-text">
-              {{toLocale(balance)}} 
+              {{toLocale(balance, "", suffix)}} 
               <small class="text-danger" v-if="isTrial">
                 <em>as at {{ date }}</em>
                 <a href="javaScript:void(0)" @click.prevent="resetTrial">Reset</a>
@@ -15,11 +15,11 @@
               <hr/>
               <div class="justify-content-between d-flex">
                 <strong>Credits</strong>
-                <span class="text-success">{{toLocale(credits)}}</span>
+                <span class="text-success">{{toLocale(credits, "", suffix)}}</span>
               </div>
               <div class="justify-content-between d-flex">
                 <strong>Debits</strong>
-                <span class="text-danger">{{toLocale(debits)}}</span>
+                <span class="text-danger">{{toLocale(debits, "", suffix)}}</span>
               </div>
               <hr/>
             </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '@module/Tokens2Wealth/helpers'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import {onMounted, ref} from 'vue'
@@ -47,6 +48,10 @@
         title: {
           type: String,
           default: "Balance"
+        },
+        suffix: {
+          type: String,
+          default: ""
         }
     })
 
@@ -97,14 +102,6 @@
       }).catch(e => {
         processing2.value = false
       })
-    }
-
-    const toLocale = (str) => {
-        if(str == "" || str == undefined) str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
     }
 </script>
 
