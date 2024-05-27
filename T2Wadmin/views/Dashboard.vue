@@ -38,7 +38,7 @@
                 end-point="api/store/type/buy_share?approval=0" 
                 title="Pending Shares: Buy" 
                 :template="CountCard"
-                link="/t2w/a/#/members/pending"
+                link="/t2w/a/#/shares/pending/buy_share"
             />
         </div>
         <div class="col-6 col-md-4">
@@ -46,16 +46,16 @@
                 end-point="api/store/type/sell_share?approval=0" 
                 title="Pending Shares: Sell" 
                 :template="CountCard"
-                link="/t2w/a/#/members/pending"
+                link="/t2w/a/#/shares/pending/sell_share"
             />
         </div>
     </div>
-    <Menu :items="members" 
+    <!-- <Menu :items="members" 
         :template="MenuButton" 
         containerClass="col-4 col-md-2 col-sm-3"
         :enable-search="false"
         title="Members"
-    ></Menu>
+    ></Menu> -->
     <Menu :items="accounts" 
         :template="MenuButton" 
         containerClass="col-4 col-md-2 col-sm-3"
@@ -82,17 +82,14 @@
     import CounterCard from '@/components/theme/CounterCard.vue';
     import CountCard from '../../components/CountCard.vue';
 
-    const members = computed(() => [
+    const accounts = computed(() => [
         {
             label: "Members",
             link: "/members",
             isRouter: true,
             iconClass: "fa-users",
             access: "1,2,3,4"
-        }
-    ])
-
-    const accounts = computed(() => [
+        },
         {
             label: "All Accounts",
             link: "/accounts",
@@ -151,7 +148,21 @@
             isRouter: true,
             iconClass: "fa-wallet",
             access: "1,2,3,4"
-        } 
+        },
+        {
+            label: "Pending Shares: Buy",
+            link: "/shares/pending/buy_share",
+            isRouter: true,
+            iconClass: "fa-share",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Pending Shares: Sell",
+            link: "/shares/pending/sell_share",
+            isRouter: true,
+            iconClass: "fa-share",
+            access: "1,2,3,4"
+        }
     ])
 
     const settings = computed(() => [

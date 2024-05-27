@@ -17,6 +17,7 @@ import Members from '../views/Members/Members.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
 import PendingProfile from '../views/Members/PendingProfile.vue'
+import PendingShares from '../views/PendingShares.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -127,6 +128,12 @@ const router = createRouter({
             name: 'PendingMembers',
             component: PendingMembers,
             meta: { title: "Pending Members" }
+        },
+        {
+            path: '/shares/pending/:ledger',
+            name: 'PendingShares',
+            component: PendingShares,
+            meta: { title: "Pending Shares" }
         }
     ]
 });

@@ -15,7 +15,7 @@
                         Today's rate is {{ rate }} naira per unit. Available units are {{ available }}
                     </div>
                     </CreateForm>
-                    <div class="alert alert-danger" v-else>Sorry, there are no available shares for you to buy.</div>
+                    <div class="alert alert-danger" v-else>Sorry, there are no available shares for you to buy at the moment.</div>
                 </div>
             </div>
         </div>
