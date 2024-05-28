@@ -4,12 +4,12 @@
             <Header :data="data" :bg="bgMap" :img="shares" caption="Shares">
                 <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
                 <template #status>
-                    <span class="badge" 
+                    <!-- <span class="badge" 
                     :class="{
                         'bg-success': (data.status == 'active'), 
                         'bg-danger': (data.status == 'pending'),
                         'bg-warning text-black': (data.status == 'inactive' || data.status == 'liquidated')}">{{ data.status }}
-                    </span>
+                    </span> -->
                 </template>
             </Header>
             <div class="row">

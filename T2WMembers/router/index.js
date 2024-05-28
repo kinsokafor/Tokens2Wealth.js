@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
 import Loan from '../views/Loan.vue'
+import Profile from '../views/Profile.vue'
 import Shares from '../views/Investments/Shares.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
 import EWallet from '../views/Savings/EWallet.vue'
@@ -17,6 +18,9 @@ import SellShares from '../views/Forms/SellShares.vue'
 import NewThrift from '../views/Forms/NewThrift.vue'
 import EditThrift from '../views/Forms/EditThrift.vue'
 import ChangeGuarantor from '../views/Forms/ChangeGuarantor.vue'
+import UpdateNOK from '../views/Forms/UpdateNOK.vue'
+import UpdateAccountDetails from '../views/Forms/UpdateAccountDetails.vue'
+import UpdateBusiness from '../views/Forms/UpdateBusiness.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -127,6 +131,30 @@ const router = createRouter({
             name: 'Statements',
             component: Statements,
             meta: { title: "Savings - Statements" }
+        },
+        {
+            path: '/profile',
+            name: 'Profile',
+            component: Profile,
+            meta: { title: "Profile" }
+        },
+        {
+            path: '/profile/update-nok',
+            name: 'UpdateNOK',
+            component: UpdateNOK,
+            meta: { title: "Profile - Update Next of Kin" }
+        },
+        {
+            path: '/profile/update-account-details',
+            name: 'UpdateAccountDetails',
+            component: UpdateAccountDetails,
+            meta: { title: "Profile - Update Account Details" }
+        },
+        {
+            path: '/profile/update-business',
+            name: 'UpdateBusiness',
+            component: UpdateBusiness,
+            meta: { title: "Profile - Update Business" }
         }
     ]
 });

@@ -277,6 +277,11 @@
             label: "Percentage Lien",
             name: "percentage_lien",
             rules: yup.number().required()
+        },
+        {
+            label: "Business Categories",
+            name: "business_cat",
+            as: "textarea"
         }
     ])
 </script>
