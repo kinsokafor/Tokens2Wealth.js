@@ -4,6 +4,7 @@
         <div class="row">
             <div class="col-md-4">
                 <profile-image :data="data"></profile-image>
+                <profile-completeness></profile-completeness>
             </div>
             <div class="col-md-8">
                 <balances :data="data"></balances>
@@ -27,6 +28,7 @@
     import {computed, watchEffect} from 'vue'
     import LatestNotifications from '../../components/Dashboard/LatestNotifications.vue';
     import LatestTransactions from '../components/Dashboard/LatestTransactions.vue';
+    import ProfileCompleteness from '../components/Dashboard/ProfileCompleteness.vue';
 
     const auth = useAuthStore()
     const data = computed(() => auth.getUser)

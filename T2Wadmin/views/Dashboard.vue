@@ -11,7 +11,7 @@
         <div class="col-6 col-md-4">
             <CounterCard 
                 end-point="api/dbtable/t2w_ewallet_transactions?status=unconfirmed" 
-                title="Unconfirmed deposits" 
+                title="Unconfirmed Deposits/Payouts" 
                 :template="CountCard"
                 link="/t2w/a/#/ewallet-credits"
             />
@@ -143,7 +143,7 @@
 
     const transactions = computed(() => [
         {
-            label: "E-Wallet Credits",
+            label: "E-Wallet Credits/Payouts",
             link: "/ewallet-credits",
             isRouter: true,
             iconClass: "fa-wallet",

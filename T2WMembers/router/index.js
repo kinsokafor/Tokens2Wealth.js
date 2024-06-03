@@ -21,6 +21,8 @@ import ChangeGuarantor from '../views/Forms/ChangeGuarantor.vue'
 import UpdateNOK from '../views/Forms/UpdateNOK.vue'
 import UpdateAccountDetails from '../views/Forms/UpdateAccountDetails.vue'
 import UpdateBusiness from '../views/Forms/UpdateBusiness.vue'
+import UpdateBirthday from '../views/Forms/UpdateBirthday.vue'
+import Payout from '../views/Forms/Payout.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -155,6 +157,18 @@ const router = createRouter({
             name: 'UpdateBusiness',
             component: UpdateBusiness,
             meta: { title: "Profile - Update Business" }
+        },
+        {
+            path: '/profile/update-birthday',
+            name: 'UpdateBirthday',
+            component: UpdateBirthday,
+            meta: { title: "Profile - Update Birthday" }
+        },
+        {
+            path: '/payout',
+            name: 'Payout',
+            component: Payout,
+            meta: { title: "Payout" }
         }
     ]
 });

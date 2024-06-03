@@ -65,10 +65,10 @@
         </div>
       </div>
       <div class="col-md-4 animate__animated animate__pulse">
-        <Restricted access="1,2" class="card mb-2" v-if="enableApproval()">
-          <loading :active="processing" 
+        <loading :active="processing" 
             :can-cancel="true" 
             :is-full-page=false></loading>
+        <Restricted access="1,2" class="card mb-2" v-if="enableApproval()">
           <div class="card-body">
             <h5 class="card-title">Approval</h5>
             <hr>
@@ -114,8 +114,8 @@
             </div>
             <hr/>
             <div class="d-flex justify-content-between">
-              <button class="btn btn-primary">Settle Balance</button>
-              <button class="btn btn-primary2">Recover</button>
+              <button class="btn btn-primary" @click.prevent="settle">Settle Balance</button>
+              <button class="btn btn-primary2" @click.prevent="recover">Recover</button>
             </div>
             
           </div>
@@ -150,8 +150,11 @@
     import GuarantorStatus from '../GuarantorStatus.vue';
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+    import {useAlertStore} from '@/store/alert'
 
     const store = useAccountsStore()
+
+    const alertStore = useAlertStore()
 
     const status = ref(false)
 
@@ -238,6 +241,48 @@
             store.data[index] = i
           }
           processing.value = false
+        })
+      }
+    }
+
+    const settle = async () => {
+      if(data.value?.ac_number == undefined) return;
+      if(confirm("Are you sure you want to debit the ewallet account to clear this loan?")) {
+        processing.value = true
+        await r.post(r.root+"/t2w/api/settle-loan", {ac_number: data.value?.ac_number, user_id: data.value?.user_id}).then(response => {
+          const meta = JSON.parse(response.data.meta)
+          delete response.data.meta
+          let i = { ...response.data, ...meta }
+          const index = store.data.findIndex(j => j.id == i.id)
+          if (index == -1) {
+            store.data = [...store.data, i]
+          } else {
+            store.data[index] = i
+          }
+          processing.value = false
+        }).catch(e => {
+          alertStore.add(e.response.data, "danger")
+        })
+      }
+    }
+
+    const recover = async () => {
+      if(data.value?.ac_number == undefined) return;
+      if(confirm("Are you sure you want to recover this loan?")) {
+        processing.value = true
+        await r.post(r.root+"/t2w/api/recover-loan", {ac_number: data.value?.ac_number, user_id: data.value?.user_id}).then(response => {
+          const meta = JSON.parse(response.data.meta)
+          delete response.data.meta
+          let i = { ...response.data, ...meta }
+          const index = store.data.findIndex(j => j.id == i.id)
+          if (index == -1) {
+            store.data = [...store.data, i]
+          } else {
+            store.data[index] = i
+          }
+          processing.value = false
+        }).catch(e => {
+          alertStore.add(e.response.data, "danger")
         })
       }
     }

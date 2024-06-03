@@ -7,11 +7,8 @@
 </template>
 
 <script setup>
-    import {useRoute} from 'vue-router'
     import profile from '@/Modules/Main/Main/views/myprofile.vue'
-    import {computed, ref} from 'vue'
-
-    const route = useRoute()
+    import {computed} from 'vue'
 
     const items = computed(() => [
         {
@@ -30,6 +27,12 @@
             link: `profile/update-business`,
             label: 'Update Business Details',
             iconClass: 'fa-solid fa-user-tie',
+            isRouter: true
+        },
+        {
+            link: `profile/update-birthday`,
+            label: 'Update your Birthday',
+            iconClass: 'fa-solid fa-calendar-days',
             isRouter: true
         }
     ])

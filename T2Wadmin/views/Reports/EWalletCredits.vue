@@ -5,14 +5,20 @@
             v-slot="{outputData}" 
             :quick-filters="quickFilters" 
             :search-columns="['amount', 'narration', 'classification', 'time_altered', 'status']">
-            <list-item v-for="data in outputData" :key="data.id">
+            <list-item 
+                v-for="data in outputData" 
+                :key="data.id" class="alert"
+                :class="{
+                    'alert-info': (data.ledger == 'credit'),
+                    'alert-danger': (data.ledger == 'debit')
+                }">
                 <!-- {{ data }} -->
                 <h3>{{ toLocale(data.amount) }} <sub style="font-weight: 300"><small>{{ data.classification }}</small></sub></h3>
                 <p>{{ data.narration }}</p>
                 <hr class="mt-4"/>
                 <div class="links">
-                    <a href="javaScript:void(0)" @click="openModal(PaymentInvoicePopUp, {img: data.pop, title: 'Payment Invoice'})"><small>Attachment</small></a>
-                    <router-link :to="`/ewallet-credits/${data.id}`" class="link-primary ml-4"><small>View</small></router-link>
+                    <a href="javaScript:void(0)" v-if="data.ledger == 'credit'" @click="openModal(PaymentInvoicePopUp, {img: data.pop, title: 'Payment Invoice'})"><small>Attachment</small></a>
+                    <router-link :to="`/ewallet-${data.ledger}s/${data.id}`" class="link-primary ml-4"><small>View</small></router-link>
                 </div>
                 
                 <template #right>
@@ -58,6 +64,16 @@
             label: "Declined",
             key: "status",
             value: "declined"
+        },
+        {
+            label: "Deposit",
+            key: "ledger",
+            value: "credit"
+        },
+        {
+            label: "Payout",
+            key: "ledger",
+            value: "debit"
         }
     ])
 

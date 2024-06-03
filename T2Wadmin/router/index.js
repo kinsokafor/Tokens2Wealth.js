@@ -13,6 +13,7 @@ import DebitWallet from '../views/Forms/DebitWallet.vue'
 import UploadPop from '../views/Forms/UploadPop.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
 import EWalletCreditView from '../views/Reports/EWalletCreditView.vue'
+import EWalletDebitView from '../views/Reports/EWalletDebitView.vue'
 import Members from '../views/Members/Members.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
@@ -110,6 +111,12 @@ const router = createRouter({
             name: 'EWalletCreditView',
             component: EWalletCreditView,
             meta: { title: "E-Wallet Credit" }
+        },
+        {
+            path: '/ewallet-debits/:id',
+            name: 'EWalletDebitView',
+            component: EWalletDebitView,
+            meta: { title: "Payout" }
         },
         {
             path: '/upload-pop/:id',

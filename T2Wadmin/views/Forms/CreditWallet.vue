@@ -101,7 +101,8 @@
                 }
             }
             processing.value = false
-            // router.back()
+            router.back()
+            alertStore.add("Done. Wait for approval")
         }).catch(e => {
             alertStore.add(e.response.data, "danger")
         })
