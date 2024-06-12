@@ -1,66 +1,68 @@
 <template>
-    <restricted access="1,2">
-        <template #message><span></span></template>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="input-group mb-3">
-                    <input type="date" class="form-control" v-model="date"/>
-                    <button class="btn btn-outline-secondary" type="button" @click.prevent="getTrialBalance">Get trial balance</button>
+    <div class="avoid">
+        <restricted access="1,2">
+            <template #message><span></span></template>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-control" v-model="date"/>
+                        <button class="btn btn-outline-secondary" type="button" @click.prevent="getTrialBalance">Get trial balance</button>
+                    </div>
+                    <a href="javaScript:void(0)" @click.prevent="resetTrialBalance" class="no-print">Reset</a>
                 </div>
-                <a href="javaScript:void(0)" @click.prevent="resetTrialBalance">Reset</a>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <Doughnut :data="data" :options="options" />
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Balances <small v-if="isTrial"><em>as at {{ date }}</em></small></h4>
-                        <div class="d-flex justify-content-between">
-                            <p>E-Wallets</p>
-                            <p>{{ toLocale(ewallet) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Term Deposits</p>
-                            <p>{{ toLocale(termDeposit) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Regular Thrift</p>
-                            <p>{{ toLocale(thrift) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Loan</p>
-                            <p>{{ toLocale(loan) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Share</p>
-                            <p>{{ toLocale(share) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Special Savings</p>
-                            <p>{{ toLocale(special) }}</p>
-                        </div><hr>
-                        <div class="d-flex justify-content-between">
-                            <strong>Total</strong>
-                            <strong>{{ toLocale(total) }}</strong>
-                        </div><hr>
-                        <div class="d-flex justify-content-between">
-                            <p>General System Account</p>
-                            <p>
-                                {{ toLocale(generalSystem) }}
-                                <br>
-                                <small>
-                                    <router-link :to="`/accounts/statement/${gsa}`">View Statement</router-link>
-                                </small>
-                            </p>
+            <div class="row">
+                <div class="col-md-6 no-print">
+                    <Doughnut :data="data" :options="options" />
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Balances <small v-if="isTrial"><em>as at {{ date }}</em></small></h4>
+                            <div class="d-flex justify-content-between">
+                                <p>E-Wallets</p>
+                                <p>{{ toLocale(ewallet) }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Term Deposits</p>
+                                <p>{{ toLocale(termDeposit) }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Regular Thrift</p>
+                                <p>{{ toLocale(thrift) }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Loan</p>
+                                <p>{{ toLocale(loan) }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Share</p>
+                                <p>{{ toLocale(share) }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Special Savings</p>
+                                <p>{{ toLocale(special) }}</p>
+                            </div><hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total</strong>
+                                <strong>{{ toLocale(total) }}</strong>
+                            </div><hr>
+                            <div class="d-flex justify-content-between">
+                                <p>General System Account</p>
+                                <p>
+                                    {{ toLocale(generalSystem) }}
+                                    <br>
+                                    <small>
+                                        <router-link :to="`/accounts/statement/${gsa}`">View Statement</router-link>
+                                    </small>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </restricted>
+        </restricted>
+    </div>
 </template>
 
 <script setup>
@@ -107,6 +109,7 @@
 
     const resetTrialBalance = () => {
         isTrial.value = false
+        date.value = null
         req.post(req.root+"/t2w/api/balance/301%").then(r => {
             ewallet.value = Math.round(r.data * 100) / 100
         })
@@ -165,5 +168,15 @@
 </script>
 
 <style lang="scss" scoped>
-
+    @media print {
+        .no-print {
+            display: none;
+        }
+        .break-after {
+            page-break-after: always;
+        }
+        .avoid {
+            page-break-inside: avoid;
+        }
+    }
 </style>

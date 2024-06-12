@@ -27,6 +27,14 @@
         link: {
             type: [String, Boolean],
             default: false
+        },
+        surfix: {
+            type: String,
+            default: ""
+        },
+        prefix: {
+            type: String,
+            default: ""
         }
     });
 </script>
@@ -99,6 +107,13 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
+      }
+      .label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        small {
+          white-space: nowrap;
+        }
       }
     }
     .card-inside:hover {

@@ -47,7 +47,7 @@
             label: "Payment Evidence",
             name: "pop",
             as: "filepond",
-            acceptedFileTypes: ['image/*', 'application/pdf'],
+            acceptedFileTypes: ['image/*'],
             rules: yup.string().required()
         },
         {

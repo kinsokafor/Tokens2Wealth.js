@@ -11,7 +11,15 @@ import ModifyTD from '../views/Forms/ModifyTD.vue'
 import CreditWallet from '../views/Forms/CreditWallet.vue'
 import DebitWallet from '../views/Forms/DebitWallet.vue'
 import UploadPop from '../views/Forms/UploadPop.vue'
+import PostInflow from '../views/Forms/PostInflow.vue'
+import PostOutflow from '../views/Forms/PostOutflow.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
+import InflowOutflow from '../views/Reports/InflowOutflow.vue'
+import InflowOutflowLedger from '../views/Reports/InflowOutflowLedger.vue'
+import DepositsPayoutsLedger from '../views/Reports/DepositsPayoutsLedger.vue'
+import Balances from '../views/Reports/Balances.vue'
+import InflowView from '../views/Reports/InflowView.vue'
+import OutflowView from '../views/Reports/OutflowView.vue'
 import EWalletCreditView from '../views/Reports/EWalletCreditView.vue'
 import EWalletDebitView from '../views/Reports/EWalletDebitView.vue'
 import Members from '../views/Members/Members.vue'
@@ -107,6 +115,24 @@ const router = createRouter({
             meta: { title: "E-Wallet Credits" }
         },
         {
+            path: '/inflow-outflow',
+            name: 'InflowOutflow',
+            component: InflowOutflow,
+            meta: { title: "Inflow & Outflow" }
+        },
+        {
+            path: '/inflow/:id',
+            name: 'InflowView',
+            component: InflowView,
+            meta: { title: "Inflow" }
+        },
+        {
+            path: '/outflow/:id',
+            name: 'OutflowView',
+            component: OutflowView,
+            meta: { title: "Outflow" }
+        },
+        {
             path: '/ewallet-credits/:id',
             name: 'EWalletCreditView',
             component: EWalletCreditView,
@@ -141,6 +167,36 @@ const router = createRouter({
             name: 'PendingShares',
             component: PendingShares,
             meta: { title: "Pending Shares" }
+        },
+        {
+            path: '/post-inflow',
+            name: 'PostInflow',
+            component: PostInflow,
+            meta: { title: "Post Inflow" }
+        },
+        {
+            path: '/post-outflow',
+            name: 'PostOutflow',
+            component: PostOutflow,
+            meta: { title: "Post Outflow" }
+        },
+        {
+            path: '/reports/ledger/inflow-outflow',
+            name: 'InflowOutflowLedger',
+            component: InflowOutflowLedger,
+            meta: { title: "Inflow & Outflow Ledger" }
+        },
+        {
+            path: '/reports/ledger/deposits-payouts',
+            name: 'DepositsPayoutsLedger',
+            component: DepositsPayoutsLedger,
+            meta: { title: "Deposits & Payouts Ledger" }
+        },
+        {
+            path: '/reports/balances',
+            name: 'Balances',
+            component: Balances,
+            meta: { title: "Balances" }
         }
     ]
 });

@@ -1,7 +1,7 @@
 <template>
     <div>
         <AccountStatement :account-number="route.params.accountNumber" />
-        <SidePanel class="glass-bg side-panel">
+        <SidePanel class="glass-bg side-panel d-none d-md-block">
             <div class="row">
                 <div class="col-md-12">
                     <AccountBalance :account-number="route.params.accountNumber"></AccountBalance>

@@ -1,70 +1,74 @@
 <template>
-    <div class="card">
-        <div class="card-body">
-            
-            <div class="row justify-content-between">
-                <div class="col-md-5 col-sm-6">
-                    <account-card :data="accountsStore.get({ac_number: txn.account})[0] ?? {}"></account-card>
-                </div>
-                <restricted access="1,2" class="col-md-4 col-sm-6">
-                    <template #message>
-                        <span></span>
-                    </template>
-                    <div class="d-flex gap-2 justify-content-end buttons" v-if="txn.status == 'unconfirmed'">
-                        <button  class="btn btn-primary2" @click.prevent="confirmPayment">Confirm</button>
-                        <button  class="btn btn-primary2 red" @click.prevent="declinePayment">Decline</button>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card" id="dataprint">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-md-7">
+                            <account-card :data="accountsStore.get({ac_number: txn.account})[0] ?? {}"></account-card>
+                        </div>
+                        <restricted access="1,2" class="col-md-5">
+                            <template #message>
+                                <span></span>
+                            </template>
+                            <div class="d-flex gap-2 justify-content-end buttons" v-if="txn.status == 'unconfirmed'">
+                                <button  class="btn btn-primary2" @click.prevent="confirmPayment">Confirm</button>
+                                <button  class="btn btn-primary2 red" @click.prevent="declinePayment">Decline</button>
+                            </div>
+                            <loading :active="processing" 
+                                :can-cancel="true" 
+                                :is-full-page=false></loading>
+                        </restricted>
                     </div>
-                    <loading :active="processing" 
-                        :can-cancel="true" 
-                        :is-full-page=false></loading>
-                </restricted>
+                    <h3 class="card-title">
+                        Credit Details
+                    </h3>
+                    <div class="d-flex justify-content-between">
+                        <span>Amount:</span>
+                        <span>{{ toLocale(txn.amount) }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Narration:</span>
+                        <span>{{ txn.narration }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Classification:</span>
+                        <span>{{ txn.classification }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Status:</span>
+                        <span>{{ txn.status }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Date of payment:</span>
+                        <span>{{ txn.date_of_payment }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Mode of payment:</span>
+                        <span>{{ txn.mode_of_payment }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Date of posting:</span>
+                        <span>{{ txn.time_altered }}</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between">
+                        <span>Posted by:</span>
+                        <span>{{ getFullname(user) }}</span>
+                    </div>
+                    <div class="img-container mt-4">
+                        <img :src="txn.pop" alt="" class="img-fluid img-thumbnail">
+                    </div>
+                    <!-- {{ txn }} -->
+                </div>
             </div>
-            <h3 class="card-title">
-                Credit Details
-            </h3>
-            <div class="d-flex justify-content-between">
-                <span>Amount:</span>
-                <span>{{ toLocale(txn.amount) }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Narration:</span>
-                <span>{{ txn.narration }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Classification:</span>
-                <span>{{ txn.classification }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Status:</span>
-                <span>{{ txn.status }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Date of payment:</span>
-                <span>{{ txn.date_of_payment }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Mode of payment:</span>
-                <span>{{ txn.mode_of_payment }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Date of posting:</span>
-                <span>{{ txn.time_altered }}</span>
-            </div>
-            <hr/>
-            <div class="d-flex justify-content-between">
-                <span>Posted by:</span>
-                <span>{{ getFullname(user) }}</span>
-            </div>
-            <div class="img-container mt-4">
-                <img :src="txn.pop" alt="" class="img-fluid img-thumbnail">
-            </div>
-            <!-- {{ txn }} -->
+            <button  class="btn btn-primary2 mt-2" @click.prevent="print">Print</button>
         </div>
     </div>
 </template>
@@ -76,7 +80,7 @@
     import {computed, ref} from 'vue'
     import {useRoute} from 'vue-router'
     import AccountCard from '../../../components/AccountCard.vue'
-    import {getFullname, Request} from '@/helpers'
+    import {getFullname, Request, Print} from '@/helpers'
     import {useAlertStore} from '@/store/alert'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
@@ -146,6 +150,10 @@
                 alertStore.add(e.response.data, "danger")
             })
         }
+    }
+
+    const print = () => {
+        let p = new Print({el: '#dataprint', popTitle: "Payment voucher"})
     }
 </script>
 

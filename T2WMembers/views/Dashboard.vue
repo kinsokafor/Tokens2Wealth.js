@@ -22,10 +22,10 @@
 </template>
 <script setup>
     import PendingGuranteedLoans from '../components/PendingGuranteedLoans.vue';
-    import ProfileImage from '../components/Dashboard/ProfileImage.vue';
+    import ProfileImage from '../../components/Dashboard/ProfileImage.vue';
     import Balances from '../components/Dashboard/Balances.vue';
     import {useAuthStore} from '@/store/auth'
-    import {computed, watchEffect} from 'vue'
+    import {computed} from 'vue'
     import LatestNotifications from '../../components/Dashboard/LatestNotifications.vue';
     import LatestTransactions from '../components/Dashboard/LatestTransactions.vue';
     import ProfileCompleteness from '../components/Dashboard/ProfileCompleteness.vue';

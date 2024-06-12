@@ -3,11 +3,8 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Credit E-Wallet</h5>
+                    <h5 class="card-title">Post Inflow</h5>
                     <CreateForm :fields="fields" 
-                        :initial-values="{
-                            fullname: fullname
-                        }"
                         @submit="handleSubmit"
                         :processing="processing">
                     </CreateForm>
@@ -18,33 +15,21 @@
 </template>
 
 <script setup>
-    import { useAccountsStore } from '../../../store/accounts'
-    import { useEWalletTxnsStore } from '../../../store/ewalletTransactions'
+    import { useInflowOutflowStore } from '../../../store/inflowOutflow'
     import { computed, ref } from 'vue'
-    import {useRoute,useRouter} from 'vue-router'
     import CreateForm from '@/components/form/CreateForm.vue'
     import * as yup from 'yup'
-    import {getFullname, Request} from '@/helpers'
+    import {Request} from '@/helpers'
     import {useAlertStore} from '@/store/alert'
     import {useConfigStore} from '@/store/config'
 
-    const store = useEWalletTxnsStore()
-    const accountsStore = useAccountsStore()
-    const route = useRoute()
-    const router = useRouter()
-    const account = computed(() => accountsStore.get({ac_number: route.params.accountNumber})[0] ?? {})
-    const fullname = computed(() => getFullname(account.value))
+    const store = useInflowOutflowStore()
     const req = new Request();
     const processing = ref(false)
     const alertStore = useAlertStore()
     const configStore = useConfigStore()
 
     const fields = computed(() => [
-        {
-            label: "Name",
-            name: "fullname",
-            disabled: true
-        },
         {
             label: "Amount",
             name: "amount",
@@ -64,8 +49,8 @@
             rules: yup.string().required()
         },
         {
-            label: "Date of payment",
-            name: "date_of_payment",
+            label: "Date of inflow",
+            name: "date_of_inflow",
             type: "date",
             rules: yup.string().required()
         },
@@ -87,8 +72,7 @@
 
     const handleSubmit = (data, actions) => {
         processing.value = true;
-        data.account = route.params.accountNumber
-        req.post(req.root+"/t2w/api/credit-ewallet", data).then(r => {
+        req.post(req.root+"/t2w/api/post-inflow", data).then(r => {
             let i = r.data
             i = { ...i, ...(JSON.parse(i.meta)) }
             delete i.meta
@@ -101,7 +85,7 @@
                 }
             }
             processing.value = false
-            router.back()
+            actions.resetForm();
             alertStore.add("Done. Wait for approval")
         }).catch(e => {
             alertStore.add(e.response.data, "danger")

@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
-import { dbTable, dynamicSort, storeGetter } from '@/helpers';
+import { dbTable, storeGetter, dynamicSort } from '@/helpers';
 import _ from 'lodash';
-import { useSessionStorage } from '@vueuse/core'
 
-export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
+export const useInflowOutflowStore = defineStore('useInflowOutflowStore', {
     state: () => {
         return {
-            data: useSessionStorage("t2wEwalletTransactions", []),
+            data: [],
             processing: false,
             fetching: false,
             limit: 100,
@@ -23,7 +22,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
             }
             this.fetching = true;
             this.processing = true;
-            await this.dbtable.get('t2w_ewallet_transactions', {
+            await this.dbtable.get('t2w_inflow_outflow', {
                 limit: this.limit,
                 offset: this.offset,
                 order: 'ASC',
@@ -36,7 +35,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                     let i = { ...r.data, ...meta }
                     const index = this.data.findIndex(j => j.id == i.id)
                     if (index == -1) {
-                        this.data = [...this.data, i]
+                        this.data = [i, ...this.data]
                     } else {
                         if (!_.isEqual(this.data[index], i)) {
                             this.data[index] = i
@@ -48,7 +47,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                         delete i.meta
                         const index = this.data.findIndex(j => j.id == i.id)
                         if (index == -1) {
-                            this.data = [...this.data, i];
+                            this.data = [i, ...this.data]
                         } else {
                             if (!_.isEqual(this.data[index], i)) {
                                 this.data[index] = i
@@ -65,7 +64,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                         }
                         this.lastTimeOut = setTimeout(() => {
                             this.fetching = false
-                        }, 3600000)
+                        }, 180000)
                     }
                 }
                 
