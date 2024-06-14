@@ -21,7 +21,16 @@
           <div class="card-body">
             <h5 class="card-title">Monthly Contribution</h5>
             <p class="card-text">{{toLocale(parseFloat(data?.amount ?? 0))}}</p>
-            <router-link :to="`/accounts/thrift/${account}/edit`" class="btn btn-primary">Edit Amount</router-link>
+            <div class="d-flex justify-content-between">
+              <router-link :to="`/accounts/thrift/${account}/edit`" class="btn btn-primary">Edit Amount</router-link>
+              <restricted access="1,2">
+                <template #message><span></span></template>
+                <button class="btn btn-primary2 red" @click="liquidate">Liquidate</button>
+              </restricted>
+              <loading :active="processing" 
+                :can-cancel="true" 
+                :is-full-page=false></loading>
+            </div>
           </div>
         </div>
       </div>
@@ -46,15 +55,22 @@
     import thrift from '../../assets/img/thrift.png';
     import { useAccountsStore } from '../../store/accounts'
     import PendingDebits from './PendingCredits.vue';
-    import {computed, onMounted, ref, watchEffect} from 'vue'
+    import {computed, ref, watchEffect} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
     import {useConfigStore} from '@/store/config'
     import balance from './balance.vue'
     import OtherBalances from './OtherBalances.vue'
+    import Loading from 'vue3-loading-overlay';
+    import {useAlertStore} from '@/store/alert'
+    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
     import 'animate.css'
 
     const store = useAccountsStore()
+
+    const alertStore = useAlertStore()
+
+    const processing = ref(false)
 
     const status = ref(false)
 
@@ -104,6 +120,31 @@
         })
       } else {
         status.value = !status.value
+      }
+    }
+
+    const liquidate = () => {
+      if(confirm("Are you sure you want to liquidate this thrift savings?")) {
+        processing.value = true
+        r.post(r.root+"/t2w/api/thrift/liquidate", {
+          id: data.value.id
+        }).then(r => {
+            let i = r.data
+            i = { ...i, ...(JSON.parse(i.meta)) }
+            delete i.meta
+            const index = store.data.findIndex(j => j.id == i.id)
+            if (index == -1) {
+                store.data = [...store.data, i]
+            } else {
+                if (!_.isEqual(store.data[index], i)) {
+                    store.data[index] = i
+                }
+            }
+        }).catch(e => {
+          alertStore.add(e.response.data, "danger");
+        }).finally(() => {
+          processing.value = false
+        })
       }
     }
 </script>

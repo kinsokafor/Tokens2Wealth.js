@@ -36,7 +36,7 @@
                                 <p>{{ toLocale(loan) }}</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <p>Share</p>
+                                <p>Share @ {{ toLocale(shareUnit) }}/unit</p>
                                 <p>{{ toLocale(share) }}</p>
                             </div>
                             <div class="d-flex justify-content-between">
@@ -76,14 +76,17 @@
 
     const req = new Request();
 
+    const totalUnits = ref(0)
+    const shareUnit = ref(1)
     const ewallet = ref(0)
     const termDeposit = ref(0)
     const thrift = ref(0)
-    const share = ref(0)
+    const share = computed(() => totalUnits.value * shareUnit.value)
     const loan = ref(0)
     const special = ref(0)
     const generalSystem = ref(0)
     const gsa = ref("")
+    
 
     const date = ref(null)
     const isTrial = ref(false)
@@ -120,7 +123,7 @@
             thrift.value = Math.round(r.data * 100) / 100
         })
         req.post(req.root+"/t2w/api/balance/313%").then(r => {
-            share.value = Math.round(r.data * 100) / 100
+            totalUnits.value = Math.round(r.data * 100) / 100
         })
         req.post(req.root+"/t2w/api/balance/321%").then(r => {
             loan.value = Math.round(r.data * 100) / 100
@@ -137,8 +140,11 @@
     }
 
 
-    onMounted(() => {
+    onMounted(async () => {
         resetTrialBalance();
+        await options.get("share_unit").then(res => {
+            shareUnit.value = parseFloat(res.data)
+        })
     })
 
     const getTrialBalance = () => {
@@ -153,7 +159,7 @@
             thrift.value = Math.round(r.data * 100) / 100
         })
         req.post(req.root+"/t2w/api/balance/313%", {date: `${date.value} 23:59:59`}).then(r => {
-            share.value = Math.round(r.data * 100) / 100
+            totalUnits.value = Math.round(r.data * 100) / 100
         })
         req.post(req.root+"/t2w/api/balance/321%", {date: `${date.value} 23:59:59`}).then(r => {
             loan.value = Math.round(r.data * 100) / 100

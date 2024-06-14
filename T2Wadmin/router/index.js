@@ -22,6 +22,11 @@ import InflowView from '../views/Reports/InflowView.vue'
 import OutflowView from '../views/Reports/OutflowView.vue'
 import EWalletCreditView from '../views/Reports/EWalletCreditView.vue'
 import EWalletDebitView from '../views/Reports/EWalletDebitView.vue'
+import MembersOnLoan from '../views/Reports/MembersOnLoan.vue'
+import MembersOnThrift from '../views/Reports/MembersOnThrift.vue'
+import MembersOnTD from '../views/Reports/MembersOnTD.vue'
+import MembersWithShares from '../views/Reports/MembersWithShares.vue'
+import AdminLog from '../views/Reports/AdminLog.vue'
 import Members from '../views/Members/Members.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
@@ -197,6 +202,36 @@ const router = createRouter({
             name: 'Balances',
             component: Balances,
             meta: { title: "Balances" }
+        },
+        {
+            path: '/reports/members/thrift',
+            name: 'MembersOnThrift',
+            component: MembersOnThrift,
+            meta: { title: "Members on Thrift Savings" }
+        },
+        {
+            path: '/reports/members/loan',
+            name: 'MembersOnLoan',
+            component: MembersOnLoan,
+            meta: { title: "Members on Loan" }
+        },
+        {
+            path: '/reports/members/term-deposit',
+            name: 'MembersOnTD',
+            component: MembersOnTD,
+            meta: { title: "Members on Term Deposit" }
+        },
+        {
+            path: '/reports/members/shares',
+            name: 'MembersWithShares',
+            component: MembersWithShares,
+            meta: { title: "Members with Shares" }
+        },
+        {
+            path: '/reports/admin-log',
+            name: 'AdminLog',
+            component: AdminLog,
+            meta: { title: "Admin Actions Log" }
         }
     ]
 });

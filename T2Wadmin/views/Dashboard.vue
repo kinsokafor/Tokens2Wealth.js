@@ -37,7 +37,7 @@
                 end-point="t2w/api/pending-loan/count" 
                 title="Pending Loan Requests" 
                 :template="CountCard2"
-                link="/t2w/a/#/accounts/loans"
+                link="/t2w/a/#/accounts/loans?status=in process"
                 method="post"
             />
         </div>
@@ -72,28 +72,28 @@
             <Menu :items="accounts" 
                 :search="searchQuery"
                 :template="MenuButton" 
-                containerClass="col-4 col-md-2 col-sm-3"
+                containerClass="col-4 col-md-3"
                 :enable-search="false"
                 title="Accounts"
             ></Menu>
             <Menu :items="transactions" 
                 :search="searchQuery"
                 :template="MenuButton" 
-                containerClass="col-4 col-md-2 col-sm-3"
+                containerClass="col-4 col-md-3"
                 :enable-search="false"
                 title="Transactions"
             ></Menu>
             <Menu :items="reports" 
                 :search="searchQuery"
                 :template="MenuButton" 
-                containerClass="col-4 col-md-2 col-sm-3"
+                containerClass="col-4 col-md-3"
                 :enable-search="false"
                 title="Reports"
             ></Menu>
             <Menu :items="settings" 
                 :search="searchQuery"
                 :template="MenuButton" 
-                containerClass="col-4 col-md-2 col-sm-3"
+                containerClass="col-4 col-md-3"
                 :enable-search="false"
                 title="Settings"
             ></Menu>
@@ -245,6 +245,41 @@
             link: "/reports/balances",
             isRouter: true,
             iconClass: "fa-regular fa-chart-bar",
+            access: "1,2"
+        },
+        {
+            label: "Members on Thrift",
+            link: "/reports/members/thrift",
+            isRouter: true,
+            iconClass: "fa-solid fa-people-carry-box",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Members on Loan",
+            link: "/reports/members/loan",
+            isRouter: true,
+            iconClass: "fa-solid fa-building-user",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Members on Term Deposit",
+            link: "/reports/members/term-deposit",
+            isRouter: true,
+            iconClass: "fa-solid fa-user-shield",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Members with Shares",
+            link: "/reports/members/shares",
+            isRouter: true,
+            iconClass: "fa-solid fa-people-group",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Admin Actions Log",
+            link: "/reports/admin-log",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
             access: "1,2"
         }
     ])

@@ -42,7 +42,6 @@
                     11,
                     12
                 ],
-                "profile": "/t2w/a/#/profile/",
                 "index": "/t2w/a/#/"
             },
             "super_admin": {
@@ -58,7 +57,6 @@
                     11,
                     12
                 ],
-                "profile": "/t2w/a/#/profile/",
                 "index": "/t2w/a/#/"
             },
             "admin": {
@@ -68,7 +66,6 @@
                     5,
                     11
                 ],
-                "profile": "/t2w/a/#/profile/",
                 "index": "/t2w/a/#/"
             },
             "pending": {
