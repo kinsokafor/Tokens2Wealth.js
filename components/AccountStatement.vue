@@ -24,12 +24,16 @@
         let balance = 0;
         return store.get({account: props.accountNumber}).map(i => {
             if(i.ledger == 'credit') {
-                i.balance = balance = balance + i.amount  
+                if(i.status == 'successful') {
+                    i.balance = balance = balance + i.amount 
+                } else i.balance = balance
                 i.credit = toLocale(i.amount)
                 i.debit = "-" 
             }
             if(i.ledger == 'debit') {
-                i.balance = balance = balance - i.amount 
+                if(i.status == 'successful') {
+                    i.balance = balance = balance - i.amount 
+                } else i.balance = balance
                 i.debit = toLocale(i.amount)
                 i.credit = "-" 
             }
@@ -50,6 +54,7 @@
     const columns = {
         time_altered: 'Date',
         narration: 'Description',
+        status: 'Status',
         credit: 'Credit',
         debit: 'Debit',
         balance: {'heading': 'Balance', 'processor': function() { return toLocale(this.balance)}}

@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Savings from '../views/Savings/Savings.vue'
 import TermDeposit from '../views/Savings/TermDeposit.vue'
 import Loan from '../views/Loan.vue'
+import GuaranteedLoans from '../views/GuaranteedLoans.vue'
 import Profile from '../views/Profile.vue'
 import Shares from '../views/Investments/Shares.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
@@ -43,6 +44,12 @@ const router = createRouter({
             name: 'Loan',
             component: Loan,
             meta: { title: "Loan" }
+        },
+        {
+            path: '/guaranteed-loans',
+            name: 'GuaranteedLoans',
+            component: GuaranteedLoans,
+            meta: { title: "Guaranteed Loan" }
         },
         {
             path: '/loan/new',
