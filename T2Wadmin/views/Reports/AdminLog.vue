@@ -3,7 +3,7 @@
         <data-filter :data="store.get({})" v-slot="{outputData}" search-columns="['narration', 'time_altered']">
             <list-item v-for="data in outputData" :key="data.id">
                 <h4><admin-name :id="data.last_altered_by"></admin-name></h4>
-                {{ data.narration }}
+                <div v-html="data.narration"></div>
                 <template #right>
                     <small>{{ data.time_altered }}</small>
                 </template>

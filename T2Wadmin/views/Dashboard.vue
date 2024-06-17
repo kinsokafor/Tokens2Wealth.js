@@ -222,6 +222,20 @@
             isRouter: true,
             iconClass: "fa-solid fa-arrows-turn-to-dots",
             access: "1,2,3,4"
+        },
+        {
+            label: "Bulk Credit",
+            link: "/bulk-credit",
+            isRouter: true,
+            iconClass: "fa-solid fa-envelopes-bulk",
+            access: "1,2"
+        },
+        {
+            label: "Bulk Debit",
+            link: "/bulk-debit",
+            isRouter: true,
+            iconClass: "fa-solid fa-envelopes-bulk",
+            access: "1,2"
         }
     ])
 

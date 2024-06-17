@@ -46,17 +46,21 @@
                             <div class="d-flex justify-content-between">
                                 <strong>Total</strong>
                                 <strong>{{ toLocale(total) }}</strong>
-                            </div><hr>
-                            <div class="d-flex justify-content-between">
-                                <p>General System Account</p>
-                                <p>
-                                    {{ toLocale(generalSystem) }}
-                                    <br>
-                                    <small>
-                                        <router-link :to="`/accounts/statement/${gsa}`">View Statement</router-link>
-                                    </small>
-                                </p>
                             </div>
+                            <restricted access="1">
+                                <template #message><span></span></template>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <p>General System Account</p>
+                                    <p>
+                                        {{ toLocale(generalSystem) }}
+                                        <br>
+                                        <small>
+                                            <router-link :to="`/accounts/statement/${gsa}`">View Statement</router-link>
+                                        </small>
+                                    </p>
+                                </div>
+                            </restricted>
                         </div>
                     </div>
                 </div>
