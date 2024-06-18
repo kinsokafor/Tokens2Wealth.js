@@ -26,7 +26,7 @@ export const useAdminLogStore = defineStore('useAdminLogStore', {
             await this.store.get({
                 limit: this.limit,
                 offset: this.offset,
-                order: 'desc',
+                order: 'DESC',
                 order_by: 'id',
                 ...params
             }, "admin_log").then(r => {

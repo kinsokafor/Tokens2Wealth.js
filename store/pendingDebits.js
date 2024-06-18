@@ -27,7 +27,7 @@ export const usePDStore = defineStore('usePDStore', {
             await this.dbtable.get('t2w_pending_debits', {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'desc',
+                order: 'DESC',
                 order_by: 'id',
                 ...params
             }).then(r => {

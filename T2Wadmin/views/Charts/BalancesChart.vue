@@ -117,25 +117,25 @@
     const resetTrialBalance = () => {
         isTrial.value = false
         date.value = null
-        req.post(req.root+"/t2w/api/balance/301%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/301%")).then(r => {
             ewallet.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/311%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/311%")).then(r => {
             termDeposit.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/312%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/312%")).then(r => {
             thrift.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/313%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/313%")).then(r => {
             totalUnits.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/321%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/321%")).then(r => {
             loan.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/201%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/201%")).then(r => {
             generalSystem.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/314%").then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/314%")).then(r => {
             special.value = Math.round(r.data * 100) / 100
         })
         req.post(req.root+"/t2w/api/get-general-system-account").then(r => {
@@ -153,25 +153,25 @@
 
     const getTrialBalance = () => {
         isTrial.value = true
-        req.post(req.root+"/t2w/api/balance/301%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/301%"), {date: `${date.value} 23:59:59`}).then(r => {
             ewallet.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/311%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/311%"), {date: `${date.value} 23:59:59`}).then(r => {
             termDeposit.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/312%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/312%"), {date: `${date.value} 23:59:59`}).then(r => {
             thrift.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/313%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/313%"), {date: `${date.value} 23:59:59`}).then(r => {
             totalUnits.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/321%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/321%"), {date: `${date.value} 23:59:59`}).then(r => {
             loan.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/201%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/201%"), {date: `${date.value} 23:59:59`}).then(r => {
             generalSystem.value = Math.round(r.data * 100) / 100
         })
-        req.post(req.root+"/t2w/api/balance/314%", {date: `${date.value} 23:59:59`}).then(r => {
+        req.post(req.root+encodeURI("/t2w/api/balance/314%"), {date: `${date.value} 23:59:59`}).then(r => {
             special.value = Math.round(r.data * 100) / 100
         })
     }

@@ -26,7 +26,7 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
             await this.dbtable.get('t2w_ewallet_transactions', {
                 limit: this.limit,
                 offset: this.offset,
-                order: 'ASC',
+                order: 'DESC',
                 order_by: 'id',
                 ...params
             }).then(r => {
