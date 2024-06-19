@@ -94,7 +94,7 @@ export const useWalletsStore = defineStore('useWalletsStore', {
             const data = state.data
             return (params = {}, ...exclude) => {
                 if(!("account" in params)) return []
-                let datax = params.account in data ? data[params.account] : []
+                let datax = params.account in data ? data[params.account].sort(dynamicSort("time_altered")) : []
                 return storeGetter(state, datax, (tempParams) => {
                     state.loadFromServer(tempParams)
                 }, params, exclude)
