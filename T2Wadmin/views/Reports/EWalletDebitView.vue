@@ -4,10 +4,10 @@
             <div class="card" id="dataprint">
                 <div class="card-body">
                     <div class="row justify-content-between">
-                        <div class="col-md-5 col-sm-6">
+                        <div class="col-md-7">
                             <account-card :data="accountsStore.get({ac_number: txn.account})[0] ?? {}"></account-card>
                         </div>
-                        <restricted access="1,2" class="col-md-4 col-sm-6">
+                        <restricted access="1,2" class="col-md-5">
                             <template #message>
                                 <span></span>
                             </template>

@@ -84,7 +84,7 @@ export const useInflowOutflowStore = defineStore('useInflowOutflowStore', {
             return state.data;
         },
         get: (state) => {
-            const data = state.data.sort(dynamicSort("time_altered"))
+            const data = state.data.sort(dynamicSort("-time_altered"))
             return (params = {}, ...exclude) => {
                 return storeGetter(state, data, (tempParams) => {
                     state.loadFromServer(tempParams)
