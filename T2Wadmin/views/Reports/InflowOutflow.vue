@@ -1,4 +1,9 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">Inflows and Outflows</h3>
+        </div>
+    </div>
     <div>
         <data-filter 
             :data="store.get()" 

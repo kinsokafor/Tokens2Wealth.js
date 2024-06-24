@@ -1,4 +1,9 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">Pending Shares</h3>
+        </div>
+    </div>
     <DataFilter :data="data" v-slot="{outputData}">
         <list-item v-for="item in outputData" :key="item.id">
             <member-name :id="item.user_id"></member-name>

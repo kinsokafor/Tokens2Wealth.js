@@ -1,6 +1,10 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">Balances</h3>
+        </div>
+    </div>
     <div>
-        
         <div id="print-div" class="mb-2">
             <div class="row mb-4">
                 <div class="col-12">

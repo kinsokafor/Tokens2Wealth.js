@@ -3,7 +3,15 @@
        <Table
         :data="statement"
         :columns="columns"
-       ></Table>
+       >
+       <template #before>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-title">Inflow & Outflow ledger</h3>
+                </div>
+            </div>
+        </template>
+    </Table>
     </div>  
 </template>
 

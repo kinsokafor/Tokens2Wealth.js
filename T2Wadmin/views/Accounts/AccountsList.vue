@@ -1,4 +1,9 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">{{accountTitle}}</h3>
+        </div>
+    </div>
     <div>
         <DataFilter 
             :data="store.get({ac_number: `${accountCode}%`})" 
@@ -27,6 +32,38 @@
 
     onUnmounted(() => {
         store.abort()
+    })
+
+    const accountTitle = computed(() => {
+        switch (route.params.accountType) {
+            case 'thrift-savings':
+                return "Regular Thrift Savings"
+                break;
+
+            case 'term-deposits':
+                return "Term Deposit Accounts"
+                break;
+
+            case 'loans':
+                return "Loan Accounts"
+                break;
+
+            case 'wallets':
+                return "E-Wallets"
+                break;
+
+            case 'shares':
+                return "Shares"
+                break;
+
+            case 'special-savings':
+                return "Special Savings Accounts"
+                break;
+        
+            default:
+                return ""
+                break;
+        }
     })
 
     const quickFilters = computed(() => {

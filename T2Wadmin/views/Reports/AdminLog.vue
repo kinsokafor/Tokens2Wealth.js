@@ -1,4 +1,9 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">Admin Log</h3>
+        </div>
+    </div>
     <div>
         <data-filter :data="store.get({})" v-slot="{outputData}" search-columns="['narration', 'time_altered']">
             <list-item v-for="data in outputData" :key="data.id">

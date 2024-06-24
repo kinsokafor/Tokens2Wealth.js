@@ -1,4 +1,9 @@
 <template>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">User Profile</h3>
+        </div>
+    </div>
     <div>
         <profile :menu="items">
             <template #beforeMenu>
@@ -52,6 +57,13 @@
             link: `/upload-pop/${route.params.id}`,
             label: 'Upload Payment Receipt',
             iconClass: 'fa-upload',
+            access: '3,4',
+            isRouter: true
+        },
+        {
+            link: `/member/data/${route.params.id}`,
+            label: 'User Data',
+            iconClass: 'fa-file',
             access: '3,4',
             isRouter: true
         }

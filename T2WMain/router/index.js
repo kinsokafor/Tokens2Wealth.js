@@ -21,6 +21,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title}`;
+    var e = document.querySelectorAll(".mobile-nav-toggle.bi-x");
+    e.forEach(i => {
+        i.click()
+    })
     next();
 });
 

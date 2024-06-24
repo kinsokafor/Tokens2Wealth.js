@@ -2,7 +2,15 @@
     <div>
         <Table 
         :data="data" 
-        :columns="columns"/>
+        :columns="columns">
+        <template #before>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-title">Members on Term Deposit</h3>
+                </div>
+            </div>
+        </template>
+    </Table>
     </div>
 </template>
 

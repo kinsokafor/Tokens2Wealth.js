@@ -16,7 +16,15 @@
             :actions="actions" 
             :data="users"
             :processing="usersStore.processing"
-        ></Table>
+        >
+            <template #before>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="page-title">Members Register</h3>
+                    </div>
+                </div>
+            </template>
+        </Table>
     </Restricted>
 </template>
 

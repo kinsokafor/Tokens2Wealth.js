@@ -30,6 +30,7 @@ import MembersOnTD from '../views/Reports/MembersOnTD.vue'
 import MembersWithShares from '../views/Reports/MembersWithShares.vue'
 import AdminLog from '../views/Reports/AdminLog.vue'
 import Members from '../views/Members/Members.vue'
+import MemberData from '../views/Members/MemberData.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
 import PendingProfile from '../views/Members/PendingProfile.vue'
@@ -162,6 +163,12 @@ const router = createRouter({
             name: 'Members',
             component: Members,
             meta: { title: "Members" }
+        },
+        {
+            path: '/member/data/:id',
+            name: 'MemberData',
+            component: MemberData,
+            meta: { title: "Member Data" }
         },
         {
             path: '/members/pending',

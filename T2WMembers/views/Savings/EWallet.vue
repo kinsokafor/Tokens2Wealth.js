@@ -2,7 +2,7 @@
     <Restricted access="1,2,3,4,5,6,7,8,9,10">
         <div class="hasAccount"  v-if="!_.isEmpty(data)">
             <Header :data="data" :bg="bgMap" :img="wallet" caption="E-Wallet">
-                <p>A level {{ data.level }} participating member</p>
+                <!-- <p>A level {{ data.level }} participating member</p> -->
                 <template #status>
                     <span class="badge" 
                     :class="{
@@ -13,9 +13,9 @@
             </Header>
             <div class="row">
                 <div class="col-md-4">
-                    <balance :ac_type="data.ac_type" title="Thrift Savings Balance" @onready="b => bal = b"></balance>
+                    <balance :ac_type="data.ac_type" title="E-Wallet Balance" @onready="b => bal = b"></balance>
                 </div>
-                <div class="col-md-8 animate__animated animate__pulse">
+                <!-- <div class="col-md-8 animate__animated animate__pulse">
                     <div class="card mb-2">
                         <div class="card-body upline-comp">
                             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div v-else>Your e-Wallet account is not yet active</div>
@@ -74,16 +74,16 @@
     import { useAuthStore } from '@/store/auth'
     import Header from '../../../components/Accounts/Header.vue';
     import wallet from '../../../assets/img/wallet.png';
-    import {useConfigStore} from '@/store/config'
+    // import {useConfigStore} from '@/store/config'
     import _ from 'lodash';
     import balance from '../../components/balance.vue'
     import { Request, Options } from '@/helpers'
-    import downlines from '../../../components/Accounts/downlines.vue';
-    import uplines from '../../../components/Accounts/uplines.vue';
+    // import downlines from '../../../components/Accounts/downlines.vue';
+    // import uplines from '../../../components/Accounts/uplines.vue';
 
     const store = useAccountsStore()
     const auth = useAuthStore()
-    const configStore = useConfigStore()
+    // const configStore = useConfigStore()
     const bal = ref(0)
     const r = new Request()
     const nsd = ref("-")

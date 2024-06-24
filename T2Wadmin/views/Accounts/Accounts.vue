@@ -1,5 +1,10 @@
 <template>
     <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-title">All Accounts</h3>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4 mb-2">
             <router-link to="accounts/wallets" class="counter-link">
                 <CounterCard 
