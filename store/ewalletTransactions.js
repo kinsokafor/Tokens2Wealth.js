@@ -28,6 +28,8 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                 offset: this.offset,
                 order: 'DESC',
                 order_by: 'id',
+                joinuserat: 'last_altered_by',
+                rightcolumns: ['surname', 'middle_name', 'other_names'],
                 ...params
             }).then(r => {
                 if ("id" in params) {

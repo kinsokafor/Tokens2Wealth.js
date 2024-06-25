@@ -30,7 +30,7 @@
     const statement = computed(() => {
         if(!trigger.value) return []
         let balance = 0;
-        return store.get({status: "confirmed"}).map(i => {
+        return store.getLedger({status: "confirmed"}).map(i => {
             if(i.ledger == 'credit') {
                 i.balance = balance = balance + parseFloat(i.amount)  
                 i.credit = toLocale(i.amount)
@@ -57,7 +57,7 @@
 
     const columns = {
         time_altered: 'Date',
-        last_altered_by: 'Name of Depositor/Beneficiary',
+        // last_altered_by: 'Name of Depositor/Beneficiary',
         narration: 'Purpose of Payment',
         classification: 'Classification',
         debit: 'Debit',
