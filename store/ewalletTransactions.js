@@ -91,6 +91,14 @@ export const useEWalletTxnsStore = defineStore('useEWalletTxnsStore', {
                     state.loadFromServer(tempParams)
                 }, params, exclude)
             }
+        },
+        getLedger: (state) => {
+            const data = state.data.sort(dynamicSort("time_altered"))
+            return (params = {}, ...exclude) => {
+                return storeGetter(state, data, (tempParams) => {
+                    state.loadFromServer(tempParams)
+                }, params, exclude)
+            }
         }
     }
 })
