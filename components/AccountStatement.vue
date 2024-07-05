@@ -4,6 +4,8 @@
         :data="statement"
         :columns="columns"
         :actions="actions"
+        @reverse="reverse"
+        @delete="deleteItem"
        >
         <template #before>
             <div class="row">
@@ -20,12 +22,17 @@
     import { useWalletsStore } from '../store/wallets'
     import { computed, ref, onMounted } from 'vue'
     import Table from '@/components/Table.vue'
+    import {Request, dbTable} from '@/helpers'
+    import {useAlertStore} from '@/store/alert'
 
     const props = defineProps({
         accountNumber: String
     })
 
+    const req = new Request();
+
     const store = useWalletsStore();
+    const alertStore = useAlertStore()
     const trigger = ref(false)
 
     const statement = computed(() => {
@@ -71,9 +78,53 @@
 
     const actions = [
         {
-            
+            name: "Reverse",
+            type: "action",
+            callback: "reverse",
+            access: [1,2]
+        },
+        {
+            name: "Delete",
+            type: "action",
+            callback: "delete",
+            access: [1]
         }
     ]
+
+    const reverse = (data, index) => {
+        if(confirm("Are you sure you want to reverse this transaction?")) {
+            req.post(req.root+"/t2w/api/reverse-statement", {id: data.id}).then(r => {
+                const meta = JSON.parse(r.data.meta)
+                delete r.data.meta
+                let i = { ...r.data, ...meta }
+                if(!(i.account in store.data)) {
+                    store.data[i.account] = []
+                }
+                const index = store.data[i.account].findIndex(j => j.id == i.id)
+                if (index == -1) {
+                    store.data[i.account] = [...store.data[i.account], i]
+                } else {
+                    if (!_.isEqual(store.data[i.account][index], i)) {
+                        store.data[i.account][index] = i
+                    }
+                }
+                alertStore.add("Reversed")
+            })
+        }
+    }
+
+    const deleteItem = (data, index) => {
+        const dbt = new dbTable()
+        if(confirm("Are you sure you want to delete this transaction?")) {
+            dbt.delete("t2w_transactions", {id: parseInt(data.id)}).then(r => {
+                const index = store.data[data.account].findIndex(j => j.id == data.id)
+                if (index != -1) {
+                    store.data[data.account].splice(index, 1);
+                }
+                alertStore.add("Deleted")
+            })
+        }
+    }
 </script>
 
 <style lang="scss" scoped>

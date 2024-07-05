@@ -7,7 +7,7 @@
                     <h1 class="animate__animated animate__backInUp">{{caption}}</h1>
                     <slot></slot>
                     <MemberCard v-if="data?.user_id != undefined" :userId="parseInt(data.user_id)">
-                        Account Number: {{data?.ac_number}}
+                      {{caption}} ID: {{data?.ac_number}}
                     </MemberCard>
                 </div>
                 <div class="status">
