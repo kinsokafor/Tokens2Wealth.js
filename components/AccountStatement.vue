@@ -3,6 +3,7 @@
        <Table
         :data="statement"
         :columns="columns"
+        :actions="actions"
        >
         <template #before>
             <div class="row">
@@ -67,6 +68,12 @@
         debit: 'Debit',
         balance: {'heading': 'Balance', 'processor': function() { return toLocale(this.balance)}}
     };
+
+    const actions = [
+        {
+            
+        }
+    ]
 </script>
 
 <style lang="scss" scoped>
