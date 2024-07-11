@@ -13,7 +13,7 @@
     </Header>
     <div class="row">
       <div class="col-md-4 animate__animated animate__pulse">
-        <balance :account="account" title="Loan Balance"></balance>
+        <balance :account="account" title="Loan Balance" @onready="b => loanBalance = b"></balance>
       </div>
       <div class="col-md-4 animate__animated animate__pulse" v-if="hasLoan">
         <div class="card mb-2">
@@ -120,6 +120,13 @@
             
           </div>
         </div>
+        <div v-else>
+          <div class="card mb-2" v-if="loanBalance != 0">
+            <div class="card-body">
+              <button class="btn btn-primary" @click.prevent="settle">Settle Balance</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -165,6 +172,8 @@
     const loanComponents = ref({})
 
     const processing = ref(false)
+
+    const loanBalance = ref(0)
 
     const props = defineProps({
         account: String
