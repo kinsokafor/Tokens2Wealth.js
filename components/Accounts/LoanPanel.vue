@@ -261,6 +261,10 @@
       if(confirm("Are you sure you want to debit the ewallet account to clear this loan?")) {
         processing.value = true
         await r.post(r.root+"/t2w/api/settle-loan", {ac_number: data.value?.ac_number, user_id: data.value?.user_id}).then(response => {
+          if(response.data == null) {
+            processing.value = false
+            return;
+          }
           const meta = JSON.parse(response.data.meta)
           delete response.data.meta
           let i = { ...response.data, ...meta }
