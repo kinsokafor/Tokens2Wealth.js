@@ -121,7 +121,7 @@
           </div>
         </div>
         <div v-else>
-          <div class="card mb-2" v-if="loanBalance != 0">
+          <div class="card mb-2" v-if="testBalance !== 0">
             <div class="card-body">
               <button class="btn btn-primary" @click.prevent="settle">Settle Balance</button>
             </div>
@@ -174,6 +174,8 @@
     const processing = ref(false)
 
     const loanBalance = ref(0)
+
+    const testBalance = computed(() => parseFloat(loanBalance.value.toFixed(2)))
 
     const props = defineProps({
         account: String
