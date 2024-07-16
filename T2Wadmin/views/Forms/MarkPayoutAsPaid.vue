@@ -34,12 +34,6 @@
 
     const fields = computed(() => [
         {
-            label: "Transfer Receipt",
-            name: "pop",
-            as: "filepond",
-            acceptedFileTypes: ['image/*', 'application/pdf']
-        },
-        {
             label: "Date of payment *",
             name: "date_of_payment",
             type: "date",
@@ -64,6 +58,7 @@
     const handleSubmit = (data, actions) => {
         processing.value = true;
         data.id = props.id
+        data.pop = "#"
         req.post(req.root+"/t2w/api/payout/confirm", data).then(r => {
             const meta = JSON.parse(r.data.meta)
             delete r.data.meta
