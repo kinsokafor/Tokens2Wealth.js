@@ -1,5 +1,5 @@
 <template>
-    <Restricted access="3">
+    <Restricted access="3,4">
         <div>
             <Filters filterKey="usersList" v-slot="{key}">
                 <SelectFilter name="status" :filterKey="key" :options="status" selected="active" label="Status"/>
@@ -151,7 +151,8 @@
             callback: "disableUser",
             conditions: {
                 status: "active"
-            }
+            },
+            access: "1,2"
         },
         {
             name: "Enable",
@@ -159,7 +160,8 @@
             callback: "enableUser",
             conditions: {
                 status: "inactive"
-            }
+            },
+            access: "1,2"
         },
         {
             name: "Delete",
@@ -167,7 +169,8 @@
             callback: "deleteUser",
             conditions: {
                 status: "inactive"
-            }
+            },
+            access: "1,2"
         }
     ]
 
