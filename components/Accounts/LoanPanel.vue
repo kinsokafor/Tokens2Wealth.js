@@ -9,6 +9,15 @@
             'bg-warning text-black': (data.status == 'in process'),
             'bg-primary': (data.status == 'cleared')}">{{ data.status }}
         </span>
+        <div class="mt-2"> 
+          <button 
+            v-if="data.status == 'defaulted' && !hasLoan"
+            class="btn btn-primary"
+            @click.prevent="unban"
+          >
+            Unban
+          </button>
+        </div>
       </template>
     </Header>
     <div class="row">
@@ -298,6 +307,28 @@
           processing.value = false
         }).catch(e => {
           alertStore.add(e.response.data, "danger")
+        })
+      }
+    }
+
+    const unban = async () => {
+      if(data.value?.ac_number == undefined) return;
+      if(confirm("Are you sure you want to unban this user from loan suspension?")) {
+        r.post(r.root+"/t2w/api/account/edit-status", {
+          id: data.value.id,
+          status: 'cleared'
+        }).then(r => {
+            let i = r.data
+            i = { ...i, ...(JSON.parse(i.meta)) }
+            delete i.meta
+            const index = store.data.findIndex(j => j.id == i.id)
+            if (index == -1) {
+                store.data = [...store.data, i]
+            } else {
+                if (!_.isEqual(store.data[index], i)) {
+                    store.data[index] = i
+                }
+            }
         })
       }
     }
