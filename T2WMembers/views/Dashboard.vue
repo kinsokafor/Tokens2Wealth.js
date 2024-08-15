@@ -3,11 +3,14 @@
         <pending-guranteed-loans/>
         <div class="row">
             <div class="col-md-4">
-                <profile-image :data="data"></profile-image>
+                <router-link to="profile" style="color: var(--bs-heading-color);">
+                    <profile-image :data="data"></profile-image>
+                </router-link>
                 <profile-completeness></profile-completeness>
             </div>
             <div class="col-md-8">
                 <balances :data="data"></balances>
+                <current-rates></current-rates>
             </div>
         </div>
         <div class="row">
@@ -29,6 +32,7 @@
     import LatestNotifications from '../../components/Dashboard/LatestNotifications.vue';
     import LatestTransactions from '../components/Dashboard/LatestTransactions.vue';
     import ProfileCompleteness from '../components/Dashboard/ProfileCompleteness.vue';
+    import CurrentRates from '../components/Dashboard/CurrentRates.vue';
 
     const auth = useAuthStore()
     const data = computed(() => auth.getUser)

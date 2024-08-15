@@ -1,5 +1,5 @@
 <template>
-    <Restricted access="1,2,3,4,5,6,7,8,9,10">
+    <!-- <Restricted access="1,2,3,4,5,6,7,8,9,10"> -->
         <div class="hasAccount"  v-if="!_.isEmpty(data)">
             <Header :data="data" :bg="bgMap" :img="wallet" caption="E-Wallet">
                 <!-- <p>A level {{ data.level }} participating member</p> -->
@@ -61,11 +61,14 @@
                         </div>
                     </div>
                 </div> -->
+                <div class="col-md-8">
+                    <PendingDebits :account="data.ac_number"></PendingDebits>
+                </div>
             </div>
         </div>
         <div v-else>Your e-Wallet account is not yet active</div>
         
-    </Restricted>
+    <!-- </Restricted> -->
 </template>
 
 <script setup>
@@ -80,6 +83,7 @@
     import { Request, Options } from '@/helpers'
     // import downlines from '../../../components/Accounts/downlines.vue';
     // import uplines from '../../../components/Accounts/uplines.vue';
+    import PendingDebits from '../../../components/Accounts/PendingDebits.vue';
 
     const store = useAccountsStore()
     const auth = useAuthStore()
