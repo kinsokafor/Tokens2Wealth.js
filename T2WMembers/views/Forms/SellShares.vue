@@ -10,6 +10,8 @@
                         @values="v => values = v"
                         :processing="processing"
                         :initial-values="initialValues">
+                        <label for="amount">Amount</label>
+                        <input type="text" readonly class="form-control" id="amount" v-model="amount">
                     <div class="alert alert-info">
                         Today's rate is {{ rate }} naira per unit.
                     </div>
@@ -82,10 +84,7 @@
         })
     }
 
-    watchEffect(() => {
-        const amount = (values.value?.units ?? 0) * (rate.value ?? 1)
-        initialValues.value = {amount: amount, units: values.value?.units}
-    })
+    const amount = computed(() => (values.value?.units ?? 0) * (rate.value ?? 1))
 </script>
 
 <style lang="scss" scoped>
