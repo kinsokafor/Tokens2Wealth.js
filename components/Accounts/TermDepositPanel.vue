@@ -38,8 +38,16 @@
               <em>{{ timeStampToDate(data.maturity) }}</em>
             </div>
             <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
+              <span>Daily Interest</span>
+              <em>{{ toLocale(parseFloat(dailyInterest)) }}</em>
+            </div>
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
               <span>Interest Earned</span>
               <em>{{ toLocale(parseFloat(data.interest_earned)) }}</em>
+            </div>
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
+              <span>Estimated MV</span>
+              <em>{{ toLocale(parseFloat(emv)) }}</em>
             </div>
             <div class="justify-content-between d-flex" v-if="data.status == 'pending'">
               <span></span>
@@ -105,6 +113,12 @@
     })
 
     const data = computed(() => store.get({ac_number: props.account})[0] ?? {})
+
+    const dailyInterest = computed(() => (data.value?.td_rate*bal.value)/36000)
+
+    const emv = computed(() => {
+      return bal.value + (dailyInterest.value * data.value?.td_tenure * 30)
+    })
 
     watchEffect(() => {
       if(data.value?.status == 'active') {

@@ -1,12 +1,12 @@
 <template>
     <div class="row">
         <div class="col-md-12">
-            <h3 class="page-title">Deposits</h3>
+            <h3 class="page-title">Payouts</h3>
         </div>
     </div>
     <div>
         <data-filter 
-            :data="store.get({ledger: 'credit'})" 
+            :data="store.get({ledger: 'debit'})" 
             v-slot="{outputData}" 
             :quick-filters="quickFilters" 
             :search-columns="['amount', 'narration', 'classification', 'time_altered', 'status']">

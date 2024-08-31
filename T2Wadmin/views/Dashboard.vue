@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
             <CounterCard 
                 end-point="api/dbtable/t2w_accounts?ac_type=term_deposit&status=pending" 
                 title="Pending Term deposits" 
@@ -16,15 +16,23 @@
                 link="/t2w/a/#/accounts/term-deposits?status=pending"
             />
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
             <CounterCard 
-                end-point="api/dbtable/t2w_ewallet_transactions?status=unconfirmed" 
-                title="Unconfirmed Deposits/Payouts" 
+                end-point="api/dbtable/t2w_ewallet_transactions?ledger=credit&status=unconfirmed" 
+                title="Unconfirmed Deposits" 
                 :template="CountCard"
                 link="/t2w/a/#/ewallet-credits?status=unconfirmed"
             />
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
+            <CounterCard 
+                end-point="api/dbtable/t2w_ewallet_transactions?ledger=debit&status=unconfirmed" 
+                title="Unconfirmed Payouts" 
+                :template="CountCard"
+                link="/t2w/a/#/ewallet-debits?status=unconfirmed"
+            />
+        </div>
+        <div class="col-12 col-md-3">
             <CounterCard 
                 end-point="api/dbtable/t2w_inflow_outflow?status=unconfirmed" 
                 title="Unconfirmed Inflow/Outflow" 
@@ -182,8 +190,15 @@
 
     const transactions = computed(() => [
         {
-            label: "E-Wallet Credits/Payouts",
+            label: "E-Wallet Credits",
             link: "/ewallet-credits",
+            isRouter: true,
+            iconClass: "fa-wallet",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Payouts",
+            link: "/ewallet-debits",
             isRouter: true,
             iconClass: "fa-wallet",
             access: "1,2,3,4"
