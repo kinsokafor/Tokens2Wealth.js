@@ -15,6 +15,7 @@ import PostInflow from '../views/Forms/PostInflow.vue'
 import PostOutflow from '../views/Forms/PostOutflow.vue'
 import BulkCredit from '../views/Forms/BulkCredit.vue'
 import BulkDebit from '../views/Forms/BulkDebit.vue'
+import PublishLearningMaterial from '../views/Forms/PublishLearningMaterial.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
 import EWalletDebits from '../views/Reports/EWalletDebits.vue'
 import InflowOutflow from '../views/Reports/InflowOutflow.vue'
@@ -30,6 +31,7 @@ import MembersOnThrift from '../views/Reports/MembersOnThrift.vue'
 import MembersOnTD from '../views/Reports/MembersOnTD.vue'
 import MembersWithShares from '../views/Reports/MembersWithShares.vue'
 import AdminLog from '../views/Reports/AdminLog.vue'
+import LearningMaterials from '../views/Reports/LearningMaterials.vue'
 import Members from '../views/Members/Members.vue'
 import MemberData from '../views/Members/MemberData.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
@@ -260,6 +262,18 @@ const router = createRouter({
             name: 'AdminLog',
             component: AdminLog,
             meta: { title: "Admin Actions Log" }
+        },
+        {
+            path: '/reports/learning-materials',
+            name: 'LearningMaterials',
+            component: LearningMaterials,
+            meta: { title: "Learning Materials" }
+        },
+        {
+            path: '/publish-learning-material',
+            name: 'PublishLearningMaterial',
+            component: PublishLearningMaterial,
+            meta: { title: "Publish Learning Material" }
         }
     ]
 });

@@ -310,6 +310,20 @@
             isRouter: true,
             iconClass: "fa-solid fa-book",
             access: "1,2"
+        },
+        {
+            label: "Publish Learning Material",
+            link: "/publish-learning-material",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Learning Materials",
+            link: "/reports/learning-materials",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
+            access: "1,2,3,4"
         }
     ])
 

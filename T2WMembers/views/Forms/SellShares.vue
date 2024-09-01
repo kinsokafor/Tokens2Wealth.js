@@ -48,11 +48,6 @@
             label: "Units",
             name: "units",
             rules: yup.number().required().min(0)
-        },
-        {
-            label: "Amount",
-            name: "amount",
-            readonly: true
         }
     ])
 
