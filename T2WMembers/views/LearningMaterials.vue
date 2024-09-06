@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-    import LearningMaterials from '../../T2Wadmin/views/Reports/LearningMaterials.vue';
+    import LearningMaterials from '../../T2WAdmin/views/Reports/LearningMaterials.vue';
 </script>
 
 <style lang="scss" scoped>

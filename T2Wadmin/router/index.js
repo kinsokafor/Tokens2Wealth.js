@@ -15,6 +15,8 @@ import PostInflow from '../views/Forms/PostInflow.vue'
 import PostOutflow from '../views/Forms/PostOutflow.vue'
 import BulkCredit from '../views/Forms/BulkCredit.vue'
 import BulkDebit from '../views/Forms/BulkDebit.vue'
+import CreditSingle from '../views/Forms/CreditSingle.vue'
+import DebitSingle from '../views/Forms/DebitSingle.vue'
 import PublishLearningMaterial from '../views/Forms/PublishLearningMaterial.vue'
 import EWalletCredits from '../views/Reports/EWalletCredits.vue'
 import EWalletDebits from '../views/Reports/EWalletDebits.vue'
@@ -214,6 +216,18 @@ const router = createRouter({
             name: 'BulkDebit',
             component: BulkDebit,
             meta: { title: "Bulk Debit" }
+        },
+        {
+            path: '/credit-single',
+            name: 'CreditSingle',
+            component: CreditSingle,
+            meta: { title: "Credit Single Wallet" }
+        },
+        {
+            path: '/debit-single',
+            name: 'DebitSingle',
+            component: DebitSingle,
+            meta: { title: "Debit Single Wallet" }
         },
         {
             path: '/reports/ledger/inflow-outflow',

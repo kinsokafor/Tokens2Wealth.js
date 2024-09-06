@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-    import {useLMStore} from '@module/Tokens2Wealth/store/learningMaterials'
+    import {useLMStore} from '@module/Tokens2Wealth/store/LearningMaterials'
     import ListItem from '@theme/ListItem.vue'
     import DataFilter from '@filter/DataFilter.vue'
 

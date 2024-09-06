@@ -251,6 +251,20 @@
             isRouter: true,
             iconClass: "fa-solid fa-envelopes-bulk",
             access: "1,2"
+        },
+        {
+            label: "Credit Single E-Wallet",
+            link: "/credit-single",
+            isRouter: true,
+            iconClass: "fa-solid fa-coins",
+            access: "1,2"
+        },
+        {
+            label: "Debit Single E-Wallet",
+            link: "/debit-single",
+            isRouter: true,
+            iconClass: "fa-solid fa-coins",
+            access: "1,2"
         }
     ])
 
