@@ -47,6 +47,8 @@ export const useWalletsStore = defineStore('useWalletsStore', {
                         }
                     }
                 } else {
+                    console.log("r", r)
+                    console.log("r.data", r.data)
                     r.data.forEach(i => {
                         i = { ...i, ...(JSON.parse(i.meta)) }
                         delete i.meta

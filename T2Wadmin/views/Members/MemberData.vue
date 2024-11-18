@@ -170,6 +170,29 @@
                         </div>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>Account Details</legend>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="field">
+                                <label for="">Account Number</label>
+                                <div>{{user.ac_number}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="field">
+                                <label for="">Bank</label>
+                                <div>{{user.bank_name}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="field">
+                                <label for="">Account Name</label>
+                                <div>{{user.ac_name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </div>
     </div>
@@ -210,9 +233,10 @@
         display: flex;
         gap: 10px;
         margin-bottom: 21px;
+        justify-content: start;
     }
     .field div {
-        width: 70%;
+        width: 100%;
         text-align: center;
         border-bottom: 1px dashed;
     }
@@ -222,5 +246,12 @@
         font-style: italic;
         height: 100%;
         display: ruby;
+        // width: 40%;
+        white-space: nowrap;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+    }
+    legend {
+        font-weight: 800;
     }
 </style>
