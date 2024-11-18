@@ -184,7 +184,10 @@ const router = createRouter({
             component: Payout,
             meta: { title: "Payout" }
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+      return { top: 0 };
+    }
 });
 
 router.beforeEach((to, from, next) => {

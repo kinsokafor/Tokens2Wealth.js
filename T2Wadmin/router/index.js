@@ -289,7 +289,10 @@ const router = createRouter({
             component: PublishLearningMaterial,
             meta: { title: "Publish Learning Material" }
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+      return { top: 0 };
+    }
 });
 
 router.beforeEach((to, from, next) => {

@@ -16,7 +16,10 @@ const router = createRouter({
             component: Dashboard,
             meta: { title: "Dashboard" }
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+      return { top: 0 };
+    }
 });
 
 router.beforeEach((to, from, next) => {

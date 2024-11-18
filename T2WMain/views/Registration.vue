@@ -130,7 +130,8 @@
             rules: yup.string().required(),
             position: "middleAfter",
             as: "vselect",
-            options: states.value
+            options: states.value,
+            taggable: true
         },
         {
             label: "L.G.A *",
@@ -139,7 +140,8 @@
             position: "middleAfter",
             column: "right",
             as: "vselect",
-            options: lgas.value
+            options: lgas.value,
+            taggable: true
         },
         {
             label: "Email *",
