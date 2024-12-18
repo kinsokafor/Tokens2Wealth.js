@@ -2,10 +2,7 @@
     <Header :data="data" :bg="bgMap" :img="wallet" caption="E-Wallet">
       <p>A level {{ data.level }} participating member</p>
       <template #status>
-        <span class="badge" 
-          :class="{
-            'bg-success': (data.status == 'active'), 
-            'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
+        <span class="badge bg-success">Active
         </span>
         <!-- <div class="form-check form-switch">
             <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">
