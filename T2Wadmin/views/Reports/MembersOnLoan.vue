@@ -37,8 +37,7 @@
     }
 
     const data = computed(() => store.get(
-            {
-                status: 'active', 
+            { 
                 ac_type: 'loan', 
                 ac_number: '321%'
             }, 'ac_type').filter(i => {

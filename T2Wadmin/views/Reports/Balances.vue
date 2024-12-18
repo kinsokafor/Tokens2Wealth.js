@@ -15,6 +15,11 @@
                 <div class="col-12">
                     <GLChart></GLChart>
                 </div>
+            </div><hr>
+            <div class="row">
+                <div class="col-12">
+                    <OtherReports></OtherReports>
+                </div>
             </div>
         </div>
         <button  class="btn btn-primary" @click.prevent="print">Print</button>
@@ -24,6 +29,7 @@
 <script setup>
     import BalancesChart from '../Charts/BalancesChart.vue';
     import GLChart from '../Charts/GLChart.vue';
+    import OtherReports from '../Charts/OtherReports.vue';
     import {Print} from '@/helpers'
 
     const print = () => {

@@ -23,6 +23,7 @@
 
     const req = new dbTable()
     const latest = ref([])
+    const sent = ref(false)
 
     const props = defineProps({
         data: Object,
@@ -33,7 +34,8 @@
     })
 
     watchEffect(() => {
-        if(props.data?.id == undefined) return;
+        if(props.data?.id == undefined || sent.value) return;
+        sent.value = true
         req.get("notification", {user_id: props.data.id, limit: 5, order_by: "last_sent", order: "DESC"}).then(r => {
             latest.value = r.data
         })

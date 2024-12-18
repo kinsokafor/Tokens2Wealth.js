@@ -1,6 +1,6 @@
 <template>
     <div class="avoid">
-        <div class="row">
+        <div class="row justify-content-end">
             <div class="col-md-6">
                 <div class="input-group mb-3">
                     <input type="date" class="form-control" v-model="from"/>

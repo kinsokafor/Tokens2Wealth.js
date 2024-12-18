@@ -2,7 +2,7 @@
     <div class="avoid">
         <restricted access="1,2">
             <template #message><span></span></template>
-            <div class="row">
+            <div class="row justify-content-end">
                 <div class="col-md-4">
                     <div class="input-group mb-3">
                         <input type="date" class="form-control" v-model="date"/>
@@ -72,13 +72,14 @@
 <script setup>
     import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
     import { Doughnut } from 'vue-chartjs'
-    import { Request } from '@/helpers'
+    import { Request, Options } from '@/helpers'
     import { onMounted, ref, computed } from 'vue';
     import { toLocale } from '@module/Tokens2Wealth/helpers'
 
     ChartJS.register(ArcElement, Tooltip, Legend)
 
     const req = new Request();
+    const opt = new Options();
 
     const totalUnits = ref(0)
     const shareUnit = ref(1)
@@ -146,7 +147,7 @@
 
     onMounted(async () => {
         resetTrialBalance();
-        await options.get("share_unit").then(res => {
+        await opt.get("share_unit").then(res => {
             shareUnit.value = parseFloat(res.data)
         })
     })
