@@ -49,7 +49,7 @@
     import { useEWalletTxnsStore } from '../../../store/ewalletTransactions'
     import { computed, ref, onMounted } from 'vue'
     import Table from '@/components/Table.vue'
-    import {getFullname} from '@/helpers'
+    import {getFullname, leadingZero} from '@/helpers'
     import {toLocale} from '@module/Tokens2Wealth/helpers'
 
     const props = defineProps({
@@ -59,8 +59,10 @@
     const store = useEWalletTxnsStore();
     const trigger = ref(false)
     const now = new Date();
-    const from = ref(`${now.getFullYear()}-01-01`)
-    const to = ref(`${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`)
+    var oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const from = ref(`${oneYearAgo.getFullYear()}-${leadingZero(oneYearAgo.getMonth()+1)}-01`)
+    const to = ref(`${now.getFullYear()}-${leadingZero(now.getMonth()+1)}-${leadingZero(now.getDate())}`)
     const between = computed(() => `time_altered,${from.value},${to.value}`)
 
     const statement = computed(() => {

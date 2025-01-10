@@ -7,7 +7,7 @@
             <div class="marquee">
                 <div><span>Current Loan Rate: </span>{{ loan }}%</div>
                 <div><span>Current Term Deposit Rate: </span>{{ td }}%</div>
-                <div><span>Loan Insurance Charge: </span>{{ loan }}%</div>
+                <div><span>Loan Insurance Charge: </span>{{ loanInsurrance }}%</div>
             </div>
             
         </marquee>

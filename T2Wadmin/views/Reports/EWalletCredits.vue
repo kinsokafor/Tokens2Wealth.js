@@ -4,9 +4,15 @@
             <h3 class="page-title">Deposits</h3>
         </div>
     </div>
+    <div class="row justify-content-end">
+        <div class="col-md-6 d-flex">
+            <input type="date" v-model="from" class="form-control">
+            <input type="date" v-model="to" class="form-control">
+        </div>
+    </div>
     <div>
         <data-filter 
-            :data="store.get({ledger: 'credit'})" 
+            :data="data" 
             v-slot="{outputData}" 
             :quick-filters="quickFilters" 
             :search-columns="['amount', 'narration', 'classification', 'time_altered', 'status']">
@@ -51,8 +57,16 @@
     import {openModal} from "jenesius-vue-modal";
     import PaymentInvoicePopUp from '@/Modules/Tokens2Wealth/components/PaymentInvoicePopUp.vue';
     import { toLocale } from '@module/Tokens2Wealth/helpers'
+    import {leadingZero} from '@/helpers'
 
     const store = useEWalletTxnsStore()
+    const now = new Date();
+    var oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const from = ref(`${oneYearAgo.getFullYear()}-${leadingZero(oneYearAgo.getMonth()+1)}-01`)
+    const to = ref(`${now.getFullYear()}-${leadingZero(now.getMonth()+1)}-${leadingZero(now.getDate())}`)
+    const between = computed(() => `time_altered,${from.value},${to.value}`)
+    const data = computed(() => store.get({ledger: 'credit', between: between.value}))
 
     const quickFilters = ref([
         {
@@ -78,10 +92,10 @@
 </script>
 
 <style lang="scss" scoped>
-    * {
-        padding: 0;
-        margin: 0;
-    }
+    // * {
+    //     padding: 0;
+    //     margin: 0;
+    // }
     .badge {
         padding: 3px 6px;
         border-radius: 10px;
