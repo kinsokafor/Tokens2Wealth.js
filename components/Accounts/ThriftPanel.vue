@@ -5,7 +5,8 @@
         <span class="badge" 
           :class="{
             'bg-success': (data.status == 'active'), 
-            'bg-warning text-black': (data.status == 'inactive')}">{{ data.status }}
+            'bg-warning text-black': (data.status == 'inactive'), 
+            'bg-danger': (data.status == 'liquidated')}">{{ data.status }}
         </span>
         <div class="form-check form-switch">
             <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">

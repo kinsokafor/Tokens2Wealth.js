@@ -6,8 +6,8 @@
     </div>
     <div class="row justify-content-end">
         <div class="col-md-6 d-flex">
-            <input type="date" v-model="from" class="form-control">
-            <input type="date" v-model="to" class="form-control">
+            <date-input type="date" label="Date From" v-model="from" name="from" column="left" class="form-control"/>
+            <date-input type="date" label="Date To" v-model="to" name="to" column="left" class="form-control"/>
         </div>
     </div>
     <div>
@@ -58,6 +58,7 @@
     import PaymentInvoicePopUp from '@/Modules/Tokens2Wealth/components/PaymentInvoicePopUp.vue';
     import { toLocale } from '@module/Tokens2Wealth/helpers'
     import {leadingZero} from '@/helpers'
+    import DateInput from '@/components/form/Date.vue'
 
     const store = useEWalletTxnsStore()
     const now = new Date();
