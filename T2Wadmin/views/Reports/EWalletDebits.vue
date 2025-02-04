@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="row justify-content-end">
-        <div class="col-md-6 d-flex">
+        <div class="col-md-6 d-flex justify-content-end">
             <date-input type="date" label="Date From" v-model="from" name="from" column="left" class="form-control"/>
             <date-input type="date" label="Date To" v-model="to" name="to" column="left" class="form-control"/>
         </div>

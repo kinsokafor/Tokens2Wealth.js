@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="row justify-content-end">
-            <div class="col-md-6 d-flex">
-                <input type="date" v-model="from" class="form-control">
-                <input type="date" v-model="to" class="form-control">
-                <button class="btn btn-primary" @click="trigger = true">Filter</button>
+            <div class="col-md-6 d-flex justify-content-end">
+                <date-input type="date" label="Date From" v-model="from" name="from" column="left" class="form-control"/>
+                <date-input type="date" label="Date To" v-model="to" name="to" column="left" class="form-control"/>
+                <!-- <button class="btn btn-primary" @click="trigger = true">Filter</button> -->
             </div>
         </div>
        <Table
@@ -51,6 +51,7 @@
     import Table from '@/components/Table.vue'
     import {getFullname, leadingZero} from '@/helpers'
     import {toLocale} from '@module/Tokens2Wealth/helpers'
+    import DateInput from '@/components/form/Date.vue'
 
     const props = defineProps({
         accountNumber: String
