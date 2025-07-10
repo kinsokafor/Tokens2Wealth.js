@@ -20,6 +20,9 @@
     import {computed} from 'vue'
     import {getFullname} from '@/helpers'
     import { toLocale } from '@module/Tokens2Wealth/helpers'
+    import { useDateFormat } from '@vueuse/core'
+
+
 
     const store = useAccountsStore();
 
@@ -27,7 +30,18 @@
         surname: {heading: "Fullname", processor: function() {return getFullname(this)}},
         amount: {heading: "Monthly Savings", processor: function() {return toLocale(this.amount)}},
         balance: {heading: "Balance", processor: function() {return toLocale(this.balance)}},
-        time_altered: "Date"
+        time_altered: {heading: "Date started",
+            processor: function() {
+                const rawDate = new Date(this.time_altered)
+                return (useDateFormat(rawDate, 'MMM DD, YYYY')).value
+            }
+        },
+        last_transaction_date: {heading: "Last transation date",
+            processor: function() {
+                const rawDate = new Date(this.last_transaction_date)
+                return (useDateFormat(rawDate, 'MMM DD, YYYY')).value
+            }
+        }
     }
 
     const data = computed(() => store.get(

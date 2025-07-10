@@ -114,7 +114,7 @@
         date_created: {
             heading: "Date of Registration",
             processor: function() {
-                console.log(this)
+                // console.log(this)
                 return timeStampToDate(this.date_created)
             }
         },
