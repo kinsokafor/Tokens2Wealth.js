@@ -3,7 +3,7 @@
         <div>
             <Filters filterKey="usersList" v-slot="{key}">
                 <SelectFilter name="status" :filterKey="key" :options="status" selected="active" label="Status"/>
-                <TextFilter name="fullname" :filterKey="key" value="" label="Name"/>
+                <!-- <TextFilter name="fullname" :filterKey="key" value="" label="Name"/> -->
                 <SelectFilter name="role" :filterKey="key" :options="roles" label="Role"/>
             </Filters>
         </div>
@@ -114,7 +114,6 @@
         date_created: {
             heading: "Date of Registration",
             processor: function() {
-                // console.log(this)
                 return timeStampToDate(this.date_created)
             }
         },
