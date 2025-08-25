@@ -98,6 +98,12 @@
                                 <div>{{user.email}}</div>
                             </div>
                         </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="field">
+                                <label for="">Referrer</label>
+                                <div><get-fullname :username="user.referral" /></div>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <fieldset>
@@ -204,6 +210,7 @@
     import {useRoute} from 'vue-router'
     import {computed, watchEffect, ref} from 'vue';
     import { Print, getFullname, getProfilePicture } from '@/helpers'
+    import GetFullname from '@theme/GetFullname.vue';
 
     const userStore = useUsersStore()
     const route = useRoute()
