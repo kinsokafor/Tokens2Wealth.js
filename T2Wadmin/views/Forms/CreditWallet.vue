@@ -64,6 +64,17 @@
             rules: yup.string().required()
         },
         {
+            label: "Purpose of payment",
+            name: "purpose",
+            as: "select",
+            options: [
+                {name: "Thrift Savings", value: "rt"},
+                {name: "Loan Repayment", value: "loan"},
+                {name: "Both", value: null}
+            ],
+            rules: yup.string().required()
+        },
+        {
             label: "Date of payment",
             name: "date_of_payment",
             type: "date",
