@@ -71,8 +71,7 @@
                 {name: "Thrift Savings", value: "rt"},
                 {name: "Loan Repayment", value: "loan"},
                 {name: "Both", value: null}
-            ],
-            rules: yup.string().required()
+            ]
         },
         {
             label: "Date of payment",
