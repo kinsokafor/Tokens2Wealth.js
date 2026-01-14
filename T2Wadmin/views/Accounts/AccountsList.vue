@@ -5,8 +5,17 @@
     </div>
   </div>
   <div>
+    <div class="row justify-content-end">
+      <div class="col-md-4">
+            <div class="input-group mb-3">
+                <input type="date" class="form-control" v-model="date"/>
+                <button class="btn btn-outline-secondary" type="button" @click.prevent="getTrialBalance">Get trial balance</button>
+            </div>
+            <a href="javaScript:void(0)" @click.prevent="resetTrialBalance" class="no-print">Reset</a>
+        </div>
+    </div>
     <DataFilter
-      :data="store.get({ ac_number: `${accountCode}%` })"
+      :data="data"
       v-slot="{ outputData }"
       :search-columns="['surname', 'other_names', 'ac_number']"
       :quick-filters="quickFilters"
@@ -154,6 +163,57 @@ const layout = ref(useSessionStorage("accounts-layout", "tiles"));
 
 const store = useAccountsStore();
 
+const moreParams = ref({});
+
+const accountCode = computed(() => {
+  switch (route.params.accountType) {
+    case "thrift-savings":
+      return 312;
+      break;
+
+    case "loans":
+      return 321;
+      break;
+
+    case "term-deposits":
+      return 311;
+      break;
+
+    case "special-savings":
+      return 314;
+      break;
+
+    case "shares":
+      return 313;
+      break;
+
+    default:
+      return 301;
+      break;
+  }
+});
+
+const data = computed(() => store.get({ ac_number: `${accountCode.value}%`, ...moreParams.value }))
+
+const date = ref(null);
+
+const isTrial = ref(false);
+
+const getTrialBalance = async () => {
+  if (!date.value) {
+    alert("Please select a date to get trial balance.");
+    return;
+  }
+  isTrial.value = true;
+  moreParams.value = { date: date.value }
+};
+
+const resetTrialBalance = () => {
+  isTrial.value = false;
+  date.value = null;
+  moreParams.value = {};
+}
+
 onUnmounted(() => {
   store.abort();
 });
@@ -235,33 +295,7 @@ const quickFilters = computed(() => {
   }
 });
 
-const accountCode = computed(() => {
-  switch (route.params.accountType) {
-    case "thrift-savings":
-      return 312;
-      break;
 
-    case "loans":
-      return 321;
-      break;
-
-    case "term-deposits":
-      return 311;
-      break;
-
-    case "special-savings":
-      return 314;
-      break;
-
-    case "shares":
-      return 313;
-      break;
-
-    default:
-      return 301;
-      break;
-  }
-});
 </script>
 
 <style lang="scss" scoped></style>

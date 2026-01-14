@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { dbTable, Request, storeGetter } from '@/helpers';
+import { dbTable, Request, storeGetter, updateStoreDataSingle, updateStoreData, storeLoaderController } from '@/helpers';
 import _ from 'lodash';
 import { useSessionStorage } from '@vueuse/core'
 
@@ -32,30 +32,9 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 ...params
             }).then(r => {
                 if ("id" in params) {
-                    const meta = JSON.parse(r.data.meta)
-                    delete r.data.meta
-                    let i = { ...r.data, ...meta }
-                    const index = this.data.findIndex(j => j.id == i.id)
-                    if (index == -1) {
-                        this.data = [...this.data, i]
-                    } else {
-                        if (!_.isEqual(this.data[index], i)) {
-                            this.data[index] = i
-                        }
-                    }
+                    this.data = updateStoreDataSingle(this.data, r.data)
                 } else {
-                    r.data.forEach(i => {
-                        i = { ...i, ...(JSON.parse(i.meta)) }
-                        delete i.meta
-                        const index = this.data.findIndex(j => j.id == i.id)
-                        if (index == -1) {
-                            this.data = [...this.data, i]
-                        } else {
-                            if (!_.isEqual(this.data[index], i)) {
-                                this.data[index] = i
-                            }
-                        }
-                    })
+                    this.data = updateStoreData(this.data, r.data)
                 }
                 if (r.data.length >= this.limit) {
                     this.offset = this.limit + this.offset
@@ -63,12 +42,12 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                 } 
                 else {
                     this.offset = 0
-                    this.loaded.push(params?.ac_number)
+                    this.loaded.push(params?.ac_number+params?.date)
                     if(this.lastTimeOut != null) {
                         clearTimeout(this.lastTimeOut)
                     }
                     this.lastTimeOut = setTimeout(() => {
-                        const index = this.loaded.findIndex(i => i == params?.ac_number)
+                        const index = this.loaded.findIndex(i => i == params?.ac_number+params?.date)
                         if(index != -1) {
                             this.loaded.splice(index, 1)
                         }
@@ -191,12 +170,13 @@ export const useAccountsStore = defineStore('useAccountsStore', {
                         state.getByNumber(tempParams) 
                     }
                     else {
-                        if(state.loaded.findIndex(i => i == tempParams?.ac_number) == -1) {
+                        if(state.loaded.findIndex(i => i == tempParams?.ac_number+tempParams?.date) == -1) {
+                            state.data = []
                             state.abort()
                             state.loadFromServer(tempParams)
                         }
                     }
-                }, params, exclude)
+                }, params, exclude, ['date'])
             }
         }
     }
