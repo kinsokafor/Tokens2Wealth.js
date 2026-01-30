@@ -188,7 +188,7 @@
         req.post(req.root+"/t2w/api/registration", data).then(r => {
             processing.value = false
             actions.resetForm()
-            alertStore.add("You are registered successfully. Check your email for an account activation link.", "success")
+            alertStore.add("You are registered successfully. You can now login to your account for payment instructions.", "success")
         }).catch(e => {
             processing.value = false
             alertStore.add(e.response.data, "danger")

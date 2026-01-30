@@ -7,6 +7,11 @@
                 <SelectFilter name="role" :filterKey="key" :options="roles" label="Role"/>
             </Filters>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <Picker :attrs="{options: pickerFields, multiple: true}" v-model="selectedColumns" />
+            </div>
+        </div>
         <Table 
             @disableUser="disable" 
             @enableUser="enable" 
@@ -29,7 +34,7 @@
 </template>
 
 <script setup>
-    import { onMounted, computed, watch } from 'vue'
+    import { onMounted, computed, ref } from 'vue'
     import { useUsersStore } from '@/Modules/Main/store/users'
     import SelectFilter from '@/components/filters/SelectFilter.vue';
     import TextFilter from '@/components/filters/TextFilter.vue';
@@ -41,9 +46,11 @@
     import male from '@/components/images/male_avatar.svg'
     import female from '@/components/images/female_avatar.svg'
     import {useConfigStore} from '@/store/config'
+    import Picker from '@form/Picker.vue'
 
     const config = useConfigStore();
     const auth = computed(() => config.get('Auth'));
+    const selectedColumns = ref(["fullname", "username", "phone", "date_created", "profile_display"]);
 
     const roles = computed(() => {
         if(auth.value.roles == undefined) return {}
@@ -107,18 +114,98 @@
         }
     })
 
-    const columns = {
-        fullname: "Fullname",
-        username: "Membership Number",
-        phone: "Phone Number",
+    const pickerFields = [
+        {
+            name: "Fullname",
+            value: "fullname"
+        },
+        {
+            name: "Membership Number",
+            value: "username"
+        },
+        {
+            name: "Phone Number",
+            value: "phone"
+        },
+        {
+            name: "Date of Registration",
+            value: "date_created"
+        },
+        {
+            name: "Photo",
+            value: "profile_display"
+        },
+        {
+            name: "Email",
+            value: "email"
+        },
+        {
+            name: "Referrer",
+            value: "referral"
+        },
+        {
+            name: "Gender",
+            value: "gender"
+        },
+        {
+            name: "Occupation",
+            value: "occupation"
+        },
+        {
+            name: "Address",
+            value: "address"
+        },
+        {
+            name: "City",
+            value: "city"
+        },
+        {
+            name: "L.G.A",
+            value: "lga"
+        },
+        {
+            name: "State",
+            value: "state"
+        },
+        {
+            name: "Country",
+            value: "country"
+        },
+        {
+            name: "Account Number",
+            value: "ac_number"
+        },
+        {
+            name: "Bank",
+            value: "bank_name"
+        },
+        {
+            name: "Account Name",
+            value: "ac_name"
+        }
+    ]
+
+    const columnFilter = {
         date_created: {
             heading: "Date of Registration",
             processor: function() {
                 return timeStampToDate(this.date_created)
             }
-        },
-        profile_display: "Photo"
+        }
     }
+
+    const columns = computed(() => {
+        const cols = {}
+        selectedColumns.value.forEach(col => {
+            if(col in columnFilter) {
+                cols[col] = columnFilter[col]
+            } else {
+                const index = pickerFields.findIndex(i => i.value == col)
+                cols[col] = pickerFields[index]?.name ?? col
+            }
+        })
+        return cols
+    })
 
     const getLink = (id, role) => {
         if(role in auth.value.roles) {
@@ -130,21 +217,6 @@
     } 
 
     const actions = [
-        // {
-        //     name: "Profile",
-        //     type: "router-link",
-        //     url: "/profile/{id}",
-        //     params: "id"
-        // },
-        // {
-        //     name: "Profile2",
-        //     type: "link",
-        //     url: "/profile?id={id}",
-        //     params: ["id"],
-        //     notConditions: {
-        //         email: "info@swiftwaylog.com"
-        //     }
-        // },
         {
             name: "Disable",
             type: "action",
