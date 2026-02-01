@@ -1,10 +1,10 @@
 <template>
     <div class="user-card">
         <div class="img-containerx img-responsive">
-            <img :src="profilePicture" alt="" class="img">
+            <img :src="userImg" alt="" class="img">
         </div>
         <div class="particulars">
-            <h3>{{getFullname(user)}}</h3>
+            <h3><router-link :to="profileLink">{{ fullname }}</router-link></h3>
             <p>Membership Number: {{user.username}} <br/>
                 <slot></slot>
             </p>
@@ -15,7 +15,7 @@
 <script setup>
     import {useUsersStore} from '@/Modules/Main/store/users'
     import {computed, ref, watchEffect} from 'vue'
-    import {getFullname, getProfilePicture} from '@/helpers'
+    import { useUserProfile } from '@/helpers'
 
     const store = useUsersStore()
 
@@ -23,14 +23,16 @@
         userId: Number
     })
 
-    const user = computed(() => store.getUser(props.userId))
+    const { fullname, user, userImg } = useUserProfile(props.userId);
 
-    const profilePicture = ref("#")
-
-    watchEffect(() => {
-      getProfilePicture(user.value).then(r => {
-        profilePicture.value = r
-      })
+    const profileLink = computed(() => {
+        if (user.value?.role === 'member') {
+            return `/member/profile/${user.value.id}`;
+        } else if (user.value?.role === 'pending') {
+            return `/pending/profile/${user.value.id}`;
+        } else {
+            return `/profile/${user.value.id}`;
+        }
     })
 </script>
 

@@ -4,7 +4,6 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">New loan</h5>
-                    
                     <CreateForm :fields="fields" 
                         @submit="handleSubmit"
                         @values="v => values = v"
@@ -13,6 +12,8 @@
                     <div class="alert alert-info">
                         You are eligible to collect up to {{toLocale(loanable)}} loan. Today's interest rate is {{ rate }}%.
                     </div>
+                    <input type="text" class="form-control mb-3" readonly 
+                        :value="`Estimated Interest: ${toLocale(estimatedInterest)}`" />
                     </CreateForm>
                     <div class="alert alert-danger" v-else>
                         <span class="badge bg-danger">Legibility</span> {{ message }}
@@ -31,6 +32,7 @@
     import * as yup from 'yup'
     import {Options, Request} from '@/helpers'
     import {useAlertStore} from '@/store/alert'
+    import { calculateInterest } from '@module/Tokens2Wealth/helpers'
 
     const store = useAccountsStore()
     const router = useRouter()
@@ -44,7 +46,13 @@
     const tenure = ref([])
     const balance = ref(0)
     const require_guarantor = ref(true);
+    const estimatedInterest = computed(() => {
+        const amount = values.value?.amount ?? 0;
+        const time = values.value?.tenure ?? 0;
+        return calculateInterest(amount, rate.value, time);
+    })
     import { toLocale } from '@module/Tokens2Wealth/helpers'
+import { parse } from 'filepond'
 
     const options = new Options()
 
@@ -65,25 +73,25 @@
             label: "First Guarantor Membership ID",
             name: "gt1_id",
             rules: yup.string().required(),
-            condition: ((values.value?.amount ?? 0) > balance.value) && require_guarantor.value
+            condition: ((parseFloat(values.value?.amount ?? 0) + estimatedInterest.value) > balance.value) && require_guarantor.value
         },
         {
             label: "First Guarantor Full Name",
             name: "gt1_fullname",
             rules: yup.string().required(),
-            condition: ((values.value?.amount ?? 0) > balance.value) && require_guarantor.value
+            condition: ((parseFloat(values.value?.amount ?? 0) + estimatedInterest.value) > balance.value) && require_guarantor.value
         },
         {
             label: "Second Guarantor Membership ID",
             name: "gt2_id",
             rules: yup.string().required(),
-            condition: ((values.value?.amount ?? 0) > balance.value) && require_guarantor.value
+            condition: ((parseFloat(values.value?.amount ?? 0) + estimatedInterest.value) > balance.value) && require_guarantor.value
         },
         {
             label: "Second Guarantor Full Name",
             name: "gt2_fullname",
             rules: yup.string().required(),
-            condition: ((values.value?.amount ?? 0) > balance.value) && require_guarantor.value
+            condition: ((parseFloat(values.value?.amount ?? 0) + estimatedInterest.value) > balance.value) && require_guarantor.value
         }
     ])
 

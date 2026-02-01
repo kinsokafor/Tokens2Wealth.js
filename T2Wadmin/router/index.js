@@ -39,6 +39,7 @@ import MemberData from '../views/Members/MemberData.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
 import MemberProfile from '../views/Members/Profile.vue'
 import PendingProfile from '../views/Members/PendingProfile.vue'
+import profile from "@module/Main/Admin/views/profile.vue";
 import PendingShares from '../views/PendingShares.vue'
 
 const router = createRouter({
@@ -48,6 +49,12 @@ const router = createRouter({
             name: 'NotFound',
             component: NotFound,
             meta: { title: "404 Not Found" }
+        },
+        {
+            path: '/profile/:id',
+            name: 'AdminProfile',
+            component: profile,
+            meta: { title: "Admin Profile" }
         },
         {
             path: '/member/profile/:id',
