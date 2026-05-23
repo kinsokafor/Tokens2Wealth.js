@@ -8,6 +8,7 @@
             <small>{{ item.time_altered }}</small>
             <Restricted access="1,2,3">
                 <a href="javaScript:void(0)" class="link-danger" @click.prevent="deletePD(item)"><small>Delete</small></a>
+                <a href="javaScript:void(0)" class="link-success" @click.prevent="settlePD(item)"><small>Settle</small></a>
                 <template #message><div></div></template>
             </Restricted>
           </template>
@@ -19,7 +20,7 @@
     import { toLocale } from '@module/Tokens2Wealth/helpers'
     import { usePDStore } from '../../store/pendingDebits'
     import ListItem from '@/components/theme/ListItem.vue'
-    import {dbTable} from '@/helpers'
+    import {dbTable, Request} from '@/helpers'
     import { useAlertStore } from '@/store/alert'
 
     const PDStore = usePDStore()
@@ -50,6 +51,11 @@
           alertStore.add(e.data, "danger")
         })
       }
+    }
+
+    const settlePD = async (item) => {
+      const rq = new Request();
+      await rq.post(rq.root + "/t2w/api/settle-pending-credit", {id: item.id})
     }
 </script>
 
