@@ -13,7 +13,7 @@
         <td v-for="col in columns" :key="col">
             {{ user[col] }}
         </td>
-        <td>{{ useDateFormat((user.date_created * 1000), 'YYYY-MM-DD HH:mm:ss A') }}</td>
+        <td>{{ dateCreated }}</td>
         <td @click.stop>
             <dropdown-actions :actions="actions" :data="data" @action="handleActions"></dropdown-actions>
         </td>
@@ -38,6 +38,18 @@ const props = defineProps({
 const emit = defineEmits(['action'])
 
 const { fullname, user, roleName, userImg, profileLink } = useUserProfile(props.data)
+
+const dateCreated = computed(() => {
+    if (props.data.date_created) {
+        if (props.data.date_created.toString().length == 10) {
+            return useDateFormat((props.data.date_created * 1000), 'YYYY-MM-DD HH:mmA')
+        } else {
+            const [dateString, timeString] = props.data.date_created.split(' ');
+            return useDateFormat(new Date(`${dateString.replace(':', '-')} ${timeString}`), 'YYYY-MM-DD HH:mmA')
+        }
+    }
+    return null
+})
 
 const actions = computed(() => [
     {

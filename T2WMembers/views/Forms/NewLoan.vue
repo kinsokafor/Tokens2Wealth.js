@@ -109,7 +109,7 @@ import { parse } from 'filepond'
         req.post(req.root+"/t2w/api/legibility").then(r => {
             loanable.value = r.data
         }).catch(e => {
-            message.value = e.response.data
+            message.value = e
         })
         req.post(req.root+"/t2w/api/balance/m/regular_thrift").then(r => {
             balance.value = r.data
