@@ -41,12 +41,6 @@
                 const rawDate = new Date(this.maturity * 1000)
                 return (useDateFormat(rawDate, 'MMM DD, YYYY')).value
             }
-        },
-        interest_earned: {
-            heading: "Maturity", 
-            processor: function() {
-                return toLocale(this.interest_earned)
-            }
         }
     }
 
