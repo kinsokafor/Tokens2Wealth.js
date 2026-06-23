@@ -1,6 +1,9 @@
 <template>
     <Header :data="data" :bg="bgMap" :img="termdeposit" caption="Term Deposit">
-      <p>Monthly savings with {{configStore.get("site_name")}} as from {{ data.time_altered }}</p>
+      <p v-if="data.status == 'active'">Monthly savings with {{configStore.get("site_name")}} as from {{ timeStampToDate(data.tenure_begins) }}</p>
+      <div class="alert alert-info" v-if="data.status == 'active'">
+        Saved {{ toLocale(parseFloat(data.balance)) }} for {{ otherData?.totalDays }} days, an an interest rate of {{ data.td_rate }}% per annum. Currently at day {{ otherData?.daysSpent }}, remaining {{ remainingDays }} day(s) to maturity.
+      </div>
       <template #status>
         <span class="badge" 
           :class="{
@@ -46,6 +49,10 @@
               <em>{{ toLocale(parseFloat(data.interest_earned)) }}</em>
             </div>
             <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
+              <span>Outstanding Interest</span>
+              <em>{{ toLocale(parseFloat(otherData?.outstanding)) }}</em>
+            </div>
+            <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
               <span>Estimated MV</span>
               <em>{{ toLocale(parseFloat(emv)) }}</em>
             </div>
@@ -86,7 +93,7 @@
     import termdeposit from '../../assets/img/term-deposit.png';
     import { useAccountsStore } from '../../store/accounts'
     import PendingCredits from './PendingCredits.vue';
-    import {computed, ref, watchEffect} from 'vue'
+    import {computed, ref, watchEffect, onMounted} from 'vue'
     import bgMap from '../../assets/img/bgMap.png'
     import {Request} from '@/helpers'
     import {useConfigStore} from '@/store/config'
@@ -114,11 +121,15 @@
 
     const data = computed(() => store.get({ac_number: props.account})[0] ?? {})
 
+    const otherData = ref(null);
+
     const dailyInterest = computed(() => (data.value?.td_rate*bal.value)/36000)
 
     const emv = computed(() => {
       return bal.value + (dailyInterest.value * data.value?.td_tenure * 30)
     })
+
+    const remainingDays = computed(() => Math.max(0, otherData.value?.totalDays - otherData.value?.daysSpent));
 
     watchEffect(() => {
       if(data.value?.status == 'active') {
@@ -126,6 +137,19 @@
       } else {
         status.value = false
       }
+    })
+
+    async function fetchData()
+    {
+      const res = await r.get(r.root+`/t2w/api/term-deposit/data/${props.account}`)
+      if(res.status === 200) {
+        return res.data;
+      }
+    }
+
+    onMounted(async () => {
+      const t = await fetchData();
+      otherData.value = t;
     })
 
     const toLocale = (str) => {

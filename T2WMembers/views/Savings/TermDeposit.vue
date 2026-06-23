@@ -9,8 +9,11 @@
       >
         <p>
           Monthly savings with {{ configStore.get("site_name") }} as from
-          {{ data.time_altered }}
+          {{ timeStampToDate(data.tenure_begins) }}
         </p>
+        <div class="alert alert-info" v-if="data.status == 'active'">
+          Saved {{ toLocale(parseFloat(data.balance)) }} for {{ otherData?.totalDays }} days, an an interest rate of {{ data.td_rate }}% per annum. Currently at day {{ otherData?.daysSpent }}, remaining {{ remainingDays }} day(s) to maturity.
+        </div>
         <template #status>
           <span
             class="badge"
@@ -72,6 +75,10 @@
                 <span>Interest Earned</span>
                 <em>{{ toLocale(parseFloat(data.interest_earned)) }}</em>
               </div>
+              <div class="justify-content-between d-flex" v-if="data.status != 'pending'">
+                <span>Outstanding Interest</span>
+                <em>{{ toLocale(parseFloat(otherData?.outstanding)) }}</em>
+              </div>
               <div
                 class="justify-content-between d-flex"
                 v-if="data.status != 'pending'"
@@ -98,7 +105,7 @@
 
 <script setup>
 import AccountIntro from "../../components/TermDepositIntro.vue";
-import { ref, computed } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useAccountsStore } from "../../../store/accounts";
 import { useAuthStore } from "@/store/auth";
 import Header from "../../../components/Accounts/Header.vue";
@@ -109,19 +116,48 @@ import _ from "lodash";
 import MenuButton from "../../../components/Menu/MenuButton.vue";
 import balance from "../../components/balance.vue";
 import { toLocale } from "@module/Tokens2Wealth/helpers";
+import {Request} from '@/helpers'
 
 const store = useAccountsStore();
 const auth = useAuthStore();
 const configStore = useConfigStore();
 const bal = ref(0);
 
+const r = new Request();
+
+const otherData = ref(null);
+
 const u = computed(() => auth.getUser);
+
+const remainingDays = computed(() => Math.max(0, otherData.value?.totalDays - otherData.value?.daysSpent));
 
 const data = computed(() => {
   const myAcc = store.get({ ac_type: "term_deposit", user_id: u.value.id });
   if (myAcc.length > 0) return myAcc[0];
   return {};
 });
+
+async function fetchData(ac_number)
+{
+  const res = await r.get(r.root+`/t2w/api/term-deposit/data/${ac_number}`)
+  if(res.status === 200) {
+    return res.data;
+  }
+}
+
+watch(() => data.value?.ac_number, async ac_number => {
+  if(ac_number != undefined) {
+    const t = await fetchData(ac_number);
+    otherData.value = t;
+  }
+})
+
+onMounted(async () => {
+  if(data.value?.ac_number != undefined) {
+    const t = await fetchData(data.value?.ac_number);
+    otherData.value = t;
+  }
+})
 
 const dailyInterest = computed(() => (data.value?.td_rate * bal.value) / 36000);
 
