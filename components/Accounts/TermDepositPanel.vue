@@ -2,7 +2,7 @@
     <Header :data="data" :bg="bgMap" :img="termdeposit" caption="Term Deposit">
       <p v-if="data.status == 'active'">Monthly savings with {{configStore.get("site_name")}} as from {{ timeStampToDate(data.tenure_begins) }}</p>
       <div class="alert alert-info" v-if="data.status == 'active'">
-        Saved {{ toLocale(parseFloat(data.balance)) }} for {{ otherData?.totalDays }} days, an an interest rate of {{ data.td_rate }}% per annum. Currently at day {{ otherData?.daysSpent }}, remaining {{ remainingDays }} day(s) to maturity.
+        Saved {{ toLocale(parseFloat(data.balance)) }} for {{ otherData?.totalDays }} days, an an interest rate of {{ data.td_rate }}% per annum. Currently at day {{ otherData?.daysSpent }}<template v-if="remainingDays > 0">, remaining {{ remainingDays }} day<template v-if="remainingDays > 1">s</template> to maturity</template>.
       </div>
       <template #status>
         <span class="badge" 
@@ -61,7 +61,10 @@
               <em><router-link :to="`/accounts/term-deposit/${data.ac_number}/modify`" class="link-success">Modify</router-link></em>
             </div>
             <hr/>
-            <button class="btn btn-primary2" v-if="data.status != 'pending'" @click.prevent="liquidate">Liquidate</button>
+            <div class="d-flex gap-2 justify-content-between buttons" v-if="data.status != 'pending'">
+            <button class="btn btn-primary2" @click.prevent="liquidate">Liquidate</button>
+            <button class="btn btn-primary2" @click.prevent="rollover" v-if="remainingDays <= 0">Roll over</button>
+            </div>
             <div class="d-flex gap-2 justify-content-between buttons" v-else>
               <button  class="btn btn-primary2 red" @click.prevent="decline">Decline</button>
               <button  class="btn btn-primary2" @click.prevent="approve">Approve</button>
@@ -102,8 +105,11 @@
     import 'animate.css'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+    import { useAlertStore } from '@/store/alert'
 
-    const store = useAccountsStore()
+    const store = useAccountsStore();
+
+    const alertStore = useAlertStore();
 
     const status = ref(false)
 
@@ -233,8 +239,11 @@
           processing.value = true
           r.post(r.root+"/t2w/api/term-deposit/liquidate/"+data.value.id).then(response => {
             updateData(response);
+            fetchData();
+            alertStore.success("Done");
             processing.value = false
           }).catch(e => {
+            alertStore.error(e);
             processing.value = false
           })
         } else {
@@ -242,8 +251,42 @@
             processing.value = true
             r.post(r.root+"/t2w/api/term-deposit/liquidate/"+data.value.id, {withInterest: true}).then(response => {
               updateData(response);
+              fetchData();
+              alertStore.success("Done");
               processing.value = false
             }).catch(e => {
+              alertStore.error(e);
+              processing.value = false
+            })
+          }
+        }
+      }
+    }
+
+    const rollover = () => {
+      if(confirm("Are you sure you want to rollover this term deposit?")) {
+        if(confirm("Do you want to roll over with the interest. Meaning that the interest will be reinvested? Click cancel for other options.")) {
+          processing.value = true
+          r.post(r.root+"/t2w/api/term-deposit/roll-over/"+data.value.id, {withInterest: true}).then(response => {
+            updateData(response);
+            fetchData();
+            alertStore.success("Done");
+            processing.value = false
+          }).catch(e => {
+            console.log(e)
+            alertStore.error(e);
+            processing.value = false
+          })
+        } else {
+          if(confirm("Click okay to roll over the principal amount only, interest will be paid into the e-wallet. Click cancel to exit.")) {
+            processing.value = true
+            r.post(r.root+"/t2w/api/term-deposit/roll-over/"+data.value.id, {withInterest: false}).then(response => {
+              updateData(response);
+              fetchData();
+              alertStore.success("Done");
+              processing.value = false
+            }).catch(e => {
+              alertStore.error(e);
               processing.value = false
             })
           }
