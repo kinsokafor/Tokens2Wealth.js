@@ -5,6 +5,7 @@ import Accounts from '../views/Accounts/Accounts.vue'
 import AccountsList from '../views/Accounts/AccountsList.vue'
 import AccountStatement from '../views/Accounts/AccountStatement.vue'
 import AccountView from '../views/Accounts/AccountView.vue'
+import SpecialSavingsGoalView from '../views/Accounts/SpecialSavingsGoalView.vue'
 import Settings from '../views/Settings.vue'
 import EditThrift from '../views/Forms/EditThrift.vue'
 import ModifyTD from '../views/Forms/ModifyTD.vue'
@@ -104,6 +105,12 @@ const router = createRouter({
             name: 'AccountView',
             component: AccountView,
             meta: { title: "Account View" }
+        },
+        {
+            path: '/special-savings/goal/:id',
+            name: 'SpecialSavingsGoalView',
+            component: SpecialSavingsGoalView,
+            meta: { title: "Special Savings Goal" }
         },
         {
             path: '/accounts/thrift/:accountNumber/edit',

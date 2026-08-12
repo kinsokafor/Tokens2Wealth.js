@@ -72,7 +72,7 @@
         processing.value = true
         r.get(r.root+"/t2w/api/special-savings/goals").then(res => {
             data.value = res.data.map(i => {
-                i.link = `/t2w/a/#/accounts/view/special/${i.ac_number}`
+                i.link = `/t2w/a/#/special-savings/goal/${i.id}`
                 return i
             })
             processing.value = false

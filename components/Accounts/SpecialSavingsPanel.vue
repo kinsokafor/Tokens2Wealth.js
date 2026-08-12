@@ -51,16 +51,22 @@
                 <span>Maturity date</span>
                 <em>{{ goal.maturity_date }}</em>
               </div>
-              <template v-if="goal.status == 'active'">
-                <hr/>
-                <button class="btn btn-primary2" @click.prevent="forceMature(goal)">Force Mature</button>
-              </template>
+              <hr/>
+              <div class="d-flex gap-2 justify-content-between">
+                <router-link :to="`/special-savings/goal/${goal.id}`" class="btn btn-primary2">View Goal</router-link>
+                <button class="btn btn-primary2" v-if="goal.status == 'active'" @click.prevent="forceMature(goal)">Force Mature</button>
+              </div>
             </div>
           </div>
         </div>
         <div v-else-if="!processing">
           <em>This cooperator has no Special Savings goals yet</em>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <OtherBalances :account="account" :userId="data.user_id"></OtherBalances>
       </div>
     </div>
 </template>
@@ -73,6 +79,7 @@
     import bgMap from '../../assets/img/bgMap.png'
     import { Request, getFullname } from '@/helpers'
     import balance from './balance.vue'
+    import OtherBalances from './OtherBalances.vue'
     import 'animate.css'
     import Loading from 'vue3-loading-overlay';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';

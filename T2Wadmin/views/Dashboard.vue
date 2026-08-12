@@ -319,6 +319,13 @@
             access: "1,2,3,4"
         },
         {
+            label: "Members on Special Savings",
+            link: "/reports/members/special-savings",
+            isRouter: true,
+            iconClass: "fa-solid fa-people-group",
+            access: "1,2,3,4"
+        },
+        {
             label: "Admin Actions Log",
             link: "/reports/admin-log",
             isRouter: true,

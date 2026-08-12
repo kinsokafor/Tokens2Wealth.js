@@ -8,7 +8,7 @@
                         'text-bg-warning': (account.balance < 0)}"
                 >
                     <div class="card-body">
-                        <h5 class="card-title">{{titleCase(account.ac_type)}}</h5>
+                        <h5 class="card-title">{{account.ac_type == 'special' ? 'Special Savings' : titleCase(account.ac_type)}}</h5>
                         <p class="card-text" v-if="account.ac_type == 'share'">{{ toLocale(account.balance, "", " Units") }}</p>
                         <p class="card-text" v-else>{{ toLocale(account.balance) }}</p>
                     </div>
