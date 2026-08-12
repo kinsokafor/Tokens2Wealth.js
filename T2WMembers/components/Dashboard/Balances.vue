@@ -3,41 +3,41 @@
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">E-wallet</div>
-                <h2 v-if="ewallet != null">{{ toLocale(ewallet) }}</h2>
+                <router-link v-if="ewallet != null" to="/savings/e-wallet"><h2>{{ toLocale(ewallet) }}</h2></router-link>
             </div>
         </div>
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">Thrift Savings</div>
-                <h2 v-if="thrift != null">{{ toLocale(thrift) }}</h2>
+                <router-link v-if="thrift != null" to="/savings/thrift"><h2>{{ toLocale(thrift) }}</h2></router-link>
                 <router-link v-else to="/savings/thrift/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
             </div>
         </div>
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">Loan</div>
-                <h2 v-if="loan != null">{{ toLocale(loan) }}</h2>
+                <router-link v-if="loan != null" to="/loan"><h2>{{ toLocale(loan) }}</h2></router-link>
                 <router-link v-else to="/loan/new" class="mt-2 btn btn-rounded btn-primary">Apply loan</router-link>
             </div>
         </div>
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">Term Deposit</div>
-                <h2 v-if="td != null">{{ toLocale(td) }}</h2>
+                <router-link v-if="td != null" to="/savings/term-deposit"><h2>{{ toLocale(td) }}</h2></router-link>
                 <router-link v-else to="/savings/term-deposit/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
             </div>
         </div>
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">Special Savings</div>
-                <h2 v-if="special != null">{{ toLocale(special) }}</h2>
+                <router-link v-if="special != null" to="/savings/special"><h2>{{ toLocale(special) }}</h2></router-link>
                 <router-link v-else to="/savings/special/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
             </div>
         </div>
         <div class="col-6 col-md-4 animate__animated animate__pulse">
             <div class="balance">
                 <div class="title">Shares</div>
-                <h2 v-if="share != null">{{ toLocale(share) }}</h2>
+                <router-link v-if="share != null" to="/investments/shares"><h2>{{ toLocale(share) }}</h2></router-link>
                 <router-link v-else to="/investments/shares/buy" class="mt-2 btn btn-rounded btn-primary">Buy Shares</router-link>
             </div>
         </div>
@@ -78,11 +78,13 @@
         req.post(req.root+"/t2w/api/balance/m/term_deposit").then(r => {
             td.value = r.data
         })
-        req.post(req.root+"/t2w/api/balance/m/special_savings").then(r => {
+        req.post(req.root+"/t2w/api/balance/m/special").then(r => {
             special.value = r.data
+        }).catch(() => {
+            special.value = null
         })
     }
-    
+
     watchEffect(() => {
         getBalances(props.data.id)
     })
@@ -107,6 +109,13 @@
             background: white;
             padding: 0 10px;
             font-size: small;
+        }
+        h2 {
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
         }
     }
     /* Extra small devices (phones, 600px and down) */
