@@ -289,6 +289,13 @@ const quickFilters = computed(() => {
       ];
       break;
 
+    case "special-savings":
+      return [
+        { label: "Active", key: "status", value: "active" },
+        { label: "Inactive", key: "status", value: "inactive" },
+      ];
+      break;
+
     default:
       return [];
       break;

@@ -31,6 +31,7 @@ import EWalletDebitView from '../views/Reports/EWalletDebitView.vue'
 import MembersOnLoan from '../views/Reports/MembersOnLoan.vue'
 import MembersOnThrift from '../views/Reports/MembersOnThrift.vue'
 import MembersOnTD from '../views/Reports/MembersOnTD.vue'
+import MembersOnSpecialSavings from '../views/Reports/MembersOnSpecialSavings.vue'
 import MembersWithShares from '../views/Reports/MembersWithShares.vue'
 import AdminLog from '../views/Reports/AdminLog.vue'
 import LearningMaterials from '../views/Reports/LearningMaterials.vue'
@@ -271,6 +272,12 @@ const router = createRouter({
             name: 'MembersOnTD',
             component: MembersOnTD,
             meta: { title: "Members on Term Deposit" }
+        },
+        {
+            path: '/reports/members/special-savings',
+            name: 'MembersOnSpecialSavings',
+            component: MembersOnSpecialSavings,
+            meta: { title: "Members on Special Savings" }
         },
         {
             path: '/reports/members/shares',

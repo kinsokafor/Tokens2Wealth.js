@@ -11,6 +11,8 @@ import Shares from '../views/Investments/Shares.vue'
 import ThriftSavings from '../views/Savings/ThriftSavings.vue'
 import EWallet from '../views/Savings/EWallet.vue'
 import SpecialSavings from '../views/Savings/SpecialSavings.vue'
+import SpecialSavingsGoal from '../views/Savings/SpecialSavingsGoal.vue'
+import NewSpecialSavings from '../views/Forms/NewSpecialSavings.vue'
 import Statements from '../views/Savings/Statements.vue'
 import NewTD from '../views/Forms/NewTD.vue'
 import TopUpTD from '../views/Forms/TopUpTD.vue'
@@ -141,6 +143,18 @@ const router = createRouter({
             name: 'SpecialSavings',
             component: SpecialSavings,
             meta: { title: "Savings - Special Savings" }
+        },
+        {
+            path: '/savings/special/new',
+            name: 'NewSpecialSavings',
+            component: NewSpecialSavings,
+            meta: { title: "Savings - New Special Savings Goal" }
+        },
+        {
+            path: '/savings/special/goal/:id',
+            name: 'SpecialSavingsGoal',
+            component: SpecialSavingsGoal,
+            meta: { title: "Savings - Special Savings Goal" }
         },
         {
             path: '/:ac_type/statement',

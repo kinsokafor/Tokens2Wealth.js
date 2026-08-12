@@ -5,6 +5,7 @@
         <e-wallet-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'contribution'"></e-wallet-panel>
         <shares-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'share'"></shares-panel>
         <term-deposit-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'term_deposit'"></term-deposit-panel>
+        <special-savings-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'special'"></special-savings-panel>
     </div>
 </template>
 
@@ -15,6 +16,7 @@
     import EWalletPanel from '@/Modules/Tokens2Wealth/components/Accounts/EWalletPanel.vue';
     import SharesPanel from '@/Modules/Tokens2Wealth/components/Accounts/SharesPanel.vue';
     import TermDepositPanel from '@/Modules/Tokens2Wealth/components/Accounts/TermDepositPanel.vue';
+    import SpecialSavingsPanel from '@/Modules/Tokens2Wealth/components/Accounts/SpecialSavingsPanel.vue';
 
     const route = useRoute()
 </script>
