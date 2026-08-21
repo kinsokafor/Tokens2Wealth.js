@@ -70,7 +70,8 @@
             options: [
                 {name: "Thrift Savings", value: "rt"},
                 {name: "Loan Repayment", value: "loan"},
-                {name: "Both", value: null}
+                {name: "Special Savings", value: "special"},
+                {name: "Any", value: null}
             ]
         },
         {
