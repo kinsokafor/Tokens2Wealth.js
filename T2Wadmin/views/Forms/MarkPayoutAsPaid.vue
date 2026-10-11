@@ -14,6 +14,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { computed, ref } from 'vue'
     import CreateForm from '@/components/form/CreateForm.vue'
     import * as yup from 'yup'

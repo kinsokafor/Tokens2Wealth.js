@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useInflowOutflowStore } from '../../../store/inflowOutflow'
     import { computed, ref } from 'vue'
     import CreateForm from '@/components/form/CreateForm.vue'

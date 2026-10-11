@@ -16,6 +16,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { ref, computed, watchEffect } from 'vue';
     import { useAccountsStore } from '../../../store/accounts'
     import { useAuthStore } from '@/store/auth'

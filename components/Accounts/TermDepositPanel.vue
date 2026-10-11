@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import Header from './Header.vue';
     import termdeposit from '../../assets/img/term-deposit.png';
     import { useAccountsStore } from '../../store/accounts'

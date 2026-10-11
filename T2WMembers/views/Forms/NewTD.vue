@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useAccountsStore } from '../../../store/accounts'
     import { computed, ref, onMounted } from 'vue'
     import {useRouter} from 'vue-router'

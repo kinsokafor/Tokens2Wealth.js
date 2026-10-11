@@ -74,6 +74,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import {useEWalletTxnsStore} from '@/Modules/Tokens2Wealth/store/ewalletTransactions'
     import {useAccountsStore} from '@/Modules/Tokens2Wealth/store/accounts'
     import {useUsersStore} from '@/Modules/Main/store/users'

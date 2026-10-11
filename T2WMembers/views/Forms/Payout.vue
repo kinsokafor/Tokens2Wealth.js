@@ -50,7 +50,7 @@
     onMounted(() => {
         const options = new Options()
         options.get("crd,minimum_cashout").then(res => {
-            crd.value = res.data.crd
+            crd.value = Array.isArray(res.data.crd) ? res.data.crd : []
             minimum_cashout.value = res.data.minimum_cashout
         })
 

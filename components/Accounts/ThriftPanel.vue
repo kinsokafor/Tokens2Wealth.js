@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import Header from './Header.vue';
     import thrift from '../../assets/img/thrift.png';
     import { useAccountsStore } from '../../store/accounts'

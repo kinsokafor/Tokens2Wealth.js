@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { computed, ref } from 'vue'
     import {useRoute,useRouter} from 'vue-router'
     import CreateForm from '@/components/form/CreateForm.vue'

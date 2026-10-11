@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useAccountsStore } from '../../../store/accounts'
     import { useEWalletTxnsStore } from '../../../store/ewalletTransactions'
     import { computed, ref } from 'vue'

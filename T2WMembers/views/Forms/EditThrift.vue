@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useAccountsStore } from '../../../store/accounts'
     import { useAuthStore } from '@/store/auth'
     import { computed, ref, onMounted } from 'vue'

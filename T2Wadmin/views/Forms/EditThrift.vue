@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useAccountsStore } from '../../../store/accounts'
     import { computed, ref } from 'vue'
     import {useRoute,useRouter} from 'vue-router'

@@ -151,6 +151,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { toLocale } from '@module/Tokens2Wealth/helpers'
     import Header from './Header.vue';
     import loan from '../../assets/img/loan.png';

@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import { useWalletsStore } from '../store/wallets'
     import { computed, ref, onMounted } from 'vue'
     import Table from '@/components/Table.vue'

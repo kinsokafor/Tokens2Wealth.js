@@ -71,6 +71,7 @@
 </template>
 
 <script setup>
+    import _ from 'lodash'
     import {useInflowOutflowStore} from '@/Modules/Tokens2Wealth/store/inflowOutflow'
     import {useUsersStore} from '@/Modules/Main/store/users'
     import {computed, ref} from 'vue'
