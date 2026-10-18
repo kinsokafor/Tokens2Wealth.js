@@ -27,10 +27,17 @@ import UpdateAccountDetails from '../views/Forms/UpdateAccountDetails.vue'
 import UpdateBusiness from '../views/Forms/UpdateBusiness.vue'
 import UpdateBirthday from '../views/Forms/UpdateBirthday.vue'
 import Payout from '../views/Forms/Payout.vue'
+import NotificationsPage from '@/Modules/Tokens2Wealth/components/Notifications/NotificationsPage.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{
+            path: '/notifications',
+            name: 'Notifications',
+            component: NotificationsPage,
+            meta: { title: "Notifications" }
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'NotFound',
             component: NotFound,

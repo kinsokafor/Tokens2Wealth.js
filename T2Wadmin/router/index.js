@@ -55,10 +55,17 @@ import MemberProfile from '../views/Members/Profile.vue'
 import PendingProfile from '../views/Members/PendingProfile.vue'
 import profile from "@module/Main/Admin/views/profile.vue";
 import PendingShares from '../views/PendingShares.vue'
+import NotificationsPage from '@/Modules/Tokens2Wealth/components/Notifications/NotificationsPage.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{
+            path: '/notifications',
+            name: 'Notifications',
+            component: NotificationsPage,
+            meta: { title: "Notifications" }
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'NotFound',
             component: NotFound,
