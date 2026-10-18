@@ -2,8 +2,7 @@
     <Header :data="data" :bg="bgMap" :img="wallet" caption="E-Wallet">
       <p>A level {{ data.level }} participating member</p>
       <template #status>
-        <span class="badge bg-success">Active
-        </span>
+        <span class="badge text-capitalize" :class="data.status === 'active' ? 'bg-success' : 'bg-secondary'">{{ data.status || "…" }}</span>
         <!-- <div class="form-check form-switch">
             <input class="form-check-input" v-model="status" type="checkbox" @mousedown="updateStatus" role="switch" id="flexSwitchCheckChecked">
         </div> -->
@@ -16,45 +15,19 @@
       <div class="col-md-8 animate__animated animate__pulse">
         <div class="card mb-2">
           <div class="card-body upline-comp">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="upline-tab" data-bs-toggle="pill" data-bs-target="#upline" type="button" role="tab" aria-controls="upline" aria-selected="false">Uplines</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="level-1-tab" data-bs-toggle="pill" data-bs-target="#level-1" type="button" role="tab" aria-controls="level-1" aria-selected="true">Level-1</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="level-2-tab" data-bs-toggle="pill" data-bs-target="#level-2" type="button" role="tab" aria-controls="level-2" aria-selected="false">Level-2</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="level-3-tab" data-bs-toggle="pill" data-bs-target="#level-3" type="button" role="tab" aria-controls="level-3" aria-selected="false">Level-3</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="level-4-tab" data-bs-toggle="pill" data-bs-target="#level-4" type="button" role="tab" aria-controls="level-4" aria-selected="false">Level-4</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="level-5-tab" data-bs-toggle="pill" data-bs-target="#level-5" type="button" role="tab" aria-controls="level-5" aria-selected="false">Level-5</button>
+            <!-- only the open tab is rendered, so each list loads when it is first opened
+                 (the uplines and all five levels used to load together when the page opened) -->
+            <ul class="nav nav-pills mb-3" role="tablist">
+                <li class="nav-item" role="presentation" v-for="t in tabs" :key="t.key">
+                    <button class="nav-link" :class="{ active: activeTab === t.key }" type="button" role="tab"
+                        :aria-selected="activeTab === t.key" @click="activeTab = t.key">{{ t.label }}</button>
                 </li>
             </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade" id="upline" role="tabpanel" aria-labelledby="upline-tab" tabindex="0">
-                    <uplines :account="account"></uplines>
-                </div>
-                <div class="tab-pane fade show active" id="level-1" role="tabpanel" aria-labelledby="level-1-tab" tabindex="0">
-                    <downlines :level="1" :account="account"></downlines>
-                </div>
-                <div class="tab-pane fade" id="level-2" role="tabpanel" aria-labelledby="level-2-tab" tabindex="0">
-                    <downlines :level="2" :account="account"></downlines>
-                </div>
-                <div class="tab-pane fade" id="level-3" role="tabpanel" aria-labelledby="level-3-tab" tabindex="0">
-                    <downlines :level="3" :account="account"></downlines>
-                </div>
-                <div class="tab-pane fade" id="level-4" role="tabpanel" aria-labelledby="level-4-tab" tabindex="0">
-                    <downlines :level="4" :account="account"></downlines>
-                </div>
-                <div class="tab-pane fade" id="level-5" role="tabpanel" aria-labelledby="level-5-tab" tabindex="0">
-                    <downlines :level="5" :account="account"></downlines>
-                </div>
+            <div>
+                <uplines v-if="activeTab === 'uplines'" :account="account"></uplines>
+                <template v-for="level in 5" :key="level">
+                    <downlines v-if="activeTab === level" :level="level" :account="account"></downlines>
+                </template>
             </div>
           </div>
         </div>
@@ -95,6 +68,9 @@
     const store = useAccountsStore()
 
     const status = ref(false)
+
+    const tabs = [{ key: 'uplines', label: "Uplines" }, ...[1, 2, 3, 4, 5].map(l => ({ key: l, label: `Level-${l}` }))]
+    const activeTab = ref(1)
 
     const r = new Request();
     

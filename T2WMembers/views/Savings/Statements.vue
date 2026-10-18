@@ -1,6 +1,6 @@
 <template>
     <div v-if="account.ac_number != undefined">
-        <AccountStatement :account-number="account.ac_number" />
+        <StatementView :account-number="account.ac_number" />
     </div>
     <div v-else>
         <em>You don't have {{route.params.ac_type}} account</em>
@@ -12,7 +12,7 @@
     import { useAccountsStore } from '../../../store/accounts'
     import { useAuthStore } from '@/store/auth'
     import {useRoute} from 'vue-router'
-    import AccountStatement from '@/Modules/Tokens2Wealth/components/AccountStatement.vue';
+    import StatementView from '@/Modules/Tokens2Wealth/components/Accounts/StatementView.vue';
 
     const store = useAccountsStore()
     const auth = useAuthStore()

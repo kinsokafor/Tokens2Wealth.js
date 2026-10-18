@@ -36,6 +36,18 @@ import MembersOnSpecialSavings from '../views/Reports/MembersOnSpecialSavings.vu
 import MembersWithShares from '../views/Reports/MembersWithShares.vue'
 import AdminLog from '../views/Reports/AdminLog.vue'
 import LearningMaterials from '../views/Reports/LearningMaterials.vue'
+import TrialBalance from '../views/Reports/Statements/TrialBalance.vue'
+import ProductAccounts from '../views/Reports/Statements/ProductAccounts.vue'
+import AccountStatementReport from '../views/Reports/Statements/AccountStatementReport.vue'
+import CashLedger from '../views/Reports/Statements/CashLedger.vue'
+import LoanArrears from '../views/Reports/Statements/LoanArrears.vue'
+import IncomeSummary from '../views/Reports/Statements/IncomeSummary.vue'
+import Portfolio from '../views/Reports/Statements/Portfolio.vue'
+import BackDuties from '../views/Reports/Statements/BackDuties.vue'
+import GuarantorExposure from '../views/Reports/Statements/GuarantorExposure.vue'
+import TdMaturity from '../views/Reports/Statements/TdMaturity.vue'
+import ApprovalsQueue from '../views/Reports/Statements/ApprovalsQueue.vue'
+import CronHealth from '../views/Reports/Statements/CronHealth.vue'
 import Members from '../views/Members/Members.vue'
 import MemberData from '../views/Members/MemberData.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
@@ -291,6 +303,83 @@ const router = createRouter({
             name: 'MembersWithShares',
             component: MembersWithShares,
             meta: { title: "Members with Shares" }
+        },
+        // server-side reports (Classes/Reports.php)
+        {
+            path: '/reports/statements/trial-balance',
+            name: 'TrialBalance',
+            component: TrialBalance,
+            meta: { title: "Trial Balance" }
+        },
+        {
+            path: '/reports/statements/trial-balance/:code',
+            name: 'ProductAccounts',
+            component: ProductAccounts,
+            meta: { title: "Product Accounts" }
+        },
+        {
+            path: '/reports/statements/account/:ac?',
+            name: 'AccountStatementReport',
+            component: AccountStatementReport,
+            meta: { title: "Account Statement" }
+        },
+        {
+            path: '/reports/statements/ledger/:type',
+            name: 'CashLedger',
+            component: CashLedger,
+            meta: { title: "Ledger" }
+        },
+        {
+            path: '/reports/loan-arrears',
+            name: 'LoanArrears',
+            component: LoanArrears,
+            meta: { title: "Loan Arrears Ageing" }
+        },
+        {
+            path: '/reports/income',
+            name: 'IncomeSummary',
+            component: IncomeSummary,
+            meta: { title: "Income Summary" }
+        },
+        {
+            path: '/reports/portfolio',
+            redirect: '/reports/portfolio/loan'
+        },
+        {
+            path: '/reports/portfolio/:product',
+            name: 'Portfolio',
+            component: Portfolio,
+            meta: { title: "Member Portfolio" }
+        },
+        {
+            path: '/reports/back-duties',
+            name: 'BackDuties',
+            component: BackDuties,
+            meta: { title: "Back Duties Ageing" }
+        },
+        {
+            path: '/reports/guarantor-exposure',
+            name: 'GuarantorExposure',
+            component: GuarantorExposure,
+            meta: { title: "Guarantor Exposure" }
+        },
+        {
+            path: '/reports/td-maturity',
+            name: 'TdMaturity',
+            component: TdMaturity,
+            meta: { title: "Term Deposit Maturity" }
+        },
+        {
+            path: '/reports/approvals',
+            name: 'ApprovalsQueue',
+            component: ApprovalsQueue,
+            meta: { title: "Approvals Queue" }
+        },
+        {
+            path: '/reports/scheduled-jobs',
+            name: 'CronHealth',
+            component: CronHealth,
+            meta: { title: "Scheduled Jobs" }
         },
         {
             path: '/reports/admin-log',

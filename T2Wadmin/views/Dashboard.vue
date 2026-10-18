@@ -4,76 +4,11 @@
             <profile-image :data="data"></profile-image>
         </div>
         <div class="col-md-7">
-            <Past30Days />
+            <Last30Days :data="summary?.last30 ?? null" />
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col-12 col-md-3">
-            <CounterCard 
-                end-point="api/dbtable/t2w_accounts?ac_type=term_deposit&status=pending" 
-                title="Pending Term deposits" 
-                :template="CountCard"
-                link="/t2w/a/#/accounts/term-deposits?status=pending"
-            />
-        </div>
-        <div class="col-12 col-md-3">
-            <CounterCard 
-                end-point="api/dbtable/t2w_ewallet_transactions?ledger=credit&status=unconfirmed" 
-                title="Unconfirmed Deposits" 
-                :template="CountCard"
-                link="/t2w/a/#/ewallet-credits?status=unconfirmed"
-            />
-        </div>
-        <div class="col-12 col-md-3">
-            <CounterCard 
-                end-point="api/dbtable/t2w_ewallet_transactions?ledger=debit&status=unconfirmed" 
-                title="Unconfirmed Payouts" 
-                :template="CountCard"
-                link="/t2w/a/#/ewallet-debits?status=unconfirmed"
-            />
-        </div>
-        <div class="col-12 col-md-3">
-            <CounterCard 
-                end-point="api/dbtable/t2w_inflow_outflow?status=unconfirmed" 
-                title="Unconfirmed Inflow/Outflow" 
-                :template="CountCard"
-                link="/t2w/a/#/inflow-outflow?status=unconfirmed"
-            />
-        </div>
-        <div class="col-6 col-md-3">
-            <CounterCard 
-                end-point="t2w/api/pending-loan/count" 
-                title="Pending Loan Requests" 
-                :template="CountCard2"
-                link="/t2w/a/#/accounts/loans?status=in process"
-                method="post"
-            />
-        </div>
-        <div class="col-6 col-md-3">
-            <CounterCard 
-                end-point="api/user?role=pending&payment_status=paid" 
-                title="Pending Members" 
-                :template="CountCard2"
-                link="/t2w/a/#/members/pending"
-            />
-        </div>
-        <div class="col-6 col-md-3">
-            <CounterCard 
-                end-point="api/store/type/buy_share?approval=0" 
-                title="Pending Shares: Buy" 
-                :template="CountCard2"
-                link="/t2w/a/#/shares/pending/buy_share"
-            />
-        </div>
-        <div class="col-6 col-md-3">
-            <CounterCard 
-                end-point="api/store/type/sell_share?approval=0" 
-                title="Pending Shares: Sell" 
-                :template="CountCard2"
-                link="/t2w/a/#/shares/pending/sell_share"
-            />
-        </div>
-    </div>
+    <!-- one request (/t2w/api/reports/dashboard) feeds the cards and the 30-day panel -->
+    <WaitingCards :waiting="summary?.waiting ?? {}" :attention="summary?.attention ?? {}" />
     <div class="row">
         <div class="col-md-8">
             <Search @value="v => searchQuery = v" />
@@ -98,7 +33,14 @@
                 :enable-search="false"
                 title="Reports"
             ></Menu>
-            <Menu :items="settings" 
+            <Menu :items="previousReports"
+                :search="searchQuery"
+                :template="MenuButton"
+                containerClass="col-4 col-md-3"
+                :enable-search="false"
+                title="Previous reports (until the new ones are signed off)"
+            ></Menu>
+            <Menu :items="settings"
                 :search="searchQuery"
                 :template="MenuButton" 
                 containerClass="col-4 col-md-3"
@@ -114,17 +56,28 @@
 <script setup>
     import Menu from '@menu/Menu.vue'
     import MenuButton from '../../components/Menu/MenuButton.vue';
-    import { computed, ref } from 'vue'
-    import CounterCard from '@/components/theme/CounterCard.vue';
-    import CountCard from '../../components/CountCard.vue';
-    import CountCard2 from '../../components/CountCard2.vue';
+    import { computed, ref, onMounted } from 'vue'
     import Search from '@menu/Search.vue'
     import ProfileImage from '../../components/Dashboard/ProfileImage.vue';
     import {useAuthStore} from '@/store/auth'
-    import Past30Days from './Charts/Past30Days.vue';
+    import {Request} from '@/helpers'
+    import Last30Days from '../../components/Dashboard/Last30Days.vue';
+    import WaitingCards from '../../components/Dashboard/WaitingCards.vue';
     import LatestNotifications from '../../components/Dashboard/LatestNotifications.vue';
 
     const searchQuery = ref("")
+
+    // everything the cards and the 30-day panel show, in one request
+    const summary = ref(null)
+    onMounted(async () => {
+        const req = new Request()
+        try {
+            const r = await req.get(req.root + "/t2w/api/reports/dashboard")
+            summary.value = r?.data ?? null
+        } catch (e) {
+            summary.value = null
+        }
+    })
 
     const auth = useAuthStore()
     const data = computed(() => auth.getUser)
@@ -269,6 +222,116 @@
     ])
 
     const reports = computed(() => [
+        // server-side reports (Classes/Reports.php); the pages they replace are in previousReports
+        {
+            label: "Trial Balance",
+            link: "/reports/statements/trial-balance",
+            isRouter: true,
+            iconClass: "fa-solid fa-scale-balanced",
+            access: "1,2"
+        },
+        {
+            label: "Account Statement",
+            link: "/reports/statements/account",
+            isRouter: true,
+            iconClass: "fa-solid fa-file-invoice",
+            access: "1,2"
+        },
+        {
+            label: "Inflow & Outflow Ledger",
+            link: "/reports/statements/ledger/inflow-outflow",
+            isRouter: true,
+            iconClass: "fa-list",
+            access: "1,2"
+        },
+        {
+            label: "Deposits & Payouts Ledger",
+            link: "/reports/statements/ledger/deposits-payouts",
+            isRouter: true,
+            iconClass: "fa-list",
+            access: "1,2"
+        },
+        {
+            label: "Loan Arrears Ageing",
+            link: "/reports/loan-arrears",
+            isRouter: true,
+            iconClass: "fa-solid fa-hourglass-half",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Income Summary",
+            link: "/reports/income",
+            isRouter: true,
+            iconClass: "fa-solid fa-sack-dollar",
+            access: "1,2"
+        },
+        {
+            label: "Member Portfolio",
+            link: "/reports/portfolio/loan",
+            isRouter: true,
+            iconClass: "fa-solid fa-users-viewfinder",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Approvals Queue",
+            link: "/reports/approvals",
+            isRouter: true,
+            iconClass: "fa-solid fa-list-check",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Back Duties Ageing",
+            link: "/reports/back-duties",
+            isRouter: true,
+            iconClass: "fa-solid fa-clock-rotate-left",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Guarantor Exposure",
+            link: "/reports/guarantor-exposure",
+            isRouter: true,
+            iconClass: "fa-solid fa-user-shield",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Term Deposit Maturity",
+            link: "/reports/td-maturity",
+            isRouter: true,
+            iconClass: "fa-solid fa-calendar-check",
+            access: "1,2"
+        },
+        {
+            label: "Scheduled Jobs",
+            link: "/reports/scheduled-jobs",
+            isRouter: true,
+            iconClass: "fa-solid fa-gears",
+            access: "1,2"
+        },
+        {
+            label: "Admin Actions Log",
+            link: "/reports/admin-log",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
+            access: "1,2"
+        },
+        {
+            label: "Publish Learning Material",
+            link: "/publish-learning-material",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
+            access: "1,2,3,4"
+        },
+        {
+            label: "Learning Materials",
+            link: "/reports/learning-materials",
+            isRouter: true,
+            iconClass: "fa-solid fa-book",
+            access: "1,2,3,4"
+        }
+    ])
+
+    // the pages the new reports replace; kept reachable until the new figures are signed off
+    const previousReports = computed(() => [
         {
             label: "Inflow & Outflow Ledger",
             link: "/reports/ledger/inflow-outflow",
@@ -323,27 +386,6 @@
             link: "/reports/members/special-savings",
             isRouter: true,
             iconClass: "fa-solid fa-people-group",
-            access: "1,2,3,4"
-        },
-        {
-            label: "Admin Actions Log",
-            link: "/reports/admin-log",
-            isRouter: true,
-            iconClass: "fa-solid fa-book",
-            access: "1,2"
-        },
-        {
-            label: "Publish Learning Material",
-            link: "/publish-learning-material",
-            isRouter: true,
-            iconClass: "fa-solid fa-book",
-            access: "1,2,3,4"
-        },
-        {
-            label: "Learning Materials",
-            link: "/reports/learning-materials",
-            isRouter: true,
-            iconClass: "fa-solid fa-book",
             access: "1,2,3,4"
         }
     ])

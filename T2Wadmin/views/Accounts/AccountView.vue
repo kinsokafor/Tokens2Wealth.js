@@ -6,6 +6,12 @@
         <shares-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'share'"></shares-panel>
         <term-deposit-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'term_deposit'"></term-deposit-panel>
         <special-savings-panel :account="route.params.accountNumber" v-if="route.params.accountType == 'special'"></special-savings-panel>
+        <!-- every account dashboard: the latest entries, with a link to the full statement -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <RecentTransactions :account="route.params.accountNumber" :key="route.params.accountNumber" />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,6 +23,7 @@
     import SharesPanel from '@/Modules/Tokens2Wealth/components/Accounts/SharesPanel.vue';
     import TermDepositPanel from '@/Modules/Tokens2Wealth/components/Accounts/TermDepositPanel.vue';
     import SpecialSavingsPanel from '@/Modules/Tokens2Wealth/components/Accounts/SpecialSavingsPanel.vue';
+    import RecentTransactions from '@/Modules/Tokens2Wealth/components/Accounts/RecentTransactions.vue';
 
     const route = useRoute()
 </script>
