@@ -1,0 +1,154 @@
+// Design tokens for the T2W portal UI kit (components/ui).
+// Every value comes from the brand variables in /color-scheme.css (--color2, --color3, --yellow, ...),
+// so changing the scheme in General Settings still re-colours the kit. The fallbacks are the
+// current scheme, used only if color-scheme.css fails to load.
+// Dark theme: the brand file swaps --highlight* / --shadow* on body.dark-theme. A custom property is
+// resolved where it is declared, so the tokens are declared on body too; declared on :root alone they
+// would keep the light values.
+
+:root, body {
+    // brand
+    --t2w-primary: var(--color2, #00af43);
+    --t2w-primary-strong: var(--color3, #032618);
+    --t2w-accent: var(--yellow, #cdf737);
+    --t2w-gradient: var(--color1, linear-gradient(180deg, #032618 10%, #00af43 100%));
+
+    // surfaces and ink
+    --t2w-surface: var(--highlight1, #fff);
+    --t2w-surface-alt: var(--highlight2, #dbdbdb);
+    --t2w-text: var(--shadow1, #222020);
+    --t2w-muted: var(--shadow2, #615959);
+    --t2w-border: color-mix(in srgb, var(--t2w-text) 12%, transparent);
+    --t2w-border-strong: color-mix(in srgb, var(--t2w-text) 22%, transparent);
+    --t2w-hover: color-mix(in srgb, var(--t2w-primary) 6%, transparent);
+
+    // tones (status). Soft = a tinted background behind the tone colour
+    --t2w-success: var(--green, #00af43);
+    --t2w-danger: var(--red, #cc2929);
+    --t2w-warning: var(--orange, #ff9a3b);
+    --t2w-info: var(--blue, #4aa1db);
+    --t2w-neutral: var(--t2w-muted);
+    --t2w-success-soft: color-mix(in srgb, var(--t2w-success) 13%, transparent);
+    --t2w-danger-soft: color-mix(in srgb, var(--t2w-danger) 12%, transparent);
+    --t2w-warning-soft: color-mix(in srgb, var(--t2w-warning) 16%, transparent);
+    --t2w-info-soft: color-mix(in srgb, var(--t2w-info) 14%, transparent);
+    --t2w-neutral-soft: color-mix(in srgb, var(--t2w-text) 8%, transparent);
+    // text-safe versions of the tones (the raw orange/green are too light for small text on white)
+    --t2w-success-ink: color-mix(in srgb, var(--t2w-success) 70%, var(--t2w-text));
+    --t2w-danger-ink: color-mix(in srgb, var(--t2w-danger) 80%, var(--t2w-text));
+    --t2w-warning-ink: color-mix(in srgb, var(--t2w-warning) 55%, var(--t2w-text));
+    --t2w-info-ink: color-mix(in srgb, var(--t2w-info) 70%, var(--t2w-text));
+
+    // shape and depth
+    --t2w-radius: 8px;
+    --t2w-radius-sm: 6px;
+    --t2w-radius-pill: 999px;
+    --t2w-shadow: 0 1px 2px color-mix(in srgb, var(--t2w-text) 6%, transparent),
+                  0 2px 8px color-mix(in srgb, var(--t2w-text) 5%, transparent);
+
+    // spacing
+    --t2w-space-1: 4px;
+    --t2w-space-2: 8px;
+    --t2w-space-3: 12px;
+    --t2w-space-4: 16px;
+    --t2w-space-5: 24px;
+
+    // type scale (fonts come from the theme: Jost headings, Open Sans body)
+    --t2w-font-heading: "Jost", "Open Sans", sans-serif;
+    --t2w-font-body: "Open Sans", sans-serif;
+    --t2w-fs-page-title: 1.5rem;
+    --t2w-fs-section: 1rem;
+    --t2w-fs-kpi: 1.5rem;
+    --t2w-fs-label: 0.8125rem;
+    --t2w-fs-table: 0.875rem;
+    --t2w-fs-small: 0.75rem;
+}
+
+// money and counts: digits of equal width so columns line up
+.t2w-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    white-space: nowrap;
+}
+
+.t2w-page-title {
+    font-family: var(--t2w-font-heading);
+    font-size: var(--t2w-fs-page-title);
+    font-weight: 600;
+    color: var(--t2w-text);
+    margin: 0 0 var(--t2w-space-1);
+}
+
+.t2w-section-title {
+    font-family: var(--t2w-font-heading);
+    font-size: var(--t2w-fs-section);
+    font-weight: 600;
+    color: var(--t2w-text);
+    margin: 0;
+}
+
+// loading placeholder bars
+.t2w-skeleton {
+    display: block;
+    height: 0.9em;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--t2w-neutral-soft) 25%, color-mix(in srgb, var(--t2w-text) 14%, transparent) 50%, var(--t2w-neutral-soft) 75%);
+    background-size: 200% 100%;
+    animation: t2w-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes t2w-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .t2w-skeleton { animation: none; }
+}
+
+.t2w-visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+// section heading with a link on the right (dashboards)
+.t2w-section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--t2w-space-2);
+    margin-bottom: var(--t2w-space-3);
+}
+
+.t2w-section-link {
+    font-size: var(--t2w-fs-label);
+    font-weight: 500;
+    color: var(--t2w-primary);
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+}
+
+// small outline button for in-page controls (the theme's .btn is an uppercase pill)
+.t2w-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border: 1px solid var(--t2w-border-strong);
+    border-radius: var(--t2w-radius-sm);
+    background: var(--t2w-surface);
+    color: var(--t2w-text);
+    font-size: var(--t2w-fs-label);
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+    &:hover:not(:disabled) { border-color: var(--t2w-primary); color: var(--t2w-primary); }
+    &:focus-visible { outline: 2px solid var(--t2w-primary); outline-offset: 2px; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

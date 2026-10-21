@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../helpers'
     import _ from 'lodash'
     import { useWalletsStore } from '../store/wallets'
     import { computed, ref, onMounted } from 'vue'
@@ -62,11 +63,6 @@
         trigger.value = true
     })
 
-    const toLocale = (str) => {
-        return str.toLocaleString("en-US", {
-            type: "currency"
-        })
-    }
 
     const columns = {
         time_altered: 'Date',

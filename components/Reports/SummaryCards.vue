@@ -1,24 +1,18 @@
 <template>
-    <div class="row summary-cards mb-3">
+    <div class="row g-2 g-md-3 mb-3 summary-cards">
         <div class="col-6 col-md-3" v-for="item in items" :key="item.label">
-            <div class="card h-100">
-                <div class="card-body py-2 px-3">
-                    <div class="small text-muted">{{ item.label }}</div>
-                    <div class="fs-5 fw-semibold text-nowrap">{{ item.value }}</div>
-                    <div class="small text-muted" v-if="item.hint">{{ item.hint }}</div>
-                </div>
-            </div>
+            <StatCard :label="item.label" :value="item.value" format="text" :hint="item.hint ?? ''"
+                :tone="item.tone ?? 'default'" />
         </div>
     </div>
 </template>
 
 <script setup>
-    // items: [{ label, value, hint? }]
+    // Report summary figures as StatCards. items: [{ label, value, hint?, tone? }]
+    // value arrives already formatted by the report page (money, counts or units), so it is shown as text.
+    import StatCard from '../ui/StatCard.vue'
+
     defineProps({
         items: { type: Array, default: () => [] }
     })
 </script>
-
-<style lang="scss" scoped>
-    .summary-cards { --bs-gutter-y: 0.6rem; }
-</style>

@@ -1,136 +1,94 @@
 <template>
-  <div class="avoid">
-    <div class="row">
-      <div class="col-12">
-        <h3 class="card-title">Other Income Reports</h3>
-      </div>
-    </div>
-    <div class="row justify-content-end">
-      <div class="col-md-6">
-        <div class="input-group mb-3">
-          <input type="date" class="form-control" v-model="from" />
-          <input type="date" class="form-control" v-model="to" />
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click.prevent="getTrialBalance"
-          >
-            Get trial balance
-          </button>
+    <div class="t2w-legacy-section" role="region" aria-labelledby="t2w-oi-title">
+        <div class="t2w-section-head">
+            <h2 class="t2w-section-title" id="t2w-oi-title">Other income <span class="t2w-legacy-asat">{{ periodText }}</span></h2>
         </div>
-        <a
-          href="javaScript:void(0)"
-          @click.prevent="resetTrialBalance"
-          class="no-print"
-          >Reset</a
-        >
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6 no-print">
-            <MonthlyIncome />
+        <div class="t2w-legacy-filter no-print">
+            <PeriodFilter :from="period.from" :to="period.to" @change="p => load(p)" />
         </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <p>Total Bank Recovery Charges</p>
-              <p class="">{{ toLocale(bankRecoveryCharges) }}</p>
+
+        <div class="row g-3">
+            <div class="col-12 col-lg-5">
+                <DataTable :columns="columns" :rows="items" row-key="key" :totals="{ value: total }" totals-label="Total income"
+                    :searchable="false" :loading="loading" :error="error" :stack-on-mobile="false" />
             </div>
-            <div class="d-flex justify-content-between">
-              <p>Total Loan interest Repaid</p>
-              <p class="">{{ toLocale(loanInterestRepaid) }}</p>
+            <div class="col-12 col-lg-7">
+                <ChartCard title="Income by month" subtitle="All months on record (not the period above)" type="bar" stacked
+                    label-heading="Month" show-totals :height="260" :loading="monthlyLoading" :error="monthlyError"
+                    :labels="months.map(m => m.month)"
+                    :datasets="SOURCES.map((s, i) => ({ label: s.label, colorIndex: i, data: months.map(m => toNumber(m[s.key]) ?? 0) }))" />
             </div>
-            <div class="d-flex justify-content-between">
-              <p>Total Registration Fees</p>
-              <p class="">{{ toLocale(regFees) }}</p>
-            </div>
-            <div class="d-flex justify-content-between">
-              <p>Total Loan Insurance Premium Paid</p>
-              <p class="">{{ toLocale(premium) }}</p>
-            </div>
-            <div class="d-flex justify-content-between">
-              <p>Total Bonus Received by System Account</p>
-              <p class="">{{ toLocale(refBonus) }}</p>
-            </div><hr>
-            <div class="d-flex justify-content-between">
-              <p><strong>Total Income</strong></p>
-              <p class=""><strong>{{ toLocale(total) }}</strong></p>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="break-after"></div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { Request } from "@/helpers";
-import { toLocale } from "@module/Tokens2Wealth/helpers";
-import MonthlyIncome from "./MonthlyIncome.vue";
+    // Other income for a period (/t2w/api/report/other-income) and by month (/t2w/api/report/chart/other-income),
+    // the same endpoints as before. The monthly chart is now one stacked bar per month, one colour per source
+    // (it drew five overlapping pale lines with the total as a bar on the same axis).
+    import { computed, onMounted, ref } from 'vue'
+    import { Request } from '@/helpers'
+    import DataTable from '../../../components/ui/DataTable.vue'
+    import ChartCard from '../../../components/ui/ChartCard.vue'
+    import PeriodFilter from '../../../components/Reports/PeriodFilter.vue'
+    import { toNumber } from '../../../helpers/format'
+    import { presetRange, periodLabel } from '../../../helpers/reports'
 
-const req = new Request();
+    const req = new Request()
+    const allTime = presetRange("all-time")
 
-const bankRecoveryCharges = ref(0);
-const loanInterestRepaid = ref(0);
-const regFees = ref(0);
-const premium = ref(0);
-const refBonus = ref(0);
-const total = computed(() => {
-    return bankRecoveryCharges.value + loanInterestRepaid.value + regFees.value + premium.value + refBonus.value
-})
-const from = ref(null);
-const to = ref(null);
-const label = ref("All time");
+    // five sources: exactly the five chart colours
+    const SOURCES = [
+        { key: "lir", label: "Loan interest repaid" },
+        { key: "brc", label: "Bank recovery charges" },
+        { key: "rf", label: "Registration fees" },
+        { key: "lipp", label: "Loan insurance premium" },
+        { key: "rbgsa", label: "Bonus on system account" },
+    ]
 
-onMounted(() => {
-  resetTrialBalance();
-});
+    const period = ref(allTime)
+    const totals = ref({})
+    const loading = ref(true)
+    const error = ref("")
 
-const resetTrialBalance = async () => {
-  await req
-    .post(req.root + "/t2w/api/report/other-income")
-    .then((r) => {
-      bankRecoveryCharges.value = r.data.brc;
-      loanInterestRepaid.value = r.data.lir;
-      regFees.value = r.data.rf;
-      premium.value = r.data.lipp;
-      refBonus.value = r.data.rbgsa;
-    });
-};
+    const load = async (p) => {
+        loading.value = true
+        error.value = ""
+        try {
+            const r = await req.post(req.root + "/t2w/api/report/other-income", { from: p.from, to: p.to })
+            totals.value = r?.data ?? {}
+            period.value = p
+        } catch (e) {
+            error.value = "The income totals could not be loaded."
+        } finally {
+            loading.value = false
+        }
+    }
 
-const getTrialBalance = async () => {
-  var data = {};
-  if (from.value != null && from.value != "") {
-    data.from = from.value;
-    label.value = "Between " + from.value + " and ";
-  } else label.value = "From onset to ";
-  if (to.value != null && to.value != "") {
-    data.to = to.value;
-    label.value += to.value;
-  } else label.value += "Current date";
-  await req.post(req.root + "/t2w/api/report/other-income", data).then((r) => {
-    bankRecoveryCharges.value = r.data.brc;
-    loanInterestRepaid.value = r.data.lir;
-    regFees.value = r.data.rf;
-    premium.value = r.data.lipp;
-    refBonus.value = r.data.rbgsa;
-  });
-};
+    const months = ref([])
+    const monthlyLoading = ref(true)
+    const monthlyError = ref("")
+
+    onMounted(async () => {
+        load(allTime)
+        try {
+            const r = await req.post(req.root + "/t2w/api/report/chart/other-income")
+            months.value = Array.isArray(r?.data) ? r.data : []
+        } catch (e) {
+            monthlyError.value = "The monthly figures could not be loaded."
+        } finally {
+            monthlyLoading.value = false
+        }
+    })
+
+    const columns = [
+        { key: "label", heading: "Source", sortable: false },
+        { key: "value", heading: "Amount", type: "money" },
+    ]
+    const items = computed(() => SOURCES.map(s => ({ key: s.key, label: s.label, value: toNumber(totals.value[s.key]) ?? 0 })))
+    const total = computed(() => items.value.reduce((a, i) => a + i.value, 0))
+    const periodText = computed(() => period.value.from === allTime.from && period.value.to === allTime.to
+        ? "all time" : periodLabel(period.value))
+
+    defineExpose({ items, total, period })
 </script>
-
-<style lang="scss" scoped>
-@media print {
-  .no-print {
-    display: none;
-  }
-  .break-after {
-    page-break-after: always;
-  }
-  .avoid {
-    page-break-inside: avoid;
-  }
-}
-</style>

@@ -1,135 +1,156 @@
 <template>
-    <div class="row">
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">E-wallet</div>
-                <router-link v-if="ewallet != null" to="/savings/e-wallet"><h2>{{ toLocale(ewallet) }}</h2></router-link>
+    <div class="t2w-member-balances" role="region" aria-labelledby="t2w-member-balances-title">
+        <h2 class="t2w-visually-hidden" id="t2w-member-balances-title">My balances</h2>
+        <div class="row g-2 g-md-3">
+            <div class="col-12 col-lg-5">
+                <StatCard tone="brand" size="lg" class="t2w-member-hero" label="Total savings"
+                    :value="loading ? null : totalSavings" :loading="loading"
+                    hint="E-wallet, thrift, term deposit, special savings and shares">
+                    <div class="t2w-member-hero__actions">
+                        <router-link to="/payout" class="t2w-hero-btn">Request payout</router-link>
+                        <router-link to="/contribution/statement" class="t2w-hero-btn is-ghost">E-wallet statement</router-link>
+                    </div>
+                </StatCard>
             </div>
-        </div>
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">Thrift Savings</div>
-                <router-link v-if="thrift != null" to="/savings/thrift"><h2>{{ toLocale(thrift) }}</h2></router-link>
-                <router-link v-else to="/savings/thrift/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">Loan</div>
-                <router-link v-if="loan != null" to="/loan"><h2>{{ toLocale(loan) }}</h2></router-link>
-                <router-link v-else to="/loan/new" class="mt-2 btn btn-rounded btn-primary">Apply loan</router-link>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">Term Deposit</div>
-                <router-link v-if="td != null" to="/savings/term-deposit"><h2>{{ toLocale(td) }}</h2></router-link>
-                <router-link v-else to="/savings/term-deposit/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">Special Savings</div>
-                <router-link v-if="special != null" to="/savings/special"><h2>{{ toLocale(special) }}</h2></router-link>
-                <router-link v-else to="/savings/special/new" class="mt-2 btn btn-rounded btn-primary">Get Started</router-link>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 animate__animated animate__pulse">
-            <div class="balance">
-                <div class="title">Shares</div>
-                <router-link v-if="share != null" to="/investments/shares"><h2>{{ toLocale(share) }}</h2></router-link>
-                <router-link v-else to="/investments/shares/buy" class="mt-2 btn btn-rounded btn-primary">Buy Shares</router-link>
+            <div class="col-12 col-lg-7">
+                <div class="row g-2 g-md-3">
+                    <div class="col-6 col-md-4" v-for="p in products" :key="p.key">
+                        <StatCard v-if="loading || p.active" :label="p.label" :value="p.value" :to="p.to"
+                            :hint="p.hint" :loading="loading" />
+                        <router-link v-else :to="p.start.to" class="t2w-start-card">
+                            <span class="t2w-start-card__label">{{ p.label }}</span>
+                            <span class="t2w-start-card__pitch">{{ p.start.pitch }}</span>
+                            <span class="t2w-start-card__cta">{{ p.start.cta }} →</span>
+                        </router-link>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import {ref, watchEffect} from 'vue'
-    import {Request} from '@/helpers'
-    import 'animate.css'
+    // Member balances: a total-savings card and one card per product.
+    // /t2w/api/balance/m/<type> answers 400 when the member has no account of that type: that product
+    // shows a "get started" card with the same link the old dashboard button had.
+    // Shares come back in units and are valued at share_unit (as on the Shares page); a loan balance
+    // is negative while money is owed, so it is shown as an amount outstanding.
+    import { computed, onMounted, ref } from 'vue'
+    import { Request, Options } from '@/helpers'
+    import StatCard from '../../../components/ui/StatCard.vue'
+    import { toNumber, count, money } from '../../../helpers/format'
 
-    const ewallet = ref(null)
-    const thrift = ref(null)
-    const loan = ref(null)
-    const td = ref(null)
-    const special = ref(null)
-    const share = ref(null)
+    const TYPES = ["contribution", "regular_thrift", "loan", "term_deposit", "special", "share"]
 
-    const props = defineProps({
-        data: Object
+    const balances = ref({})   // ac_type -> number, or null when the member has no such account
+    const shareUnit = ref(0)
+    const loading = ref(true)
+
+    onMounted(async () => {
+        const req = new Request()
+        const results = await Promise.all([
+            ...TYPES.map(t => req.post(`${req.root}/t2w/api/balance/m/${t}`)
+                .then(r => toNumber(r?.data) ?? 0)
+                .catch(() => null)),
+            new Options().get("share_unit").then(r => toNumber(r?.data) ?? 0).catch(() => 0)
+        ])
+        balances.value = Object.fromEntries(TYPES.map((t, i) => [t, results[i]]))
+        shareUnit.value = results[TYPES.length]
+        loading.value = false
     })
 
-    const req = new Request();
+    const has = t => balances.value[t] !== null && balances.value[t] !== undefined
+    const shareValue = computed(() => (balances.value.share ?? 0) * shareUnit.value)
 
-    const getBalances = (userId) => {
-        req.post(req.root+"/t2w/api/balance/m/contribution").then(r => {
-            ewallet.value = r.data
-        })
-        req.post(req.root+"/t2w/api/balance/m/regular_thrift").then(r => {
-            thrift.value = r.data
-        })
-        req.post(req.root+"/t2w/api/balance/m/loan").then(r => {
-            loan.value = r.data
-        })
-        req.post(req.root+"/t2w/api/balance/m/share").then(r => {
-            share.value = r.data
-        })
-        req.post(req.root+"/t2w/api/balance/m/term_deposit").then(r => {
-            td.value = r.data
-        })
-        req.post(req.root+"/t2w/api/balance/m/special").then(r => {
-            special.value = r.data
-        }).catch(() => {
-            special.value = null
-        })
-    }
+    const products = computed(() => [
+        {
+            key: "contribution", label: "E-wallet", active: has("contribution"),
+            value: balances.value.contribution, to: "/savings/e-wallet",
+            start: { to: "/savings/e-wallet", pitch: "Your e-wallet is not active yet.", cta: "See details" }
+        },
+        {
+            key: "regular_thrift", label: "Thrift savings", active: has("regular_thrift"),
+            value: balances.value.regular_thrift, to: "/savings/thrift",
+            start: { to: "/savings/thrift/new", pitch: "Save a fixed amount every month.", cta: "Get started" }
+        },
+        {
+            key: "loan", label: "Loan outstanding", active: has("loan"),
+            value: has("loan") ? Math.max(0, -balances.value.loan) : null, to: "/loan",
+            start: { to: "/loan/new", pitch: "Borrow against your savings.", cta: "Apply for a loan" }
+        },
+        {
+            key: "term_deposit", label: "Term deposit", active: has("term_deposit"),
+            value: balances.value.term_deposit, to: "/savings/term-deposit",
+            start: { to: "/savings/term-deposit/new", pitch: "Lock savings away for a better rate.", cta: "Get started" }
+        },
+        {
+            key: "special", label: "Special savings", active: has("special"),
+            value: balances.value.special, to: "/savings/special",
+            start: { to: "/savings/special/new", pitch: "Save towards a goal of your own.", cta: "Get started" }
+        },
+        {
+            key: "share", label: "Shares", active: has("share"),
+            value: shareValue.value, to: "/investments/shares",
+            hint: has("share") ? `${count(balances.value.share)} units at ${money(shareUnit.value)}` : "",
+            start: { to: "/investments/shares/buy", pitch: "Own part of the cooperative.", cta: "Buy shares" }
+        },
+    ])
 
-    watchEffect(() => {
-        getBalances(props.data.id)
-    })
-
-    const toLocale = (str) => {
-        var parts = (Math.round(str * 100) / 100).toString().split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return parts.join(".");
-    }
+    const totalSavings = computed(() =>
+        ["contribution", "regular_thrift", "term_deposit", "special"].reduce((a, t) => a + (balances.value[t] ?? 0), 0)
+        + shareValue.value)
 </script>
 
 <style lang="scss" scoped>
-    .balance {
-        border: 1px solid #d7d7d7;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        position: relative;
-        .title {
-            position: absolute;
-            top: -11px;
-            background: white;
-            padding: 0 10px;
-            font-size: small;
-        }
-        h2 {
-            cursor: pointer;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
+    .t2w-member-balances { margin-bottom: var(--t2w-space-5); }
+
+    .t2w-member-hero { min-height: 100%; }
+
+    .t2w-member-hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--t2w-space-2);
+        margin-top: var(--t2w-space-3);
+        flex-basis: 100%;
+    }
+
+    .t2w-hero-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: var(--t2w-radius-pill);
+        background: var(--t2w-accent);
+        color: var(--t2w-primary-strong);
+        font-size: var(--t2w-fs-label);
+        font-weight: 600;
+        text-decoration: none;
+        &:hover { filter: brightness(0.95); }
+        &:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+        &.is-ghost {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            &:hover { background: rgba(255, 255, 255, 0.12); }
         }
     }
-    /* Extra small devices (phones, 600px and down) */
-    @media only screen and (max-width: 600px) {}
 
-    /* Small devices (portrait tablets and large phones, 600px and up) */
-    @media only screen and (min-width: 600px) {}
+    // a product the member hasn't started: dashed outline, short pitch, call to action
+    .t2w-start-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--t2w-space-1);
+        height: 100%;
+        padding: var(--t2w-space-3) var(--t2w-space-4);
+        border: 1px dashed var(--t2w-border-strong);
+        border-radius: var(--t2w-radius);
+        color: var(--t2w-text);
+        text-decoration: none;
+        transition: border-color 0.15s ease, background 0.15s ease;
+        &:hover { border-color: var(--t2w-primary); background: var(--t2w-hover); }
+        &:focus-visible { outline: 2px solid var(--t2w-primary); outline-offset: 2px; }
+    }
 
-    /* Medium devices (landscape tablets, 768px and up) */
-    @media only screen and (min-width: 768px) {}
-
-    /* Large devices (laptops/desktops, 992px and up) */
-    @media only screen and (min-width: 992px) {}
-
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (min-width: 1200px) {}
+    .t2w-start-card__label { font-size: var(--t2w-fs-label); color: var(--t2w-muted); }
+    .t2w-start-card__pitch { font-size: var(--t2w-fs-small); color: var(--t2w-muted); flex: 1 1 auto; }
+    .t2w-start-card__cta { font-size: var(--t2w-fs-label); font-weight: 600; color: var(--t2w-primary); }
 </style>

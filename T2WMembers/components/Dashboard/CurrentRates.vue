@@ -1,63 +1,57 @@
 <template>
-    <div class="ticker">
-        <div class="caption">
-            TODAY
-        </div>
-        <marquee scrollamount="4">
-            <div class="marquee">
-                <div><span>Current Loan Rate: </span>{{ loan }}%</div>
-                <div><span>Current Term Deposit Rate: </span>{{ td }}%</div>
-                <div><span>Loan Insurance Charge: </span>{{ loanInsurrance }}%</div>
+    <Panel title="Today's rates" :loading="loading">
+        <dl class="t2w-rates">
+            <div v-for="r in rates" :key="r.label">
+                <dt>{{ r.label }}</dt>
+                <dd class="t2w-num">{{ percent(r.value) }}</dd>
             </div>
-            
-        </marquee>
-    </div>
+        </dl>
+    </Panel>
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    // The cooperative's current rates (General Settings options), as a short list instead of a scrolling ticker.
+    import { ref, computed, onMounted } from 'vue'
     import { Options } from '@/helpers'
+    import Panel from '../../../components/ui/Panel.vue'
+    import { percent } from '../../../helpers/format'
 
-    const loan = ref(null)
-    const td = ref(null)
-    const loanInsurrance = ref(null)
+    const loan = ref(0)
+    const td = ref(0)
+    const loanInsurance = ref(0)
+    const loading = ref(true)
 
-    onMounted(() => {
-        const options = new Options;
-        options.get("loan_rate,td_rate,percentage_charge_on_loan").then(r => {
-            loan.value = r.data?.loan_rate ?? 0;
-            td.value = r.data?.td_rate ?? 0;
-            loanInsurrance.value = r.data?.percentage_charge_on_loan ?? 0;
-        })
+    onMounted(async () => {
+        try {
+            const r = await new Options().get("loan_rate,td_rate,percentage_charge_on_loan")
+            loan.value = r?.data?.loan_rate ?? 0
+            td.value = r?.data?.td_rate ?? 0
+            loanInsurance.value = r?.data?.percentage_charge_on_loan ?? 0
+        } finally {
+            loading.value = false
+        }
     })
+
+    const rates = computed(() => [
+        { label: "Loan interest", value: loan.value },
+        { label: "Term deposit interest", value: td.value },
+        { label: "Loan insurance charge", value: loanInsurance.value },
+    ])
 </script>
 
 <style lang="scss" scoped>
-    * {
+    .t2w-rates {
         margin: 0;
-        padding: 0;
-        line-height: normal;
-    }
-    .ticker {
         display: flex;
-        background: #f3f5fa;
-        margin-bottom: 20px;
-        .caption {
-            background: rgb(16, 45, 22);
-            color: rgb(0, 175, 67);
-            font-weight: 700;
-            padding: 3px 8px;
-            text-wrap: nowrap;
-            font-size: small;
+        flex-direction: column;
+        gap: var(--t2w-space-2);
+        > div {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--t2w-space-3);
+            font-size: var(--t2w-fs-table);
         }
-    }
-    .marquee {
-        display: flex;
-        gap: 39px;
-    }
-    .marquee span {
-        font-style: italic;
-        font-weight: 300;
-        color: #102d16;
+        dt { font-weight: 400; color: var(--t2w-muted); }
+        dd { margin: 0; font-weight: 600; color: var(--t2w-text); }
     }
 </style>

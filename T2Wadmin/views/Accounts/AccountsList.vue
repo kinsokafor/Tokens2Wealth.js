@@ -51,14 +51,7 @@
 
   <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
-  <div class="row summary-row mb-3" v-if="data">
-    <div class="col-6 col-md-3" v-for="c in cards" :key="c.label">
-      <div class="card h-100"><div class="card-body py-2 px-3">
-        <div class="small text-muted">{{ c.label }}</div>
-        <div class="fs-5 fw-semibold text-nowrap">{{ c.value }}</div>
-      </div></div>
-    </div>
-  </div>
+  <SummaryCards v-if="data" :items="cards" />
   <div v-if="data && data.unlisted_balance" class="small text-muted mb-2">
     Not in this list: {{ money(data.unlisted_balance) }} posted to account numbers that have no account record.
   </div>
@@ -120,6 +113,7 @@ import _ from "lodash";
 import { Request } from "@/helpers";
 import { useAlertStore } from "@/store/alert";
 import AccountCard from "@/Modules/Tokens2Wealth/components/AccountCard.vue";
+import SummaryCards from "@/Modules/Tokens2Wealth/components/Reports/SummaryCards.vue";
 import { amount, count, longDate, downloadCsv, errorMessage } from "@/Modules/Tokens2Wealth/helpers/reports";
 
 // One request per view of the list (/t2w/api/accounts/list/{type}): the server filters, searches,
@@ -241,5 +235,4 @@ const exportCsv = async () => {
 .filters > div { min-width: 220px; }
 .clickable { cursor: pointer; }
 .sortable { cursor: pointer; user-select: none; white-space: nowrap; }
-.summary-row { --bs-gutter-y: 0.6rem; }
 </style>
