@@ -1,6 +1,6 @@
 <template>
     <ReportShell title="Learning Materials" subtitle="Published for members" :loading="loading" :can-export="false">
-        <template #actions>
+        <template #actions v-if="canPublish">
             <router-link to="/publish-learning-material" class="btn btn-outline-secondary btn-sm">Publish new</router-link>
         </template>
         <DataTable :columns="columns" :rows="rows" :page-size="50" :default-sort="{ key: 'time_altered', dir: 'desc' }"
@@ -15,6 +15,8 @@
 
 <script setup>
     import { computed } from 'vue'
+    import { useRouter } from 'vue-router'
+    import { useAuthStore } from '@/store/auth'
     import { useLMStore } from '@module/Tokens2Wealth/store/LearningMaterials'
     import ReportShell from '../../../components/Reports/ReportShell.vue'
     import DataTable from '../../../components/ui/DataTable.vue'
@@ -22,6 +24,13 @@
 
     const store = useLMStore()
     const rows = computed(() => store.get({}))
+
+    // The member app shows this same page: "Publish new" is for staff, and only where the app has the
+    // publish page (the member app doesn't; its catch-all route would show "not found").
+    const auth = useAuthStore()
+    const router = useRouter()
+    const canPublish = computed(() => auth.hasAccess("1,2,3,4")
+        && router.resolve("/publish-learning-material").matched.some(r => !r.path.includes(":pathMatch")))
     const loading = useSettledLoading(() => rows.value)
 
     // DOMParser builds an inert document: nothing in the HTML runs while reading its text
