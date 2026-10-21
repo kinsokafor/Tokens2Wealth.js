@@ -1,63 +1,42 @@
 <template>
-    <div class="row">
-        <div class="col-md-4 col-sm-6" v-for="account in filtered" :key="account.id">
-            <router-link :to="`/accounts/view/${account?.ac_type}/${account?.ac_number}`">
-                <div class="card mb-3"
-                    :class="{
-                        'text-bg-success': (account.balance >= 0),
-                        'text-bg-warning': (account.balance < 0)}"
-                >
-                    <div class="card-body">
-                        <h5 class="card-title">{{account.ac_type == 'special' ? 'Special Savings' : titleCase(account.ac_type)}}</h5>
-                        <p class="card-text" v-if="account.ac_type == 'share'">{{ toLocale(account.balance, "", " Units") }}</p>
-                        <p class="card-text" v-else>{{ toLocale(account.balance) }}</p>
-                    </div>
-                </div>
-            </router-link>
+    <div class="t2w-other-balances" v-if="filtered.length">
+        <h3 class="t2w-section-title mb-2">Other accounts</h3>
+        <div class="row g-2 g-md-3">
+            <div class="col-6 col-md-4" v-for="account in filtered" :key="account.id">
+                <StatCard :label="label(account)" format="text" :value="show(account)"
+                    :to="`/accounts/view/${account?.ac_type}/${account?.ac_number}`"
+                    :tone="Number(account.balance) < 0 ? 'warning' : 'default'" :hint="account.ac_number" />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { toLocale } from '@module/Tokens2Wealth/helpers'
-    import {Request, titleCase} from '@/helpers'
-    import {ref, watchEffect, computed} from 'vue'
-    import {useAuthStore} from '@/store/auth'
+    // The member's other accounts (not the one on this page), each linking to its own page.
+    // Negative balances get an amber edge (they had an amber card before).
+    import { ref, watchEffect, computed } from 'vue'
+    import { Request, titleCase } from '@/helpers'
+    import StatCard from '../ui/StatCard.vue'
+    import { money, count } from '../../helpers/format'
 
-    const authStore = useAuthStore()
+    const props = defineProps({ account: String, userId: Number })
 
-    const user = computed(() => authStore.getUser)
-    
-    const r = new Request
-
+    const r = new Request()
     const accounts = ref([])
-
-    const props = defineProps({account: String, userId: Number})
 
     const filtered = computed(() => accounts.value.filter(i => i.ac_number != props.account))
 
-    const getBalances = () => {
-        if(props.userId == undefined) return;
-        r.post(r.root+"/t2w/api/get/user-accounts", {user_id: props.userId}).then(r => {
-            accounts.value = r.data
-        })
-    }
-
     watchEffect(() => {
-        if(props.userId != undefined) {
-            getBalances()
-        }
+        if (props.userId == undefined) return
+        r.post(r.root + "/t2w/api/get/user-accounts", { user_id: props.userId }).then(res => {
+            accounts.value = Array.isArray(res?.data) ? res.data : []
+        }).catch(() => { accounts.value = [] })
     })
 
-    const getLink = (a) => {
-        if(a?.user_id == parseInt(user.value?.id ?? 0)) {
-            return `#`
-        } else {
-            return 
-        }
-    }
+    const label = a => a.ac_type == 'special' ? 'Special Savings' : a.ac_type == 'contribution' ? 'E-Wallet' : titleCase(String(a.ac_type).replace(/_/g, ' '))
+    const show = a => a.ac_type == 'share' ? `${count(a.balance)} units` : money(a.balance)
 </script>
 
 <style lang="scss" scoped>
-
+    .t2w-other-balances { margin: var(--t2w-space-4) 0; }
 </style>

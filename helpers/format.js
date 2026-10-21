@@ -13,11 +13,13 @@ export function toNumber(value) {
     return isFinite(n) ? n : null
 }
 
-// "₦12,500.50". Empty values show as ₦0.00 (as the old toLocale did); non-numbers show as "—"
+// "₦12,500.50". Empty values show as ₦0.00 (as the old toLocale did); non-numbers show as "—".
+// Negative amounts use a true minus sign ("−₦500.00"): the hyphen Intl puts there runs into the ₦ in Jost.
 export function money(value) {
     if (value === null || value === undefined || value === "") return ngn.format(0)
     const n = toNumber(value)
-    return n === null ? "—" : ngn.format(n)
+    if (n === null) return "—"
+    return n < 0 ? "−" + ngn.format(-n) : ngn.format(n)
 }
 
 // "₦1.2M": chart ticks and tight spaces only, never in tables or statements

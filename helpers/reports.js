@@ -1,5 +1,7 @@
 // Shared helpers for the server-side reports (see Public/Modules/Tokens2Wealth/Classes/Reports.php)
 
+import { money } from "./format"
+
 const pad = (n) => String(n).padStart(2, "0")
 
 export const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -34,14 +36,13 @@ export function presetRange(preset, today = new Date()) {
     }
 }
 
-const ngn = new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" })
 const plain = new Intl.NumberFormat("en-NG", { maximumFractionDigits: 2 })
 
 // NGN amount, or a plain number for unit-based products (shares)
 export function amount(value, unit = "NGN") {
     const n = Number(value ?? 0)
     if (!isFinite(n)) return "-"
-    return unit === "NGN" ? ngn.format(n) : `${plain.format(n)} ${unit}`
+    return unit === "NGN" ? money(n) : `${plain.format(n)} ${unit}`
 }
 
 export function count(value) {
