@@ -52,7 +52,8 @@
         emptyText: { type: String, default: "Nothing to show yet." },
         // no padding around the body (tables, lists that run edge to edge)
         flush: { type: Boolean, default: false },
-        as: { type: String, default: "section" }
+        // a div, not a section: the Arsha theme pads every <section> by 60px
+        as: { type: String, default: "div" }
     })
     defineEmits(['retry'])
 </script>

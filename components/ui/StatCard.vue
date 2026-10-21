@@ -10,7 +10,8 @@
         </div>
 
         <div class="t2w-stat__value t2w-num" :style="{ '--t2w-fit': fit }">
-            <span v-if="loading" class="t2w-skeleton" style="width: 60%; height: 1.1em"></span>
+            <!-- same height as the figure's line (line-height 1.2), so nothing moves when it arrives -->
+            <span v-if="loading" class="t2w-skeleton" style="width: 60%; height: 1.2em"></span>
             <template v-else>{{ display }}</template>
         </div>
 
@@ -127,10 +128,13 @@
         flex: 1 1 auto;
         min-width: 0;
         font-size: var(--t2w-fs-label);
+        line-height: 1.3;
         color: var(--t2w-muted);
+        // wrap to two lines on narrow cards rather than cutting the label off
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .t2w-stat__icon {

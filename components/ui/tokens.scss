@@ -114,3 +114,21 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
 }
+
+// section heading with a link on the right (dashboards)
+.t2w-section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--t2w-space-2);
+    margin-bottom: var(--t2w-space-3);
+}
+
+.t2w-section-link {
+    font-size: var(--t2w-fs-label);
+    font-weight: 500;
+    color: var(--t2w-primary);
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+}

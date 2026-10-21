@@ -1,32 +1,29 @@
 <template>
-    <div class="card mb-4 n-widget">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <h5 class="card-title mb-0">
-                    Notifications
-                    <span v-if="unread" class="badge bg-primary ms-1">{{ unread > 99 ? "99+" : unread }}</span>
-                </h5>
-                <div class="d-flex align-items-center gap-3">
-                    <button v-if="unread" type="button" class="btn btn-link btn-sm p-0 text-muted" :disabled="busy" @click="markAll">Mark all read</button>
-                    <router-link to="/notifications" class="btn btn-link btn-sm p-0">View all</router-link>
-                </div>
-            </div>
-            <div v-if="loading && !rows.length" class="text-muted small py-2">Loading…</div>
-            <div v-else-if="error" class="text-muted small py-2">Notifications are unavailable right now.</div>
-            <div v-else-if="!rows.length" class="text-muted py-3 text-center"><em>No notifications yet.</em></div>
-            <div v-else class="n-scroll">
-                <router-link v-for="n in rows" :key="n.id" to="/notifications" class="n-link">
-                    <NotificationItem :item="n" compact />
-                </router-link>
-            </div>
+    <Panel class="n-widget" flush :loading="loading && !rows.length" :error="error ? 'Notifications are unavailable right now.' : ''"
+        :empty="!rows.length" empty-text="No notifications yet.">
+        <template #title>
+            <h2 class="t2w-section-title">
+                Notifications
+                <span v-if="unread" class="n-count t2w-num">{{ unread > 99 ? "99+" : unread }}<span class="t2w-visually-hidden"> unread</span></span>
+            </h2>
+        </template>
+        <template #actions>
+            <button v-if="unread" type="button" class="n-action" :disabled="busy" @click="markAll">Mark all read</button>
+            <router-link to="/notifications">View all</router-link>
+        </template>
+        <div class="n-scroll">
+            <router-link v-for="n in rows" :key="n.id" to="/notifications" class="n-link">
+                <NotificationItem :item="n" compact />
+            </router-link>
         </div>
-    </div>
+    </Panel>
 </template>
 
 <script setup>
     import { onMounted, ref } from 'vue'
     import { Request } from '@/helpers'
     import NotificationItem from '../Notifications/NotificationItem.vue'
+    import Panel from '../ui/Panel.vue'
 
     // latest notifications and the unread count in one request (/t2w/api/notifications/summary).
     // "View all" opens the module's notifications page in whichever app this widget is in.
@@ -73,14 +70,36 @@
 
 <style lang="scss" scoped>
     .n-scroll {
-        max-height: 360px;
+        max-height: 420px;
         overflow-y: auto;
-        margin: 0 -8px;
+        padding: var(--t2w-space-1) var(--t2w-space-2);
     }
     .n-link {
+        display: block;
         color: inherit;
         text-decoration: none;
-        display: block;
-        &:hover { background: rgba(0, 0, 0, .03); }
+        border-radius: var(--t2w-radius-sm);
+        &:hover { background: var(--t2w-hover); }
+    }
+    .n-count {
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0 6px;
+        margin-left: 4px;
+        border-radius: var(--t2w-radius-pill);
+        background: var(--t2w-primary);
+        color: #fff;
+        font-size: var(--t2w-fs-small);
+        line-height: 1.6;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .n-action {
+        all: unset;
+        cursor: pointer;
+        color: var(--t2w-muted);
+        &:hover { text-decoration: underline; }
+        &:disabled { opacity: 0.5; cursor: default; }
+        &:focus-visible { outline: 2px solid var(--t2w-primary); outline-offset: 2px; }
     }
 </style>

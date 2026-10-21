@@ -235,7 +235,8 @@
         margin-bottom: var(--t2w-space-2);
     }
 
-    .t2w-dt__search { max-width: 280px; }
+    // the theme gives .form-control 11px padding and square corners
+    .t2w-dt__search { max-width: 280px; padding: 4px 10px; border-radius: var(--t2w-radius-sm); }
     .t2w-dt__toolbar { display: flex; flex-wrap: wrap; gap: var(--t2w-space-2); flex: 1 1 auto; }
     .t2w-dt__count { font-size: var(--t2w-fs-small); color: var(--t2w-muted); margin-left: auto; }
 
