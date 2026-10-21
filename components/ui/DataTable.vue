@@ -128,12 +128,14 @@
     const NUMERIC = ["money", "money-compact", "count", "percent"]
 
     const cols = computed(() => props.columns.map(c => {
-        const numeric = NUMERIC.includes(c.type)
+        // a right-aligned column is a figure even without a type (the report pages pass format + align)
+        const numeric = NUMERIC.includes(c.type) || (!c.type && c.align === "end")
         const align = c.align ?? (numeric ? "end" : "start")
         return {
             ...c,
             numeric,
-            sortable: c.sortable ?? true,
+            // a brought-forward row means the order is the statement's own: no sorting unless asked for
+            sortable: c.sortable ?? !props.before,
             cls: [
                 align === "end" ? "text-end" : align === "center" ? "text-center" : "",
                 numeric ? "t2w-num" : "",
@@ -151,11 +153,28 @@
     }
 
     // ---- search
+    // The input updates `search` at once; the filter follows `query` after a short pause in typing.
+    // Each row's displayed text is built once per rows/columns change, not on every keystroke
+    // (formatting every cell of 9,000 log rows took ~0.8 s a keypress).
     const search = ref("")
+    const query = ref("")
+    let searchTimer = null
+    watch(search, v => {
+        clearTimeout(searchTimer)
+        searchTimer = setTimeout(() => { query.value = v.trim().toLowerCase() }, v ? 150 : 0)
+    })
+
+    const searchText = computed(() => {
+        if (!props.searchable) return null
+        const index = new Map()
+        props.rows.forEach(row => index.set(row, cols.value.map(c => String(formatCell(c, row))).join("\u0001").toLowerCase()))
+        return index
+    })
+
     const filtered = computed(() => {
-        const q = search.value.trim().toLowerCase()
-        if (!q) return props.rows
-        return props.rows.filter(row => cols.value.some(c => String(formatCell(c, row)).toLowerCase().includes(q)))
+        const q = query.value
+        if (!q || !searchText.value) return props.rows
+        return props.rows.filter(row => (searchText.value.get(row) ?? "").includes(q))
     })
 
     // ---- sort
@@ -181,7 +200,8 @@
 
     const sortValue = (c, row) => {
         const v = row?.[c.key]
-        if (c.numeric) return toNumber(v)
+        // figures sort as numbers; text in a figure column ("865 days") falls back to a natural text sort
+        if (c.numeric) return toNumber(v) ?? v
         if (c.type === "date" || c.type === "datetime") return parseDate(v)?.getTime() ?? null
         return v
     }
@@ -211,7 +231,7 @@
         ? sorted.value.slice(pageStart.value, pageStart.value + props.pageSize)
         : sorted.value)
 
-    watch([search, () => props.rows], () => { page.value = 1 })
+    watch([query, () => props.rows], () => { page.value = 1 })
     watch(pageCount, n => { if (page.value > n) page.value = n })
 
     const onBeforePrint = () => { printing.value = true }
