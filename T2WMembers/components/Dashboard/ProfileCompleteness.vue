@@ -1,116 +1,105 @@
 <template>
     <restricted access="6,7,8,9">
         <template #message><span></span></template>
-        <div v-if="!status && percentage != 0" class="mb-2">
-            <p><em>Your profile is {{ percentage }}% complete</em></p>
-            <div class="progress-bar"></div>
-            <p class="text-danger"><small>Please complete your profile</small></p>
-            <ul>
-                <li v-if="'ac_number' in fields || 'ac_name' in fields || 'bank_name' in fields">
-                    Update your bank details -- <router-link to="/profile/update-account-details">
-                        <em>click here</em>
-                    </router-link>
-                </li>
-                <li v-if="'n1_fullname' in fields || 'n1_phone' in fields">
-                    Update your Next of Kin -- <router-link to="/profile/update-nok">
-                        <em>click here</em>
-                    </router-link>
-                </li>
-                <li v-if="'profile_picture' in fields">
-                    Update your Profile picture -- <a href="/#/change-profile-picture">
-                        <em>click here</em>
-                    </a>
-                </li>
-                <li v-if="'birthday_month' in fields || 'birthday_day' in fields">
-                    Update your Birthday -- <router-link to="/profile/update-birthday">
-                        <em>click here</em>
-                    </router-link>
+        <Panel v-if="loaded && !complete" title="Complete your profile">
+            <div class="t2w-profile-progress">
+                <div class="t2w-profile-progress__bar" role="progressbar" :aria-valuenow="percentage"
+                    aria-valuemin="0" aria-valuemax="100" aria-label="Profile completeness">
+                    <span :style="{ width: percentage + '%' }"></span>
+                </div>
+                <span class="t2w-profile-progress__value t2w-num">{{ percentage }}%</span>
+            </div>
+            <ul class="t2w-profile-todo" v-if="todo.length">
+                <li v-for="t in todo" :key="t.label">
+                    <router-link v-if="t.to" :to="t.to">{{ t.label }}</router-link>
+                    <a v-else :href="t.href">{{ t.label }}</a>
                 </li>
             </ul>
-        </div>
+        </Panel>
     </restricted>
 </template>
 
 <script setup>
-    import {Request} from '@/helpers'
-    import { onMounted, ref, computed, watchEffect } from 'vue';
+    // Profile completeness from /t2w/api/m/profile-completeness: a progress bar and the missing items.
+    // Hidden once the profile is complete (as before).
+    import { Request } from '@/helpers'
+    import { onMounted, ref, computed, watch } from 'vue'
+    import Panel from '../../../components/ui/Panel.vue'
 
-    const req = new Request()
+    const emit = defineEmits(["complete"])
+
     const percentage = ref(0)
-    const fields = ref([])
-    const status = computed(() => percentage.value >= 100)
-    const percentageDisplay = computed(() => percentage.value + "%")
+    const fields = ref({})
+    const loaded = ref(false)
+    const complete = computed(() => percentage.value >= 100)
 
-    const emit = defineEmits(["complete"]);
-
-    onMounted(() => {
-        req.post(req.root+"/t2w/api/m/profile-completeness").then(r => {
-            percentage.value = r.data.percentage
-            fields.value = r.data.fields
-        })
-    })
-
-    watchEffect(() => {
-        if(percentage.value >= 100) {
-            emit("complete");
+    onMounted(async () => {
+        const req = new Request()
+        try {
+            const r = await req.post(req.root + "/t2w/api/m/profile-completeness")
+            percentage.value = Math.max(0, Math.min(100, Math.round(Number(r?.data?.percentage) || 0)))
+            fields.value = r?.data?.fields ?? {}
+            loaded.value = true
+        } catch (e) {
+            // leave the panel hidden: it is a reminder, not something the dashboard depends on
         }
     })
+
+    watch(complete, c => { if (c) emit("complete") })
+
+    const missing = (...keys) => keys.some(k => k in (fields.value ?? {}))
+
+    const todo = computed(() => [
+        missing('ac_number', 'ac_name', 'bank_name') && { label: "Add your bank details", to: "/profile/update-account-details" },
+        missing('n1_fullname', 'n1_phone') && { label: "Add your next of kin", to: "/profile/update-nok" },
+        missing('profile_picture') && { label: "Upload a profile picture", href: "/#/change-profile-picture" },
+        missing('birthday_month', 'birthday_day') && { label: "Add your birthday", to: "/profile/update-birthday" },
+    ].filter(Boolean))
 </script>
 
 <style lang="scss" scoped>
-    * {
-        padding: 0;
-        margin: 0;
-        line-height: normal;
+    .t2w-profile-progress {
+        display: flex;
+        align-items: center;
+        gap: var(--t2w-space-3);
+        margin-bottom: var(--t2w-space-3);
     }
-    @keyframes shiny {
-        0% {
-            left: -10%;
-        }
 
-        100% {
-            left: 110%;
-        }
-    }
-    .progress-bar {
-        width: 100%;
-        position: relative;
-        height: 10px;
-        background: rgb(230, 230, 230);
-        border-radius: 5px;
-        overflow: clip;
-    }
-    .progress-bar::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: -5px;
-        left: 0px;
-        height: 20px;
-        background: var(--color2);
-        width: v-bind(percentageDisplay);
-    }
-    .progress-bar::after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: -5px;
-        height: 80px;
-        background: white;
-        width: 30px;
-        filter: blur(8px);
-        mix-blend-mode: overlay;
-        transform: skewX(50%);
-        opacity: 0.3;
-        animation: shiny linear infinite 2s;
-    }
-    ul {
-        border-left: 1.5px solid var(--color2);
-        li {
+    .t2w-profile-progress__bar {
+        flex: 1 1 auto;
+        height: 8px;
+        border-radius: var(--t2w-radius-pill);
+        background: var(--t2w-neutral-soft);
+        overflow: hidden;
+        span {
             display: block;
-            text-indent: 12px;
-            font-size: smaller;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--t2w-primary);
+            transition: width 0.4s ease;
         }
     }
-    
+
+    .t2w-profile-progress__value {
+        font-size: var(--t2w-fs-label);
+        font-weight: 600;
+        color: var(--t2w-text);
+    }
+
+    .t2w-profile-todo {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--t2w-space-1);
+        font-size: var(--t2w-fs-table);
+        li::before {
+            content: "○";
+            color: var(--t2w-muted);
+            margin-right: var(--t2w-space-2);
+        }
+        a { color: var(--t2w-primary); text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+    }
 </style>
