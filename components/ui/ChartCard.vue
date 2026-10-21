@@ -15,6 +15,11 @@
         </div>
         <DataTable v-else :columns="tableColumns" :rows="tableRows" row-key="label"
             :searchable="false" :totals="tableTotals" dense />
+        <!-- printing copies the page's HTML, and a canvas copies blank: print the figures as a table instead -->
+        <div v-if="!asTable" class="t2w-chart-card__print" aria-hidden="true">
+            <DataTable :columns="tableColumns" :rows="tableRows" row-key="label"
+                :searchable="false" :totals="tableTotals" :stack-on-mobile="false" dense />
+        </div>
 
         <template #footer v-if="$slots.footer"><slot name="footer"></slot></template>
     </Panel>
@@ -142,7 +147,9 @@
         &:focus-visible { outline: 2px solid var(--t2w-primary); outline-offset: 2px; border-radius: 2px; }
     }
 
+    .t2w-chart-card__print { display: none; }
     @media print {
-        .t2w-chart-card__canvas canvas { max-width: 100%; }
+        .t2w-chart-card__canvas { display: none; }
+        .t2w-chart-card__print { display: block; }
     }
 </style>

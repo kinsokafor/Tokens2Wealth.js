@@ -1,163 +1,76 @@
 <template>
-    <div class="avoid">
-        <div class="row justify-content-end">
-            <div class="col-md-6">
-                <div class="input-group mb-3">
-                    <input type="date" class="form-control" v-model="from"/>
-                    <input type="date" class="form-control" v-model="to"/>
-                    <button class="btn btn-outline-secondary" type="button" @click.prevent="getTrialBalance">Get trial balance</button>
-                </div>
-                <a href="javaScript:void(0)" @click.prevent="resetTrialBalance" class="no-print">Reset</a>
-            </div>
+    <div class="t2w-legacy-section" role="region" aria-labelledby="t2w-gl-title">
+        <div class="t2w-section-head">
+            <h2 class="t2w-section-title" id="t2w-gl-title">General ledger <span class="t2w-legacy-asat">{{ periodText }}</span></h2>
         </div>
-        <div class="row">
-            <div class="col-md-6 no-print">
-                <Bar :data="data" :options="options"/>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="card-title">General Ledger Balances</h3>
-                        <div class="d-flex justify-content-between">
-                            <p>Inflows</p>
-                            <p class="text-success">{{ toLocale(inflow) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Deposits</p>
-                            <p class="text-success">{{ toLocale(deposit) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between bg-light">
-                            <p><strong>Subtotal</strong></p>
-                            <p class="text-success"><strong>{{ toLocale(credits) }}</strong></p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Outflows</p>
-                            <p class="text-danger">{{ toLocale(outflow) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Payouts</p>
-                            <p class="text-danger">{{ toLocale(payout) }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between bg-light">
-                            <p><strong>Subtotal</strong></p>
-                            <p class="text-danger"><strong>{{ toLocale(debits) }}</strong></p>
-                        </div><hr>
-                        <div class="d-flex justify-content-between">
-                            <p><strong>General Ledger Balance</strong></p>
-                            <p :class="{'text-danger': (balance < 0), 'text-success': (balance >= 0)}"><strong>{{ toLocale(balance) }}</strong></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="t2w-legacy-filter no-print">
+            <PeriodFilter :from="period.from" :to="period.to" @change="p => load(p)" />
         </div>
+
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-4"><StatCard label="Money in" :value="credits" :loading="loading"
+                :hint="`Inflows ${money(inflow)} · Deposits ${money(deposit)}`" /></div>
+            <div class="col-6 col-md-4"><StatCard label="Money out" :value="debits" :loading="loading"
+                :hint="`Outflows ${money(outflow)} · Payouts ${money(payout)}`" /></div>
+            <div class="col-12 col-md-4"><StatCard label="General ledger balance" :value="balance" :loading="loading"
+                :tone="balance < 0 ? 'danger' : 'success'" hint="Money in minus money out" /></div>
+        </div>
+
+        <ChartCard title="Money in and out" type="bar" label-heading="Ledger" :height="220" :loading="loading" :error="error"
+            :labels="['Inflow / outflow', 'Deposits / payouts']"
+            :datasets="[
+                { label: 'In', colorIndex: 0, data: [inflow, deposit] },
+                { label: 'Out', colorIndex: 2, data: [outflow, payout] }
+            ]" />
     </div>
-    <div class="break-after"></div>
 </template>
 
 <script setup>
-    import {
-        Chart as ChartJS,
-        Title,
-        Tooltip,
-        Legend,
-        BarElement,
-        CategoryScale,
-        LinearScale,
-    } from 'chart.js';
-    import { Bar } from 'vue-chartjs';
-    import {ref, onMounted, computed} from 'vue'
-    import {Request} from '@/helpers'
-    import {toLocale} from '@module/Tokens2Wealth/helpers'
+    // General ledger: inflow & outflow plus deposits & payouts for a period (same endpoints as before).
+    // The old panel's date fields are now the shared period filter; "All time" is what it showed by default.
+    import { computed, onMounted, ref } from 'vue'
+    import { Request } from '@/helpers'
+    import StatCard from '../../../components/ui/StatCard.vue'
+    import ChartCard from '../../../components/ui/ChartCard.vue'
+    import PeriodFilter from '../../../components/Reports/PeriodFilter.vue'
+    import { money, toNumber } from '../../../helpers/format'
+    import { presetRange, periodLabel } from '../../../helpers/reports'
 
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        BarElement,
-        Title,
-        Tooltip,
-        Legend
-    );
-    const inflow = ref(0)
-    const outflow = ref(0)
-    const deposit = ref(0)
-    const payout = ref(0)
-    const label = ref("All time")
-    const from = ref(null)
-    const to = ref(null)
+    const req = new Request()
+    const allTime = presetRange("all-time")
+
+    const period = ref(allTime)
+    const inflow = ref(0), outflow = ref(0), deposit = ref(0), payout = ref(0)
+    const loading = ref(true)
+    const error = ref("")
+
+    const load = async (p) => {
+        loading.value = true
+        error.value = ""
+        try {
+            const body = { from: p.from, to: p.to }
+            const [io, dp] = await Promise.all([
+                req.post(req.root + "/t2w/api/break-down/inflow-outflow", body),
+                req.post(req.root + "/t2w/api/break-down/deposit-payout", body),
+            ])
+            inflow.value = toNumber(io?.data?.inflow) ?? 0
+            outflow.value = toNumber(io?.data?.outflow) ?? 0
+            deposit.value = toNumber(dp?.data?.deposit) ?? 0
+            payout.value = toNumber(dp?.data?.payout) ?? 0
+            period.value = p
+        } catch (e) {
+            error.value = "The ledger totals could not be loaded."
+        } finally {
+            loading.value = false
+        }
+    }
+    onMounted(() => load(allTime))
+
     const credits = computed(() => inflow.value + deposit.value)
     const debits = computed(() => outflow.value + payout.value)
     const balance = computed(() => credits.value - debits.value)
-    const req = new Request();
+    const periodText = computed(() => period.value.from === allTime.from && period.value.to === allTime.to
+        ? "all time" : periodLabel(period.value))
 
-    const data = computed(() => {
-        return {
-            labels: ['Inflow', 'Outflow', 'Deposit', 'Payout'],
-            datasets: [
-                {
-                label: label.value,
-                backgroundColor: '#f87979',
-                data: [inflow.value, outflow.value, deposit.value, payout.value],
-                }
-            ],
-        }
-    });
-
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-    };
-
-    onMounted(() => {
-        resetTrialBalance()
-    })
-
-    const resetTrialBalance = async () => {
-        to.value = null
-        from.value = null
-        await req.post(req.root+"/t2w/api/break-down/inflow-outflow").then(r => {
-            inflow.value = r.data.inflow
-            outflow.value = r.data.outflow
-        })
-
-        await req.post(req.root+"/t2w/api/break-down/deposit-payout").then(r => {
-            deposit.value = r.data.deposit
-            payout.value = r.data.payout
-        })
-    }
-
-    const getTrialBalance = async () => {
-        var data = {}
-        if(from.value != null && from.value != "") {
-            data.from = from.value
-            label.value = "Between "+from.value+" and ";
-        } else label.value = "From onset to ";
-        if(to.value != null && to.value != "") {
-            data.to = to.value
-            label.value += to.value;
-        } else label.value += "Current date";
-        await req.post(req.root+"/t2w/api/break-down/inflow-outflow", data).then(r => {
-            inflow.value = r.data.inflow
-            outflow.value = r.data.outflow
-        })
-
-        await req.post(req.root+"/t2w/api/break-down/deposit-payout", data).then(r => {
-            deposit.value = r.data.deposit
-            payout.value = r.data.payout
-        })
-    }
+    defineExpose({ inflow, outflow, deposit, payout, balance, period })
 </script>
-
-<style lang="scss" scoped>
-    @media print {
-        .no-print {
-            display: none;
-        }
-        .break-after {
-            page-break-after: always;
-        }
-        .avoid {
-            page-break-inside: avoid;
-        }
-    }
-</style>

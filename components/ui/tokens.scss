@@ -132,3 +132,23 @@
     text-decoration: none;
     &:hover { text-decoration: underline; }
 }
+
+// small outline button for in-page controls (the theme's .btn is an uppercase pill)
+.t2w-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border: 1px solid var(--t2w-border-strong);
+    border-radius: var(--t2w-radius-sm);
+    background: var(--t2w-surface);
+    color: var(--t2w-text);
+    font-size: var(--t2w-fs-label);
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+    &:hover:not(:disabled) { border-color: var(--t2w-primary); color: var(--t2w-primary); }
+    &:focus-visible { outline: 2px solid var(--t2w-primary); outline-offset: 2px; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
