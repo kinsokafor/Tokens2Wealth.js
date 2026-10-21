@@ -48,6 +48,7 @@ import GuarantorExposure from '../views/Reports/Statements/GuarantorExposure.vue
 import TdMaturity from '../views/Reports/Statements/TdMaturity.vue'
 import ApprovalsQueue from '../views/Reports/Statements/ApprovalsQueue.vue'
 import CronHealth from '../views/Reports/Statements/CronHealth.vue'
+import Participation from '../views/Reports/Statements/Participation.vue'
 import Members from '../views/Members/Members.vue'
 import MemberData from '../views/Members/MemberData.vue'
 import PendingMembers from '../views/Members/PendingMembers.vue'
@@ -357,6 +358,12 @@ const router = createRouter({
             name: 'Portfolio',
             component: Portfolio,
             meta: { title: "Member Portfolio" }
+        },
+        {
+            path: '/reports/participation',
+            name: 'Participation',
+            component: Participation,
+            meta: { title: "Monthly Participating Members" }
         },
         {
             path: '/reports/back-duties',
