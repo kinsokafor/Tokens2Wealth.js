@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../helpers'
     import { ref } from 'vue';
     import { getProfilePicture } from '@/helpers'
     import 'animate.css'
@@ -26,13 +27,6 @@
         data: Object
     })
 
-    const toLocale = (str) => {
-        if(str == undefined) return ""
-        return str.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'NGN',
-        })
-    }
 
     const userImg = ref("#")
 

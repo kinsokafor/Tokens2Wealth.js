@@ -51,6 +51,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../../helpers'
     import Header from './Header.vue';
     import wallet from '../../assets/img/wallet.png';
     import { useAccountsStore } from '../../store/accounts'
@@ -88,13 +89,6 @@
       }
     })
 
-    const toLocale = (str) => {
-        if(str == "") str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
     // /accounts/post/credit/:accountNumber
     const items = computed(() => [
       {

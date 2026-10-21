@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../../helpers'
     import _ from 'lodash'
     import Header from './Header.vue';
     import termdeposit from '../../assets/img/term-deposit.png';
@@ -159,13 +160,6 @@
       otherData.value = t;
     })
 
-    const toLocale = (str) => {
-        if(str == "") str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const timeStampToDate = (timestamp) => {
         const d = new Date(parseInt(timestamp) * 1000);

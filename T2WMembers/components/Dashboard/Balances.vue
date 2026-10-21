@@ -45,6 +45,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../../../helpers'
     import {ref, watchEffect} from 'vue'
     import {Request} from '@/helpers'
     import 'animate.css'
@@ -89,11 +90,6 @@
         getBalances(props.data.id)
     })
 
-    const toLocale = (str) => {
-        var parts = (Math.round(str * 100) / 100).toString().split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return parts.join(".");
-    }
 </script>
 
 <style lang="scss" scoped>

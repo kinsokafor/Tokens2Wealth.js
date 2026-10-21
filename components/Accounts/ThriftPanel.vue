@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+    import { toLocale } from '../../helpers'
     import _ from 'lodash'
     import Header from './Header.vue';
     import thrift from '../../assets/img/thrift.png';
@@ -94,13 +95,6 @@
       }
     })
 
-    const toLocale = (str) => {
-        if(str == "") str = 0;
-        return str.toLocaleString("en-US", {
-          style:"currency", 
-          currency:"NGN"
-        })
-    }
 
     const updateStatus = () => {
       if(confirm(`Are you sure you want to ${status.value ? 'deactivate' : 'activate'} this account?`)) {

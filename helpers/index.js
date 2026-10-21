@@ -1,3 +1,6 @@
+import { money } from './format'
+
+// NGN amount (see helpers/format.js). With a prefix or suffix, a plain number instead, e.g. toLocale(12, "", " units")
 const toLocale = (str, prefix = "", suffix = "") => {
     if(str == "" || str == undefined) str = 0;
 
@@ -8,13 +11,9 @@ const toLocale = (str, prefix = "", suffix = "") => {
     }
 
     if(prefix != "" || suffix != "") return ordinaryString();
-    
-    str = parseFloat(str);
-    return str.toLocaleString("en-NG", {
-        style:"currency", 
-        currency:"NGN"
-    })
-} 
+
+    return money(str)
+}
 
 export {toLocale}
 
